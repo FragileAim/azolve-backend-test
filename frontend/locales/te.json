@@ -1,0 +1,16 @@
+{
+  "_meta": { "name": "తెలుగు", "code": "te", "dir": "ltr" },
+  "common": {
+    "save": "సేవ్", "cancel": "రద్దు", "delete": "తొలగించు", "edit": "సవరించు", "create": "సృష్టించు",
+    "search": "వెతుకు", "loading": "లోడ్ అవుతోంది...", "no_data": "డేటా లేదు", "yes": "అవును", "no": "కాదు",
+    "name": "పేరు", "email": "ఇమెయిల్", "total": "మొత్తం",
+    "dashboard": "డాష్‌బోర్డ్"
+  },
+  "nav": {
+    "home": "హోమ్", "clients": "క్లయింట్లు", "invoices": "ఇన్వాయిస్లు", "products": "ఉత్పత్తులు",
+    "employees": "ఉద్యోగులు"
+  },
+  "invoice": {
+    "title": "ఇన్వాయిస్", "grand_total": "మొత్తం", "paid": "చెల్లించబడింది", "pending": "పెండింగ్"
+  }
+}

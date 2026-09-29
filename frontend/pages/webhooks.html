@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Webhooks & Public API · Azolve</title>
+  <link rel="stylesheet" href="../css/azolve-v2.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    .code-block{background:#0f172a;color:#e2e8f0;padding:18px 20px;border-radius:12px;font-family:ui-monospace,monospace;font-size:13px;line-height:1.7;overflow-x:auto;position:relative}
+    .code-block .kw{color:#c4b5fd}
+    .code-block .str{color:#86efac}
+    .code-block .num{color:#fcd34d}
+    .code-block .com{color:#64748b;font-style:italic}
+    .code-block .copy{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.1);color:#e2e8f0;border:1px solid rgba(255,255,255,.2);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer}
+    .code-block .copy:hover{background:rgba(255,255,255,.2)}
+    .endpoint-row{display:grid;grid-template-columns:80px 1fr auto;gap:14px;padding:12px 16px;border-bottom:1px solid var(--az-border-2);align-items:center;font-family:ui-monospace,monospace;font-size:13px}
+    .endpoint-row:last-child{border-bottom:0}
+    .method{padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700;text-align:center;color:#fff}
+    .method-GET{background:#10b981} .method-POST{background:#3b82f6} .method-PUT{background:#f59e0b} .method-DEL{background:#ef4444}
+    .key-mono{font-family:ui-monospace,monospace;font-size:12px;background:#f1f5f9;padding:6px 10px;border-radius:6px;color:#475569}
+  </style>
+</head>
+<body class="az-app az-embedded">
+  <div class="az-page">
+
+    <!-- Hero -->
+    <div class="az-hero">
+      <div class="az-hero-inner">
+        <div class="az-hero-icon"><i class="fa-solid fa-code"></i></div>
+        <div class="az-hero-text">
+          <h1>Webhooks & Public API</h1>
+          <p>Build integrations with Azolve. Subscribe to events, query your data — full REST API + real-time webhook subscriptions.</p>
+        </div>
+        <div class="az-hero-actions">
+          <button class="az-btn"><i class="fa-solid fa-book"></i> API Docs</button>
+          <button class="az-btn az-btn-primary"><i class="fa-solid fa-plus"></i> Create API Key</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="az-tabs">
+      <button class="az-tab active" data-tab="webhooks">Webhooks</button>
+      <button class="az-tab" data-tab="apikeys">API Keys</button>
+      <button class="az-tab" data-tab="docs">API Reference</button>
+      <button class="az-tab" data-tab="logs">Delivery Logs</button>
+    </div>
+
+    <!-- Webhooks Tab -->
+    <div data-tabpane="webhooks">
+      <div class="az-grid az-grid-4" style="margin-bottom:20px">
+        <div class="az-stat az-stat-info"><div class="az-stat-row"><div><div class="az-stat-label">Endpoints</div><div class="az-stat-value">7</div><div class="az-stat-trend flat">Active subscribers</div></div><div class="az-stat-icon"><i class="fa-solid fa-link"></i></div></div></div>
+        <div class="az-stat az-stat-success"><div class="az-stat-row"><div><div class="az-stat-label">Delivered</div><div class="az-stat-value">12,481</div><div class="az-stat-trend up">99.2% success</div></div><div class="az-stat-icon"><i class="fa-solid fa-check"></i></div></div></div>
+        <div class="az-stat az-stat-warning"><div class="az-stat-row"><div><div class="az-stat-label">Retrying</div><div class="az-stat-value">14</div><div class="az-stat-trend flat">Will retry 3x</div></div><div class="az-stat-icon"><i class="fa-solid fa-rotate"></i></div></div></div>
+        <div class="az-stat az-stat-danger"><div class="az-stat-row"><div><div class="az-stat-label">Failed</div><div class="az-stat-value">98</div><div class="az-stat-trend down">After all retries</div></div><div class="az-stat-icon"><i class="fa-solid fa-xmark"></i></div></div></div>
+      </div>
+
+      <div class="az-card" style="padding:0">
+        <div style="padding:18px 24px;border-bottom:1px solid var(--az-border-2);display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="az-card-title"><i class="fa-solid fa-link" style="color:var(--az-primary);margin-right:8px"></i>Webhook Endpoints</div>
+            <div class="az-card-subtitle">URLs that receive event notifications</div>
+          </div>
+          <button class="az-btn az-btn-sm az-btn-primary"><i class="fa-solid fa-plus"></i> Add Endpoint</button>
+        </div>
+        <table class="az-table">
+          <thead><tr><th>Endpoint URL</th><th>Events</th><th>Last Delivery</th><th>Status</th><th></th></tr></thead>
+          <tbody id="hookBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Code sample -->
+      <div class="az-card" style="margin-top:20px">
+        <div class="az-card-title" style="margin-bottom:12px"><i class="fa-solid fa-code" style="color:var(--az-primary);margin-right:8px"></i>Sample webhook payload</div>
+        <div class="code-block">
+<button class="copy" onclick="navigator.clipboard.writeText(this.parentNode.innerText)">Copy</button>
+<span class="com">// POST → your endpoint</span>
+{
+  <span class="kw">"event"</span>: <span class="str">"invoice.paid"</span>,
+  <span class="kw">"created_at"</span>: <span class="str">"2026-06-02T10:42:18Z"</span>,
+  <span class="kw">"data"</span>: {
+    <span class="kw">"id"</span>: <span class="str">"inv_a4d5f6c8"</span>,
+    <span class="kw">"number"</span>: <span class="str">"INV-2026-0142"</span>,
+    <span class="kw">"customer"</span>: <span class="str">"Acme Industries Pvt Ltd"</span>,
+    <span class="kw">"amount"</span>: <span class="num">125000</span>,
+    <span class="kw">"currency"</span>: <span class="str">"INR"</span>,
+    <span class="kw">"paid_at"</span>: <span class="str">"2026-06-02T10:42:00Z"</span>
+  },
+  <span class="kw">"signature"</span>: <span class="str">"sha256=a4b5c6d7..."</span>
+}
+        </div>
+      </div>
+    </div>
+
+    <!-- API Keys -->
+    <div data-tabpane="apikeys" hidden>
+      <div class="az-card" style="padding:0">
+        <div style="padding:18px 24px;border-bottom:1px solid var(--az-border-2);display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="az-card-title"><i class="fa-solid fa-key" style="color:var(--az-warning);margin-right:8px"></i>API Keys</div>
+            <div class="az-card-subtitle">Use these to authenticate requests to api.azolve.io</div>
+          </div>
+          <button class="az-btn az-btn-sm az-btn-primary"><i class="fa-solid fa-plus"></i> Generate Key</button>
+        </div>
+        <table class="az-table">
+          <thead><tr><th>Name</th><th>Key</th><th>Created</th><th>Last Used</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <tr><td class="az-tbl-strong">Production · main app</td><td><span class="key-mono">sk_live_•••••••3f8a</span></td><td>15 May 2026</td><td>2 minutes ago</td><td><span class="az-badge az-badge-success">Active</span></td><td><button class="az-btn az-btn-sm az-btn-ghost"><i class="fa-solid fa-ellipsis-v"></i></button></td></tr>
+            <tr><td class="az-tbl-strong">Staging · QA</td><td><span class="key-mono">sk_test_•••••••9c2d</span></td><td>22 Apr 2026</td><td>1 day ago</td><td><span class="az-badge az-badge-success">Active</span></td><td><button class="az-btn az-btn-sm az-btn-ghost"><i class="fa-solid fa-ellipsis-v"></i></button></td></tr>
+            <tr><td class="az-tbl-strong">Zapier integration</td><td><span class="key-mono">sk_live_•••••••7b1e</span></td><td>03 Mar 2026</td><td>4 hours ago</td><td><span class="az-badge az-badge-success">Active</span></td><td><button class="az-btn az-btn-sm az-btn-ghost"><i class="fa-solid fa-ellipsis-v"></i></button></td></tr>
+            <tr><td class="az-tbl-strong">Old reporting tool</td><td><span class="key-mono">sk_live_•••••••2a09</span></td><td>11 Jan 2026</td><td>67 days ago</td><td><span class="az-badge">Revoked</span></td><td><button class="az-btn az-btn-sm az-btn-ghost"><i class="fa-solid fa-ellipsis-v"></i></button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- API Reference -->
+    <div data-tabpane="docs" hidden>
+      <div class="az-card">
+        <div class="az-card-title" style="margin-bottom:14px"><i class="fa-solid fa-book" style="color:var(--az-info);margin-right:8px"></i>Available endpoints</div>
+        <div style="border:1px solid var(--az-border-2);border-radius:10px;overflow:hidden">
+          <div class="endpoint-row"><span class="method method-GET">GET</span><span>/v1/invoices</span><span class="az-badge">List invoices</span></div>
+          <div class="endpoint-row"><span class="method method-POST">POST</span><span>/v1/invoices</span><span class="az-badge">Create invoice</span></div>
+          <div class="endpoint-row"><span class="method method-GET">GET</span><span>/v1/invoices/:id</span><span class="az-badge">Retrieve invoice</span></div>
+          <div class="endpoint-row"><span class="method method-PUT">PUT</span><span>/v1/invoices/:id</span><span class="az-badge">Update invoice</span></div>
+          <div class="endpoint-row"><span class="method method-GET">GET</span><span>/v1/clients</span><span class="az-badge">List clients</span></div>
+          <div class="endpoint-row"><span class="method method-POST">POST</span><span>/v1/clients</span><span class="az-badge">Create client</span></div>
+          <div class="endpoint-row"><span class="method method-GET">GET</span><span>/v1/products</span><span class="az-badge">List products</span></div>
+          <div class="endpoint-row"><span class="method method-POST">POST</span><span>/v1/payments</span><span class="az-badge">Record payment</span></div>
+          <div class="endpoint-row"><span class="method method-DEL">DEL</span><span>/v1/invoices/:id</span><span class="az-badge">Delete invoice</span></div>
+        </div>
+      </div>
+
+      <div class="az-card">
+        <div class="az-card-title" style="margin-bottom:12px">Quick start — cURL</div>
+        <div class="code-block">
+<button class="copy" onclick="navigator.clipboard.writeText(this.parentNode.innerText)">Copy</button>
+<span class="com"># List your latest invoices</span>
+curl https://api.azolve.io/v1/invoices \
+  -H <span class="str">"Authorization: Bearer sk_live_•••••••3f8a"</span> \
+  -H <span class="str">"Content-Type: application/json"</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delivery Logs -->
+    <div data-tabpane="logs" hidden>
+      <div class="az-card" style="padding:0">
+        <div style="padding:18px 24px;border-bottom:1px solid var(--az-border-2)">
+          <div class="az-card-title"><i class="fa-solid fa-list" style="color:var(--az-info);margin-right:8px"></i>Recent webhook deliveries</div>
+        </div>
+        <table class="az-table">
+          <thead><tr><th>Time</th><th>Event</th><th>Endpoint</th><th>Response</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td style="font-size:12px;color:#94a3b8">2m ago</td><td><span class="az-badge az-badge-info">invoice.paid</span></td><td class="az-mono">https://api.acme.in/azolve-hook</td><td><span class="az-mono">200 OK · 142ms</span></td><td><span class="az-badge az-badge-success">Delivered</span></td></tr>
+            <tr><td style="font-size:12px;color:#94a3b8">18m ago</td><td><span class="az-badge az-badge-info">invoice.created</span></td><td class="az-mono">https://hooks.zapier.com/...</td><td><span class="az-mono">200 OK · 89ms</span></td><td><span class="az-badge az-badge-success">Delivered</span></td></tr>
+            <tr><td style="font-size:12px;color:#94a3b8">1h ago</td><td><span class="az-badge az-badge-purple">deal.won</span></td><td class="az-mono">https://app.intercom.io/...</td><td><span class="az-mono">200 OK · 318ms</span></td><td><span class="az-badge az-badge-success">Delivered</span></td></tr>
+            <tr><td style="font-size:12px;color:#94a3b8">2h ago</td><td><span class="az-badge az-badge-warning">payment.failed</span></td><td class="az-mono">https://api.acme.in/azolve-hook</td><td><span class="az-mono">503 · timeout</span></td><td><span class="az-badge az-badge-warning">Retry 1/3</span></td></tr>
+            <tr><td style="font-size:12px;color:#94a3b8">3h ago</td><td><span class="az-badge az-badge-info">client.created</span></td><td class="az-mono">https://make.com/webhooks/...</td><td><span class="az-mono">200 OK · 64ms</span></td><td><span class="az-badge az-badge-success">Delivered</span></td></tr>
+            <tr><td style="font-size:12px;color:#94a3b8">5h ago</td><td><span class="az-badge az-badge-danger">invoice.deleted</span></td><td class="az-mono">https://old-system.local/...</td><td><span class="az-mono">404 · Not Found</span></td><td><span class="az-badge az-badge-danger">Failed</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const HOOKS = [
+      { url:'https://api.acme.in/azolve-hook',  events:'invoice.*, payment.*',     last:'2m ago',  status:'active' },
+      { url:'https://hooks.zapier.com/hooks/...', events:'invoice.created',         last:'18m ago', status:'active' },
+      { url:'https://app.intercom.io/intercom/...', events:'client.*, deal.won',   last:'1h ago',  status:'active' },
+      { url:'https://make.com/webhooks/8842...',events:'client.created',           last:'3h ago',  status:'active' },
+      { url:'https://api.acme.in/old-hook',     events:'invoice.paid',             last:'5h ago',  status:'failing' },
+      { url:'https://staging.azolve.io/test',   events:'all',                      last:'1d ago',  status:'paused' },
+      { url:'https://customer-portal.io/sync',  events:'client.*, invoice.paid',   last:'1d ago',  status:'active' }
+    ];
+    function badgeStatus(s){
+      if(s==='active')  return '<span class="az-badge az-badge-success">● Active</span>';
+      if(s==='failing') return '<span class="az-badge az-badge-danger">● Failing</span>';
+      return '<span class="az-badge">⏸ Paused</span>';
+    }
+    document.getElementById('hookBody').innerHTML = HOOKS.map(h => `
+      <tr>
+        <td><span class="az-mono" style="font-size:12px">${h.url}</span></td>
+        <td><span class="az-badge az-badge-info">${h.events}</span></td>
+        <td style="font-size:12.5px;color:var(--az-text-3)">${h.last}</td>
+        <td>${badgeStatus(h.status)}</td>
+        <td><button class="az-btn az-btn-sm az-btn-ghost"><i class="fa-solid fa-ellipsis-v"></i></button></td>
+      </tr>
+    `).join('');
+
+    // Tab switching
+    document.querySelectorAll('.az-tab').forEach(t => {
+      t.addEventListener('click', () => {
+        document.querySelectorAll('.az-tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        const target = t.dataset.tab;
+        document.querySelectorAll('[data-tabpane]').forEach(p => p.hidden = (p.dataset.tabpane !== target));
+      });
+    });
+  </script>
+</body>
+</html>

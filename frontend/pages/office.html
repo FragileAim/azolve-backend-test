@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Office Suite · Azolve</title>
+  <link rel="stylesheet" href="../css/azolve-v2.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    .create-tile{display:flex;gap:14px;align-items:center;padding:18px 20px;border:1px solid var(--az-border);border-radius:14px;background:#fff;cursor:pointer;transition:var(--az-transition)}
+    .create-tile:hover{transform:translateY(-3px);box-shadow:var(--az-shadow-md);border-color:var(--az-primary)}
+    .create-tile-icon{width:54px;height:54px;border-radius:14px;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+    .doc-card{background:#fff;border:1px solid var(--az-border);border-radius:14px;padding:14px;cursor:pointer;transition:var(--az-transition);position:relative;overflow:hidden}
+    .doc-card:hover{transform:translateY(-3px);box-shadow:var(--az-shadow-md);border-color:var(--az-primary)}
+    .doc-thumb{height:140px;border-radius:10px;background:linear-gradient(135deg,#f1f5f9,#e2e8f0);display:flex;align-items:center;justify-content:center;font-size:42px;color:#94a3b8;margin-bottom:10px;position:relative;overflow:hidden}
+    .doc-thumb.doc{background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1e40af}
+    .doc-thumb.spreadsheet{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#047857}
+    .doc-thumb.presentation{background:linear-gradient(135deg,#fed7aa,#fdba74);color:#c2410c}
+    .doc-title{font-weight:600;font-size:14px;color:var(--az-text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .doc-meta{font-size:11.5px;color:var(--az-text-3)}
+    .doc-menu{position:absolute;top:8px;right:8px;width:30px;height:30px;background:rgba(255,255,255,.92);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#64748b;cursor:pointer;opacity:0;transition:.2s;backdrop-filter:blur(8px);border:1px solid rgba(0,0,0,.06)}
+    .doc-card:hover .doc-menu{opacity:1}
+    .doc-menu:hover{background:#fff;color:var(--az-text)}
+    .grid-docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:9998;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+    .modal-overlay.show{display:flex;animation:az-fade-in .2s ease}
+    .modal{background:#fff;border-radius:18px;padding:28px;max-width:480px;width:90%;box-shadow:var(--az-shadow-xl)}
+    .modal-title{font-size:18px;font-weight:700;margin:0 0 14px}
+    .empty-state{text-align:center;padding:60px 20px;color:var(--az-text-3)}
+  </style>
+</head>
+<body class="az-app az-embedded">
+  <div class="az-page">
+
+    <!-- Hero -->
+    <div class="az-hero" style="background:linear-gradient(135deg,#6366f1 0%,#06b6d4 100%)">
+      <div class="az-hero-inner">
+        <div class="az-hero-icon"><i class="fa-solid fa-folder-open"></i></div>
+        <div class="az-hero-text">
+          <h1>Office Suite</h1>
+          <p>Create documents, spreadsheets and presentations — all in one place. Share with anyone via link.</p>
+        </div>
+        <div class="az-hero-actions">
+          <button class="az-btn" id="trashBtn"><i class="fa-solid fa-trash"></i> Trash</button>
+          <button class="az-btn az-btn-primary" id="newDocBtn"><i class="fa-solid fa-plus"></i> Create New</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Create Tiles -->
+    <div style="margin-bottom:24px">
+      <div style="font-size:13px;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:10px">Start a new file</div>
+      <div class="az-grid az-grid-3">
+        <div class="create-tile" onclick="createNew('document')">
+          <div class="create-tile-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)"><i class="fa-solid fa-file-lines"></i></div>
+          <div><div style="font-weight:600;font-size:15px">Blank Document</div><div style="font-size:12.5px;color:var(--az-text-3)">Word-style rich text editor</div></div>
+        </div>
+        <div class="create-tile" onclick="createNew('spreadsheet')">
+          <div class="create-tile-icon" style="background:linear-gradient(135deg,#10b981,#047857)"><i class="fa-solid fa-table-cells"></i></div>
+          <div><div style="font-weight:600;font-size:15px">Blank Spreadsheet</div><div style="font-size:12.5px;color:var(--az-text-3)">Excel-style with formulas</div></div>
+        </div>
+        <div class="create-tile" onclick="createNew('presentation')">
+          <div class="create-tile-icon" style="background:linear-gradient(135deg,#f97316,#c2410c)"><i class="fa-solid fa-tv"></i></div>
+          <div><div style="font-weight:600;font-size:15px">Blank Presentation</div><div style="font-size:12.5px;color:var(--az-text-3)">PowerPoint-style slides</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="az-grid az-grid-4" style="margin-bottom:20px">
+      <div class="az-stat az-stat-info"><div class="az-stat-row"><div><div class="az-stat-label">Total Files</div><div class="az-stat-value" id="statTotal">0</div></div><div class="az-stat-icon"><i class="fa-solid fa-folder"></i></div></div></div>
+      <div class="az-stat"><div class="az-stat-row"><div><div class="az-stat-label">Documents</div><div class="az-stat-value" id="statDoc">0</div></div><div class="az-stat-icon" style="background:#dbeafe;color:#1e40af"><i class="fa-solid fa-file-lines"></i></div></div></div>
+      <div class="az-stat az-stat-success"><div class="az-stat-row"><div><div class="az-stat-label">Spreadsheets</div><div class="az-stat-value" id="statSheet">0</div></div><div class="az-stat-icon"><i class="fa-solid fa-table-cells"></i></div></div></div>
+      <div class="az-stat az-stat-warning"><div class="az-stat-row"><div><div class="az-stat-label">Presentations</div><div class="az-stat-value" id="statSlide">0</div></div><div class="az-stat-icon"><i class="fa-solid fa-tv"></i></div></div></div>
+    </div>
+
+    <!-- Filters -->
+    <div class="az-card" style="padding:0">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--az-border-2);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <div class="az-tabs" style="margin:0;border:0;gap:2px">
+          <button class="az-tab active" data-filter="all">All Files</button>
+          <button class="az-tab" data-filter="document">📄 Documents</button>
+          <button class="az-tab" data-filter="spreadsheet">📊 Spreadsheets</button>
+          <button class="az-tab" data-filter="presentation">🎬 Presentations</button>
+          <button class="az-tab" data-filter="starred">⭐ Starred</button>
+        </div>
+        <input class="az-input" id="searchBox" placeholder="🔍 Search files..." style="max-width:240px" />
+      </div>
+
+      <div style="padding:20px">
+        <div id="filesGrid" class="grid-docs"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share modal -->
+  <div class="modal-overlay" id="shareModal">
+    <div class="modal">
+      <div class="modal-title"><i class="fa-solid fa-share-nodes" style="color:var(--az-primary);margin-right:8px"></i>Share document</div>
+      <div id="shareDocTitle" style="color:var(--az-text-3);font-size:13px;margin-bottom:16px"></div>
+
+      <div style="border:1px solid var(--az-border);border-radius:12px;padding:14px;margin-bottom:14px">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+          <input type="checkbox" id="shareEnabled" style="width:18px;height:18px;accent-color:#4f46e5">
+          <div><div style="font-weight:600">Anyone with the link can access</div><div style="font-size:12px;color:var(--az-text-3)">Public sharing — no login required</div></div>
+        </label>
+      </div>
+
+      <div id="shareDetails" style="display:none">
+        <label class="az-label">Permission</label>
+        <select class="az-select" id="sharePerm">
+          <option value="view">👁  Can view (read-only)</option>
+          <option value="edit">✏️  Can edit (collaborate)</option>
+        </select>
+        <div class="az-form-group" style="margin-top:14px">
+          <label class="az-label">Public link</label>
+          <div style="display:flex;gap:8px">
+            <input class="az-input" id="shareUrl" readonly style="font-family:ui-monospace,monospace;font-size:12px">
+            <button class="az-btn az-btn-primary" id="copyShareBtn"><i class="fa-solid fa-copy"></i> Copy</button>
+          </div>
+          <div class="az-help">Share this link with anyone — they can <span id="permLabel">view</span> the file.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px">
+        <button class="az-btn" id="closeShareBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // === Auth helper (use token saved by main app) ===
+    const TOKEN = localStorage.getItem('authToken') || localStorage.getItem('azolve_token') || localStorage.getItem('token') || '';
+    const API_BASE = (window.location.hostname === 'azolve.io' || window.location.hostname.endsWith('.pages.dev') || window.location.hostname.includes('super.myninja.ai'))
+      ? 'https://azolve-api.onrender.com/api'
+      : '/api';
+
+    async function api(path, opts = {}) {
+      const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
+      if (TOKEN) headers.Authorization = 'Bearer ' + TOKEN;
+      const r = await fetch(API_BASE + path, { ...opts, headers });
+      if (!r.ok) {
+        const txt = await r.text();
+        throw new Error(`${r.status}: ${txt.slice(0, 200)}`);
+      }
+      return r.json();
+    }
+
+    function fmtDate(d){
+      const dt = new Date(d), now = new Date(), diff = (now-dt)/1000;
+      if (diff < 60) return 'just now';
+      if (diff < 3600) return Math.floor(diff/60)+'m ago';
+      if (diff < 86400) return Math.floor(diff/3600)+'h ago';
+      if (diff < 7*86400) return Math.floor(diff/86400)+'d ago';
+      return dt.toLocaleDateString();
+    }
+    function escape(s){ return String(s||'').replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c])); }
+
+    let allDocs = [];
+    // Read filter from URL (?filter=document/spreadsheet/presentation/starred/all)
+    const _qp = new URLSearchParams(location.search);
+    let currentFilter = _qp.get('filter') || 'all';
+
+    function getEditorPath(type, id, share) {
+      const map = { document:'office-document.html', spreadsheet:'office-spreadsheet.html', presentation:'office-presentation.html' };
+      const file = map[type] || 'office-document.html';
+      const params = share ? `?share=${share}` : `?id=${id}`;
+      return file + params;
+    }
+
+    function renderStats(s) {
+      document.getElementById('statTotal').textContent = s.total || 0;
+      document.getElementById('statDoc').textContent = s.document || 0;
+      document.getElementById('statSheet').textContent = s.spreadsheet || 0;
+      document.getElementById('statSlide').textContent = s.presentation || 0;
+    }
+
+    function renderFiles() {
+      const q = (document.getElementById('searchBox').value || '').toLowerCase();
+      let list = allDocs;
+      if (currentFilter === 'starred') list = list.filter(d => d.starred);
+      else if (currentFilter !== 'all') list = list.filter(d => d.type === currentFilter);
+      if (q) list = list.filter(d => (d.title || '').toLowerCase().includes(q));
+
+      const grid = document.getElementById('filesGrid');
+      if (!list.length) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+          <div class="az-empty-icon"><i class="fa-regular fa-folder-open"></i></div>
+          <div class="az-empty-title">${allDocs.length ? 'No matching files' : 'No files yet'}</div>
+          <div class="az-empty-desc">${allDocs.length ? 'Try a different filter or search term.' : 'Click "Create New" above to start your first document.'}</div>
+        </div>`;
+        return;
+      }
+      grid.innerHTML = list.map(d => {
+        const icon = d.type === 'document' ? 'fa-file-lines' : d.type === 'spreadsheet' ? 'fa-table-cells' : 'fa-tv';
+        return `<div class="doc-card" onclick="openDoc('${d._id}','${d.type}')">
+          <div class="doc-thumb ${d.type}"><i class="fa-solid ${icon}"></i></div>
+          <div class="doc-title">${d.starred ? '⭐ ' : ''}${escape(d.title)}</div>
+          <div class="doc-meta">
+            ${d.type === 'document' ? 'Document' : d.type === 'spreadsheet' ? 'Spreadsheet' : 'Presentation'}
+            · ${fmtDate(d.updatedAt)}
+          </div>
+          <div class="doc-menu" onclick="event.stopPropagation();showMenu(event,'${d._id}','${d.type}')"><i class="fa-solid fa-ellipsis-v"></i></div>
+        </div>`;
+      }).join('');
+    }
+
+    async function loadAll() {
+      try {
+        const [list, stats] = await Promise.all([api('/office'), api('/office/stats')]);
+        allDocs = list.data || [];
+        renderStats(stats.data || {});
+        renderFiles();
+      } catch (err) {
+        console.error('loadAll', err);
+        document.getElementById('filesGrid').innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+          <div class="az-empty-icon" style="background:#fee2e2;color:#b91c1c"><i class="fa-solid fa-circle-exclamation"></i></div>
+          <div class="az-empty-title">Could not load files</div>
+          <div class="az-empty-desc">${escape(err.message)}<br>Make sure you're logged in.</div>
+        </div>`;
+      }
+    }
+
+    async function createNew(type) {
+      try {
+        const r = await api('/office', { method: 'POST', body: JSON.stringify({ type }) });
+        const id = r.data._id;
+        // Navigate to editor
+        window.location.href = getEditorPath(type, id);
+      } catch (err) { alert('Could not create: ' + err.message); }
+    }
+
+    function openDoc(id, type) {
+      window.location.href = getEditorPath(type, id);
+    }
+
+    function showMenu(e, id, type) {
+      const choice = prompt('Action: 1=Share  2=Rename  3=Duplicate  4=Star  5=Delete', '1');
+      if (choice === '1') openShare(id, type);
+      else if (choice === '2') renameDoc(id);
+      else if (choice === '3') duplicateDoc(id);
+      else if (choice === '4') starDoc(id);
+      else if (choice === '5') deleteDoc(id);
+    }
+
+    async function renameDoc(id) {
+      const newTitle = prompt('New name:');
+      if (!newTitle) return;
+      await api('/office/' + id, { method: 'PUT', body: JSON.stringify({ title: newTitle }) });
+      loadAll();
+    }
+    async function duplicateDoc(id) {
+      await api('/office/' + id + '/duplicate', { method: 'POST' });
+      loadAll();
+    }
+    async function starDoc(id) {
+      const doc = allDocs.find(d => d._id === id);
+      await api('/office/' + id, { method: 'PUT', body: JSON.stringify({ starred: !doc.starred }) });
+      loadAll();
+    }
+    async function deleteDoc(id) {
+      if (!confirm('Move to trash?')) return;
+      await api('/office/' + id, { method: 'DELETE' });
+      loadAll();
+    }
+
+    // === Share modal ===
+    let currentShareId = null;
+    async function openShare(id, type) {
+      currentShareId = id;
+      const doc = allDocs.find(d => d._id === id);
+      document.getElementById('shareDocTitle').textContent = doc ? doc.title : '';
+      try {
+        const r = await api('/office/' + id);
+        const enabled = !!r.data.isPublic;
+        document.getElementById('shareEnabled').checked = enabled;
+        document.getElementById('sharePerm').value = r.data.sharePermission || 'view';
+        document.getElementById('shareDetails').style.display = enabled ? '' : 'none';
+        if (enabled) {
+          updateShareUrl(r.data.shareToken, r.data.type);
+        }
+      } catch (e) {}
+      document.getElementById('shareModal').classList.add('show');
+    }
+
+    function updateShareUrl(token, type) {
+      const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
+      const editor = type === 'spreadsheet' ? 'office-spreadsheet.html' : type === 'presentation' ? 'office-presentation.html' : 'office-document.html';
+      const url = `${baseUrl}/${editor}?share=${token}`;
+      document.getElementById('shareUrl').value = url;
+      document.getElementById('permLabel').textContent = document.getElementById('sharePerm').value === 'edit' ? 'view & edit' : 'view';
+    }
+
+    document.getElementById('closeShareBtn').onclick = () => document.getElementById('shareModal').classList.remove('show');
+    document.getElementById('shareModal').onclick = (e) => { if (e.target.id === 'shareModal') e.target.classList.remove('show'); };
+
+    document.getElementById('shareEnabled').onchange = async (e) => {
+      const enabled = e.target.checked;
+      const perm = document.getElementById('sharePerm').value;
+      try {
+        const r = await api('/office/' + currentShareId + '/share', {
+          method: 'POST', body: JSON.stringify({ enabled, permission: perm }),
+        });
+        document.getElementById('shareDetails').style.display = enabled ? '' : 'none';
+        if (enabled) {
+          const doc = allDocs.find(d => d._id === currentShareId);
+          updateShareUrl(r.data.shareToken, doc ? doc.type : 'document');
+        }
+      } catch (err) { alert('Could not update share: ' + err.message); }
+    };
+    document.getElementById('sharePerm').onchange = async () => {
+      const enabled = document.getElementById('shareEnabled').checked;
+      if (!enabled) return;
+      const perm = document.getElementById('sharePerm').value;
+      const r = await api('/office/' + currentShareId + '/share', {
+        method: 'POST', body: JSON.stringify({ enabled: true, permission: perm }),
+      });
+      const doc = allDocs.find(d => d._id === currentShareId);
+      updateShareUrl(r.data.shareToken, doc ? doc.type : 'document');
+    };
+    document.getElementById('copyShareBtn').onclick = () => {
+      const inp = document.getElementById('shareUrl');
+      inp.select(); document.execCommand('copy');
+      const btn = document.getElementById('copyShareBtn');
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+      setTimeout(() => { btn.innerHTML = orig; }, 1500);
+    };
+
+    // Filter tabs
+    document.querySelectorAll('.az-tab').forEach(t => {
+      // Sync active tab with currentFilter from URL
+      t.classList.toggle('active', t.dataset.filter === currentFilter);
+      t.onclick = () => {
+        document.querySelectorAll('.az-tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        currentFilter = t.dataset.filter;
+        renderFiles();
+      };
+    });
+    document.getElementById('searchBox').oninput = renderFiles;
+
+    // New doc dropdown — default action: ask which type
+    document.getElementById('newDocBtn').onclick = () => {
+      const choice = prompt('Create what?\n1 = Document\n2 = Spreadsheet\n3 = Presentation', '1');
+      if (choice === '1') createNew('document');
+      else if (choice === '2') createNew('spreadsheet');
+      else if (choice === '3') createNew('presentation');
+    };
+    document.getElementById('trashBtn').onclick = () => alert('Trash view coming soon.');
+
+    loadAll();
+  </script>
+</body>
+</html>

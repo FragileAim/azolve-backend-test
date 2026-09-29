@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Workflow Builder · Azolve</title>
+  <link rel="stylesheet" href="../css/azolve-v2.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    .wf-canvas{background:
+      radial-gradient(circle, #e2e8f0 1px, transparent 1px) 0 0/22px 22px,
+      var(--az-bg-soft);
+      border:1px solid var(--az-border);border-radius:var(--az-radius-lg);
+      min-height:340px;padding:30px;position:relative;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+    .wf-node{background:#fff;border:1px solid var(--az-border);border-radius:14px;padding:14px 18px;min-width:200px;box-shadow:var(--az-shadow);position:relative;transition:var(--az-transition);cursor:grab}
+    .wf-node:hover{transform:translateY(-2px);box-shadow:var(--az-shadow-md);border-color:var(--az-primary)}
+    .wf-node-trigger{border-left:4px solid var(--az-primary)}
+    .wf-node-condition{border-left:4px solid var(--az-warning)}
+    .wf-node-action{border-left:4px solid var(--az-success)}
+    .wf-node-icon{width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:#fff;margin-bottom:8px}
+    .wf-node-title{font-weight:600;font-size:13px;color:var(--az-text)}
+    .wf-node-desc{font-size:11px;color:var(--az-text-3);margin-top:2px}
+    .wf-arrow{font-size:22px;color:#cbd5e1}
+    .wf-row{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--az-border-2);transition:var(--az-transition)}
+    .wf-row:last-child{border-bottom:0}
+    .wf-row:hover{background:var(--az-bg-soft)}
+    .palette-item{padding:10px 12px;border:1px dashed var(--az-border);border-radius:10px;display:flex;align-items:center;gap:10px;cursor:grab;transition:var(--az-transition)}
+    .palette-item:hover{border-style:solid;border-color:var(--az-primary);background:var(--az-primary-light)}
+    .switch{position:relative;display:inline-block;width:44px;height:24px}
+    .switch input{display:none}
+    .slider{position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:24px;transition:.3s}
+    .slider:before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 2px 4px rgba(0,0,0,.15)}
+    input:checked+.slider{background:var(--az-success)}
+    input:checked+.slider:before{transform:translateX(20px)}
+  </style>
+</head>
+<body class="az-app az-embedded">
+  <div class="az-page">
+
+    <!-- Hero -->
+    <div class="az-hero az-hero-blue">
+      <div class="az-hero-inner">
+        <div class="az-hero-icon"><i class="fa-solid fa-diagram-project"></i></div>
+        <div class="az-hero-text">
+          <h1>Workflow Builder</h1>
+          <p>Drag-and-drop automation. Connect triggers to actions — invoices, emails, WhatsApp, webhooks. No code required.</p>
+        </div>
+        <div class="az-hero-actions">
+          <button class="az-btn"><i class="fa-solid fa-folder-open"></i> Templates</button>
+          <button class="az-btn az-btn-primary"><i class="fa-solid fa-plus"></i> New Workflow</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="az-grid az-grid-4" style="margin-bottom:20px">
+      <div class="az-stat az-stat-info">
+        <div class="az-stat-row"><div><div class="az-stat-label">Active Workflows</div><div class="az-stat-value">12</div><div class="az-stat-trend up"><i class="fa-solid fa-bolt"></i> Running</div></div><div class="az-stat-icon"><i class="fa-solid fa-bolt"></i></div></div>
+      </div>
+      <div class="az-stat az-stat-success">
+        <div class="az-stat-row"><div><div class="az-stat-label">Runs This Month</div><div class="az-stat-value">3,427</div><div class="az-stat-trend up"><i class="fa-solid fa-arrow-up"></i> +24%</div></div><div class="az-stat-icon"><i class="fa-solid fa-play"></i></div></div>
+      </div>
+      <div class="az-stat az-stat-warning">
+        <div class="az-stat-row"><div><div class="az-stat-label">Hours Saved</div><div class="az-stat-value">186</div><div class="az-stat-trend flat"><i class="fa-solid fa-clock"></i> This month</div></div><div class="az-stat-icon"><i class="fa-solid fa-hourglass"></i></div></div>
+      </div>
+      <div class="az-stat az-stat-danger">
+        <div class="az-stat-row"><div><div class="az-stat-label">Failed Runs</div><div class="az-stat-value">8</div><div class="az-stat-trend down"><i class="fa-solid fa-exclamation"></i> Need review</div></div><div class="az-stat-icon"><i class="fa-solid fa-circle-xmark"></i></div></div>
+      </div>
+    </div>
+
+    <!-- Visual Canvas + Palette -->
+    <div class="az-grid" style="grid-template-columns:240px 1fr;gap:20px;margin-bottom:20px">
+      <div class="az-card">
+        <div class="az-card-title" style="margin-bottom:12px"><i class="fa-solid fa-shapes" style="color:var(--az-primary);margin-right:6px"></i>Components</div>
+        <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin:8px 0">Triggers</div>
+        <div class="az-flex-col" style="gap:8px">
+          <div class="palette-item"><i class="fa-solid fa-file-invoice" style="color:var(--az-primary)"></i><span>Invoice Created</span></div>
+          <div class="palette-item"><i class="fa-solid fa-handshake" style="color:var(--az-primary)"></i><span>Deal Won</span></div>
+          <div class="palette-item"><i class="fa-solid fa-user-plus" style="color:var(--az-primary)"></i><span>New Client</span></div>
+        </div>
+        <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin:14px 0 8px">Actions</div>
+        <div class="az-flex-col" style="gap:8px">
+          <div class="palette-item"><i class="fa-solid fa-envelope" style="color:var(--az-success)"></i><span>Send Email</span></div>
+          <div class="palette-item"><i class="fa-brands fa-whatsapp" style="color:var(--az-success)"></i><span>Send WhatsApp</span></div>
+          <div class="palette-item"><i class="fa-solid fa-bell" style="color:var(--az-success)"></i><span>Notify Team</span></div>
+          <div class="palette-item"><i class="fa-solid fa-link" style="color:var(--az-success)"></i><span>Call Webhook</span></div>
+        </div>
+      </div>
+
+      <div class="az-card" style="padding:0">
+        <div style="padding:14px 20px;border-bottom:1px solid var(--az-border-2);display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:600">Auto-send invoice on Deal Won</div>
+            <div style="font-size:12px;color:var(--az-text-3)">Active · last run 2 minutes ago</div>
+          </div>
+          <div class="az-flex">
+            <span class="az-badge az-badge-success">● Active</span>
+            <button class="az-btn az-btn-sm"><i class="fa-solid fa-pen"></i> Edit</button>
+          </div>
+        </div>
+        <div class="wf-canvas">
+          <div class="wf-node wf-node-trigger">
+            <div class="wf-node-icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)"><i class="fa-solid fa-bolt"></i></div>
+            <div class="wf-node-title">When: Deal Won</div>
+            <div class="wf-node-desc">CRM Pipeline · Status = Won</div>
+          </div>
+          <div class="wf-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="wf-node wf-node-condition">
+            <div class="wf-node-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><i class="fa-solid fa-code-branch"></i></div>
+            <div class="wf-node-title">If: Amount &gt; ₹50,000</div>
+            <div class="wf-node-desc">Filter condition</div>
+          </div>
+          <div class="wf-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="wf-node wf-node-action">
+            <div class="wf-node-icon" style="background:linear-gradient(135deg,#10b981,#059669)"><i class="fa-solid fa-file-invoice"></i></div>
+            <div class="wf-node-title">Then: Create Invoice</div>
+            <div class="wf-node-desc">Auto-fill from deal</div>
+          </div>
+          <div class="wf-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="wf-node wf-node-action">
+            <div class="wf-node-icon" style="background:linear-gradient(135deg,#10b981,#059669)"><i class="fa-brands fa-whatsapp"></i></div>
+            <div class="wf-node-title">Then: Send WhatsApp</div>
+            <div class="wf-node-desc">To client primary contact</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Workflow List -->
+    <div class="az-card" style="padding:0">
+      <div style="padding:18px 24px;border-bottom:1px solid var(--az-border-2);display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div class="az-card-title"><i class="fa-solid fa-list-check" style="color:var(--az-info);margin-right:8px"></i>Your Workflows</div>
+          <div class="az-card-subtitle">Active automations across your account</div>
+        </div>
+        <input class="az-input" placeholder="🔍 Search workflows..." style="max-width:240px" />
+      </div>
+      <div id="wfList"></div>
+    </div>
+  </div>
+
+  <script>
+    const WFS = [
+      { id:1, name:'Auto-send invoice on Deal Won',     trigger:'Deal Won',         actions:'Create Invoice → WhatsApp', runs:248, success:99, active:true,  updated:'2m ago' },
+      { id:2, name:'7-day overdue payment reminder',    trigger:'Invoice 7d overdue', actions:'Send Email + WhatsApp',     runs:412, success:97, active:true,  updated:'1h ago' },
+      { id:3, name:'Welcome email for new clients',     trigger:'Client Created',   actions:'Send Email',                runs:128, success:100,active:true,  updated:'4h ago' },
+      { id:4, name:'Notify on high-value invoice',      trigger:'Invoice > ₹1L',    actions:'Slack notify owner',        runs:36,  success:100,active:true,  updated:'2d ago' },
+      { id:5, name:'Auto-create task on support reply', trigger:'Ticket replied',   actions:'Create Task',                runs:1782,success:96, active:true,  updated:'5m ago' },
+      { id:6, name:'Birthday wishes to clients',        trigger:'Client Birthday',  actions:'Send WhatsApp',              runs:14,  success:100,active:false, updated:'14d ago' }
+    ];
+    document.getElementById('wfList').innerHTML = WFS.map(w => `
+      <div class="wf-row">
+        <div style="display:flex;gap:14px;align-items:center;flex:1;min-width:0">
+          <div style="width:42px;height:42px;border-radius:12px;background:${w.active?'linear-gradient(135deg,#6366f1,#8b5cf6)':'#e2e8f0'};color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:600">${w.name}</div>
+            <div style="font-size:12.5px;color:var(--az-text-3);margin-top:2px"><strong>When:</strong> ${w.trigger} · <strong>Then:</strong> ${w.actions}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:24px;align-items:center">
+          <div style="text-align:right">
+            <div style="font-weight:700;font-size:15px">${w.runs.toLocaleString()}</div>
+            <div style="font-size:11px;color:var(--az-text-3)">runs</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-weight:700;font-size:15px;color:${w.success>=98?'var(--az-success)':'var(--az-warning)'}">${w.success}%</div>
+            <div style="font-size:11px;color:var(--az-text-3)">success</div>
+          </div>
+          <label class="switch"><input type="checkbox" ${w.active?'checked':''}><span class="slider"></span></label>
+          <button class="az-btn az-btn-sm az-btn-ghost"><i class="fa-solid fa-ellipsis-v"></i></button>
+        </div>
+      </div>
+    `).join('');
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "_meta": { "name": "ગુજરાતી", "code": "gu", "dir": "ltr" },
+  "common": {
+    "save": "સાચવો", "cancel": "રદ કરો", "delete": "કાઢી નાખો", "edit": "સંપાદિત કરો", "create": "બનાવો",
+    "search": "શોધો", "loading": "લોડ થઈ રહ્યું છે...", "no_data": "કોઈ ડેટા મળ્યો નથી", "yes": "હા", "no": "ના",
+    "submit": "સબમિટ કરો", "back": "પાછળ", "next": "આગળ", "close": "બંધ કરો",
+    "actions": "ક્રિયાઓ", "status": "સ્થિતિ", "date": "તારીખ", "amount": "રકમ",
+    "name": "નામ", "email": "ઈમેલ", "phone": "ફોન", "address": "સરનામું", "total": "કુલ",
+    "dashboard": "ડેશબોર્ડ"
+  },
+  "nav": {
+    "home": "હોમ", "clients": "ગ્રાહકો", "invoices": "ઇન્વોઇસ", "products": "ઉત્પાદનો",
+    "leads": "લીડ્સ", "deals": "સોદા", "projects": "પ્રોજેક્ટ્સ", "tasks": "કાર્યો",
+    "employees": "કર્મચારીઓ", "reports": "રિપોર્ટ્સ"
+  },
+  "invoice": {
+    "title": "ઇન્વોઇસ", "invoice_number": "ઇન્વોઇસ નં.", "client": "ગ્રાહક",
+    "grand_total": "કુલ સરવાળો", "paid": "ચૂકવેલ", "pending": "બાકી", "overdue": "મુદત વીતી"
+  }
+}

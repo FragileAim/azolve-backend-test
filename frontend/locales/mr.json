@@ -1,0 +1,38 @@
+{
+  "_meta": { "name": "मराठी", "code": "mr", "dir": "ltr" },
+  "common": {
+    "save": "जतन करा", "cancel": "रद्द करा", "delete": "हटवा", "edit": "संपादित करा", "create": "तयार करा",
+    "search": "शोधा", "loading": "लोड होत आहे...", "no_data": "कोणताही डेटा नाही", "yes": "होय", "no": "नाही",
+    "submit": "सबमिट करा", "back": "मागे", "next": "पुढे", "previous": "मागील", "close": "बंद करा",
+    "confirm": "पुष्टी करा", "actions": "क्रिया", "status": "स्थिती", "date": "तारीख", "amount": "रक्कम",
+    "name": "नाव", "email": "ईमेल", "phone": "फोन", "address": "पत्ता", "total": "एकूण",
+    "view": "पहा", "download": "डाउनलोड", "upload": "अपलोड", "filter": "फिल्टर", "export": "निर्यात",
+    "import": "आयात", "settings": "सेटिंग्ज", "logout": "लॉग आउट", "profile": "प्रोफाइल",
+    "dashboard": "डॅशबोर्ड", "today": "आज", "yesterday": "काल", "this_week": "या आठवड्यात",
+    "this_month": "या महिन्यात", "this_year": "या वर्षी"
+  },
+  "nav": {
+    "home": "मुख्यपृष्ठ", "clients": "ग्राहक", "invoices": "बीजक", "products": "उत्पादने",
+    "leads": "लीड्स", "deals": "करार", "projects": "प्रकल्प", "tasks": "कार्ये",
+    "employees": "कर्मचारी", "attendance": "उपस्थिती", "leaves": "रजा",
+    "tickets": "सपोर्ट तिकीटे", "meetings": "बैठका", "calendar": "कॅलेंडर",
+    "reports": "अहवाल", "payments": "देयके", "expenses": "खर्च"
+  },
+  "invoice": {
+    "title": "बीजक", "invoice_number": "बीजक क्रमांक", "invoice_date": "बीजक तारीख",
+    "due_date": "देय तारीख", "client": "ग्राहक", "items": "वस्तू",
+    "quantity": "प्रमाण", "rate": "दर", "tax": "कर", "subtotal": "उप-एकूण",
+    "grand_total": "एकूण बेरीज", "paid": "भरले", "pending": "प्रलंबित", "overdue": "थकीत",
+    "send": "बीजक पाठवा", "mark_paid": "भरले म्हणून चिन्हांकित करा", "create_invoice": "बीजक तयार करा"
+  },
+  "auth": {
+    "login": "लॉगिन", "register": "नोंदणी", "password": "पासवर्ड",
+    "forgot_password": "पासवर्ड विसरलात?", "remember_me": "मला लक्षात ठेवा",
+    "sign_in": "साइन इन", "sign_up": "साइन अप", "welcome_back": "पुन्हा स्वागत आहे!"
+  },
+  "errors": {
+    "required": "हे फील्ड आवश्यक आहे", "invalid_email": "अवैध ईमेल पत्ता",
+    "min_length": "किमान {n} अक्षरे आवश्यक", "network": "नेटवर्क त्रुटी. पुन्हा प्रयत्न करा.",
+    "unauthorized": "तुम्ही अधिकृत नाही", "not_found": "स्रोत सापडला नाही"
+  }
+}

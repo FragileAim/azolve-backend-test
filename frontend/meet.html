@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Azolve Meet — Free Video Meetings for Business Teams</title>
+<meta name="description" content="Azolve Meet offers free video conferencing for business teams. Schedule meetings, share screens, invite participants, and record sessions — built into the Azolve platform.">
+<meta name="keywords" content="azolve meet, free video meetings, business video conferencing, online meetings, team meetings, screen sharing">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#714B67">
+<meta property="og:title" content="Azolve Meet — Video Meetings">
+<meta property="og:description" content="Free video meetings for business teams.">
+<meta property="og:image" content="https://azolve.io/assets/og-image.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#00A09D;--primary-dark:#008B88;--secondary:#714B67;
+  --bg:#0f0f1a;--bg2:#1a1a2e;--bg3:#252542;--bg4:#2d2d4e;
+  --text:#e8e8f0;--text2:#9999bb;--text3:#6666aa;
+  --border:rgba(255,255,255,0.08);--green:#10b981;--red:#ef4444;
+  --yellow:#f59e0b;--blue:#3b82f6;--purple:#8b5cf6;
+  --radius:12px;--shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow:hidden}
+
+/* —— LOBBY —— */
+#lobby{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;background:radial-gradient(ellipse at 20% 50%,rgba(0,160,157,0.12) 0%,transparent 60%),radial-gradient(ellipse at 80% 50%,rgba(113,75,103,0.12) 0%,transparent 60%),var(--bg)}
+.lobby-card{background:var(--bg2);border:1px solid var(--border);border-radius:24px;padding:40px;width:100%;max-width:480px;box-shadow:var(--shadow)}
+.lobby-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;justify-content:center}
+.lobby-logo-text{font-size:24px;font-weight:800;color:var(--text)}
+.lobby-logo-text span{color:var(--primary)}
+.lobby-preview{position:relative;border-radius:16px;overflow:hidden;background:#000;aspect-ratio:16/9;margin-bottom:24px}
+.lobby-preview video{width:100%;height:100%;object-fit:cover}
+.lobby-preview-off{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg3);gap:12px}
+.lobby-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--secondary),var(--primary));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#fff}
+.lobby-controls{display:flex;gap:10px;justify-content:center;margin-bottom:24px}
+.ctrl-btn{width:48px;height:48px;border-radius:50%;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.ctrl-btn:hover{background:var(--bg4)}
+.ctrl-btn.off{background:var(--red);border-color:var(--red);color:#fff}
+.lobby-name{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.lobby-name label{font-size:13px;font-weight:600;color:var(--text2)}
+.lobby-name input{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 16px;color:var(--text);font-size:15px;outline:none;transition:border-color .2s}
+.lobby-name input:focus{border-color:var(--primary)}
+.btn-join{width:100%;padding:14px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-join:hover{opacity:.9;transform:translateY(-1px)}
+.meeting-info{display:flex;align-items:center;gap:8px;background:var(--bg3);border-radius:10px;padding:10px 14px;margin-bottom:20px;font-size:13px}
+.meeting-badge{background:rgba(0,160,157,0.15);color:var(--primary);border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;text-transform:uppercase}
+
+/* —— WAITING SCREEN —— */
+#waitingScreen{display:none;align-items:center;justify-content:center;min-height:100vh;background:var(--bg);flex-direction:column;gap:24px}
+.waiting-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:40px;max-width:400px;width:100%;text-align:center;box-shadow:var(--shadow)}
+.waiting-spinner{width:56px;height:56px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* —— DENIED SCREEN —— */
+#deniedScreen{display:none;align-items:center;justify-content:center;min-height:100vh;background:var(--bg);flex-direction:column;gap:24px}
+
+/* —— ROOM —— */
+#room{display:none;height:100vh;flex-direction:column;background:var(--bg)}
+.room-header{height:56px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0}
+.room-logo{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800}
+.room-timer{font-size:13px;color:var(--text2);font-family:monospace;background:var(--bg3);padding:5px 12px;border-radius:8px}
+.room-meeting-id{font-size:12px;color:var(--text3);cursor:pointer;display:flex;align-items:center;gap:5px}
+.room-meeting-id:hover{color:var(--primary)}
+.room-body{flex:1;display:flex;overflow:hidden;position:relative}
+
+/* Video grid */
+.video-grid{flex:1;display:grid;gap:8px;padding:8px;background:var(--bg);overflow:hidden}
+.layout-1{grid-template-columns:1fr}
+.layout-2{grid-template-columns:1fr 1fr}
+.layout-3{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.layout-4{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.layout-many{grid-template-columns:repeat(3,1fr)}
+.video-tile{position:relative;border-radius:12px;overflow:hidden;background:var(--bg2);border:1px solid var(--border);min-height:120px}
+.video-tile video{width:100%;height:100%;object-fit:cover;display:block}
+.video-tile-off{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.tile-av{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--secondary),var(--primary))}
+.tile-name{position:absolute;bottom:10px;left:10px;font-size:12px;font-weight:600;background:rgba(0,0,0,0.6);padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:6px}
+.tile-host{position:absolute;top:10px;left:10px;font-size:11px;background:rgba(245,158,11,0.2);color:var(--yellow);border:1px solid rgba(245,158,11,0.3);padding:2px 8px;border-radius:20px;display:flex;align-items:center;gap:4px}
+.tile-muted{position:absolute;top:10px;right:10px;background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--red)}
+.layout-3 .video-tile:first-child{grid-column:span 2}
+
+/* Screen share overlay */
+.screenshare-tile{position:absolute;inset:0;background:var(--bg);z-index:10;display:flex;flex-direction:column}
+.screenshare-tile video{flex:1;object-fit:contain;background:#000}
+.screenshare-label{padding:10px 16px;background:var(--bg2);display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2)}
+
+/* Waiting banner */
+.waiting-banner{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:30px;padding:10px 24px;font-size:13px;display:flex;align-items:center;gap:8px;opacity:0;transition:opacity .4s;pointer-events:none;white-space:nowrap}
+.waiting-banner.show{opacity:1}
+
+/* Sidebar panel */
+.sidebar-panel{width:300px;background:var(--bg2);border-left:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;transition:width .3s}
+.sidebar-panel.hidden{width:0;overflow:hidden}
+.panel-tabs{display:flex;border-bottom:1px solid var(--border)}
+.panel-tab{flex:1;padding:12px;text-align:center;cursor:pointer;font-size:13px;color:var(--text2);display:flex;align-items:center;justify-content:center;gap:6px;transition:color .2s}
+.panel-tab.active{color:var(--primary);border-bottom:2px solid var(--primary)}
+.panel-content{display:none;flex-direction:column;flex:1;overflow:hidden}
+.panel-content.active{display:flex}
+.chat-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.chat-msg{display:flex;flex-direction:column;gap:3px}
+.chat-msg-name{font-size:11px;color:var(--text3);font-weight:600}
+.chat-msg-text{background:var(--bg3);border-radius:10px;padding:8px 12px;font-size:13px;max-width:90%;word-break:break-word}
+.chat-msg.own .chat-msg-text{background:rgba(0,160,157,0.15);align-self:flex-end}
+.chat-msg.own .chat-msg-name{text-align:right;color:var(--primary)}
+.chat-system{font-size:11px;color:var(--text3);text-align:center;padding:4px 0}
+.chat-input-area{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border)}
+.chat-input-area input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:13px;outline:none}
+.chat-input-area input:focus{border-color:var(--primary)}
+.chat-send-btn{background:var(--primary);border:none;color:#fff;border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px}
+.participants-list{flex:1;overflow-y:auto;padding:8px}
+.participant-item{display:flex;align-items:center;gap:12px;padding:10px 8px;border-radius:10px;cursor:default;transition:background .2s}
+.participant-item:hover{background:var(--bg3)}
+.participant-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.participant-info{flex:1;min-width:0}
+.participant-name{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.participant-status{font-size:11px;color:var(--text3)}
+.participant-icons{display:flex;gap:8px;align-items:center}
+.p-icon{font-size:12px;color:var(--text2)}
+.p-icon.muted{color:var(--red)}
+.p-actions{display:flex;gap:4px}
+.p-action-btn{background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;transition:all .2s}
+.p-action-btn:hover{background:var(--bg4);color:var(--text)}
+.p-action-btn.danger{border-color:rgba(239,68,68,0.3);color:var(--red)}
+.p-action-btn.danger:hover{background:rgba(239,68,68,0.1)}
+
+/* Controls */
+.room-controls{height:76px;background:var(--bg2);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:10px;padding:0 20px;flex-shrink:0;position:relative}
+.ctrl-group{display:flex;gap:6px;align-items:center}
+.ctrl-group+.ctrl-group{border-left:1px solid var(--border);padding-left:10px;margin-left:4px}
+.room-btn{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:6px 10px;border-radius:12px;transition:background .2s;border:none;background:transparent;color:var(--text)}
+.room-btn:hover{background:var(--bg3)}
+.room-btn-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid var(--border);background:var(--bg3);transition:all .2s;color:var(--text)}
+.room-btn.active .room-btn-icon,.room-btn.off .room-btn-icon{background:var(--red);border-color:var(--red);color:#fff}
+.room-btn.share-on .room-btn-icon{background:var(--blue);border-color:var(--blue);color:#fff}
+.room-btn.recording .room-btn-icon{background:var(--red);border-color:var(--red);color:#fff;animation:pulse 1.5s infinite}
+.room-btn-label{font-size:10px;color:var(--text2)}
+.end-btn{background:var(--red);color:#fff;border:none;border-radius:12px;padding:12px 20px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;transition:opacity .2s}
+.end-btn:hover{opacity:.9}
+.more-menu{position:absolute;bottom:86px;right:20px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:8px;min-width:200px;display:none;z-index:50;box-shadow:var(--shadow)}
+.more-menu.open{display:block}
+.more-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;font-size:13px;transition:background .2s}
+.more-item:hover{background:var(--bg3)}
+.more-item i{width:16px;color:var(--text2)}
+
+/* Participant count badge */
+.participant-count{position:absolute;top:-4px;right:-4px;background:var(--primary);color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700}
+
+/* Security badge */
+.security-badge{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);color:var(--green);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:6px;z-index:100}
+
+/* Recording indicator */
+.rec-indicator{position:fixed;top:70px;right:20px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:var(--red);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:6px;display:none}
+.rec-dot{width:8px;height:8px;background:var(--red);border-radius:50%;animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* Toast */
+.meet-toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#fff;border-radius:20px;padding:10px 24px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:1000;white-space:nowrap}
+.meet-toast.show{opacity:1}
+
+/* Invite Modal */
+.invite-modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px)}
+.invite-modal.open{display:flex}
+.invite-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:32px;width:100%;max-width:440px;box-shadow:var(--shadow)}
+.invite-title{font-size:18px;font-weight:800;margin-bottom:6px}
+.invite-sub{font-size:13px;color:var(--text2);margin-bottom:20px}
+.invite-link-box{display:flex;gap:8px;background:var(--bg3);border-radius:10px;padding:12px 14px;margin-bottom:20px;align-items:center}
+.invite-link-url{flex:1;font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.copy-btn{background:var(--primary);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.invite-share-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.invite-share-btns{display:flex;gap:8px;margin-bottom:20px}
+.share-btn{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 8px;font-size:12px;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;gap:6px;transition:background .2s}
+.share-btn:hover{background:var(--bg4)}
+.invite-close{width:100%;padding:12px;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}
+.invite-close:hover{background:var(--bg4)}
+
+/* Settings Modal */
+.settings-modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px)}
+.settings-modal.open{display:flex}
+.settings-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:32px;width:100%;max-width:440px;box-shadow:var(--shadow)}
+
+/* Admit Modal (Waiting Room) */
+.admit-toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px 20px;min-width:320px;box-shadow:var(--shadow);z-index:300;display:none;animation:slideDown .3s ease}
+.admit-toast.show{display:flex;flex-direction:column;gap:10px}
+@keyframes slideDown{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.admit-toast-title{font-size:13px;font-weight:700;color:var(--text)}
+.admit-toast-name{font-size:15px;font-weight:800;color:var(--primary)}
+.admit-toast-btns{display:flex;gap:8px}
+.admit-btn{flex:1;padding:9px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.admit-btn.yes{background:var(--green);color:#fff}
+.admit-btn.no{background:var(--red);color:#fff}
+.admit-btn:hover{opacity:.85}
+
+/* Reaction float */
+.reaction-float{position:fixed;font-size:36px;animation:floatUp 2.5s ease forwards;pointer-events:none;z-index:999}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-200px) scale(1.5)}}
+
+@media(max-width:640px){
+  .lobby-card{padding:24px}
+  .room-btn-label{display:none}
+  .room-btn-icon{width:38px;height:38px;font-size:16px}
+  .sidebar-panel{position:absolute;right:0;top:0;bottom:0;z-index:20;width:280px!important}
+  .sidebar-panel.hidden{width:0!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOBBY ══════════ -->
+<div id="lobby">
+  <div class="lobby-card">
+    <div class="lobby-logo">
+      <img src="assets/logo-navbar.png" alt="Azolve" style="height:40px;width:auto;">
+      <div class="lobby-logo-text" style="margin-left:4px"><span>MEET</span></div>
+    </div>
+
+    <div class="meeting-info">
+      <i class="fas fa-video"></i>
+      <span id="lobbyMeetingTitle">Loading meeting...</span>
+      <span class="meeting-badge" id="lobbyMeetingType">Team Meeting</span>
+    </div>
+
+    <div class="lobby-preview" id="lobbyPreview">
+      <video id="lobbyVideo" autoplay muted playsinline></video>
+      <div class="lobby-preview-off" id="lobbyVideoOff" style="display:none">
+        <div class="lobby-avatar" id="lobbyAvatarLetter">U</div>
+        <span style="font-size:13px;color:var(--text2)">Camera is off</span>
+      </div>
+    </div>
+
+    <div class="lobby-controls">
+      <button class="ctrl-btn" id="lobbyMicBtn" onclick="toggleLobbyMic()" title="Toggle Microphone">
+        <i class="fas fa-microphone"></i>
+      </button>
+      <button class="ctrl-btn" id="lobbyCamBtn" onclick="toggleLobbyCam()" title="Toggle Camera">
+        <i class="fas fa-video"></i>
+      </button>
+      <button class="ctrl-btn" onclick="openSettings()" title="Audio/Video Settings">
+        <i class="fas fa-cog"></i>
+      </button>
+    </div>
+
+    <div class="lobby-name">
+      <label>Your Name</label>
+      <input type="text" id="lobbyName" placeholder="Enter your display name" value="">
+    </div>
+
+    <button class="btn-join" onclick="joinMeeting()">
+      <i class="fas fa-video" style="margin-right:8px"></i>
+      Join Meeting
+    </button>
+    <div style="text-align:center;margin-top:16px;font-size:13px;color:var(--text3)">
+      <i class="fas fa-lock" style="margin-right:5px;color:var(--green)"></i>
+      End-to-end encrypted · Secured by Azolve
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ WAITING SCREEN ══════════ -->
+<div id="waitingScreen">
+  <div class="waiting-card">
+    <div class="waiting-spinner"></div>
+    <h2 style="margin-bottom:10px">Waiting to be admitted</h2>
+    <p style="color:var(--text2);font-size:14px">The host will let you in shortly. Please wait...</p>
+    <div style="margin-top:20px;padding:12px;background:var(--bg3);border-radius:10px;font-size:13px;color:var(--text3)">
+      Meeting ID: <span id="waitingMeetingId" style="color:var(--primary)"></span>
+    </div>
+    <button onclick="leaveWaiting()" style="margin-top:20px;width:100%;padding:12px;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:10px;cursor:pointer;font-size:14px">
+      <i class="fas fa-times" style="margin-right:8px"></i>Cancel
+    </button>
+  </div>
+</div>
+
+<!-- ══════════ DENIED SCREEN ══════════ -->
+<div id="deniedScreen">
+  <div class="waiting-card">
+    <div style="font-size:48px;margin-bottom:16px">❌</div>
+    <h2 style="margin-bottom:10px;color:var(--red)">Entry Denied</h2>
+    <p style="color:var(--text2);font-size:14px">The host has declined your request to join this meeting.</p>
+    <button onclick="window.history.back()" style="margin-top:24px;width:100%;padding:12px;background:var(--primary);border:none;color:#fff;border-radius:10px;cursor:pointer;font-size:14px;font-weight:700">
+      <i class="fas fa-arrow-left" style="margin-right:8px"></i>Go Back
+    </button>
+  </div>
+</div>
+
+<!-- ══════════ ROOM ══════════ -->
+<div id="room">
+  <!-- Header -->
+  <div class="room-header">
+    <div class="room-logo">
+      <img src="assets/logo-navbar.png" alt="Azolve" style="height:28px;width:auto;">
+      <div style="margin-left:4px;font-weight:800;font-size:16px"><span style="color:var(--primary)">MEET</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="room-timer" id="roomTimer">00:00:00</div>
+      <div class="room-meeting-id" onclick="copyMeetingId()">
+        <i class="fas fa-copy"></i>
+        <span id="roomMeetingId">Loading...</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px" onclick="openInviteModal()">
+        <i class="fas fa-user-plus"></i> Invite
+      </button>
+    </div>
+  </div>
+
+  <!-- Body: Video + Sidebar -->
+  <div class="room-body">
+    <!-- Videos -->
+    <div id="videoArea" style="position:relative;flex:1;display:flex;flex-direction:column;overflow:hidden">
+      <div class="video-grid layout-1" id="videoGrid"></div>
+
+      <!-- Screen share overlay -->
+      <div id="screenShareOverlay" class="screenshare-tile" style="display:none">
+        <div class="screenshare-label"><i class="fas fa-desktop"></i><span id="screenShareLabel">You are sharing your screen</span></div>
+        <video id="screenVideo" autoplay playsinline></video>
+      </div>
+
+      <!-- Waiting for others banner -->
+      <div class="waiting-banner" id="waitingBanner">
+        <i class="fas fa-clock" style="color:var(--yellow)"></i>
+        Waiting for others to join…
+      </div>
+    </div>
+
+    <!-- Sidebar Panel -->
+    <div class="sidebar-panel hidden" id="sidebarPanel">
+      <div class="panel-tabs">
+        <div class="panel-tab active" onclick="switchTab('chat')" id="tabChat"><i class="fas fa-comment-dots"></i> Chat</div>
+        <div class="panel-tab" onclick="switchTab('participants')" id="tabParticipants">
+          <i class="fas fa-users"></i> People
+          <span class="participant-count" id="participantCount" style="position:relative;top:0;right:0;width:auto;height:auto;border-radius:20px;padding:1px 6px;font-size:10px">1</span>
+        </div>
+      </div>
+      <!-- Chat -->
+      <div class="panel-content active" id="panelChat">
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+          <input type="text" id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChatMessage()">
+          <button class="chat-send-btn" onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </div>
+      <!-- Participants -->
+      <div class="panel-content" id="panelParticipants">
+        <div style="padding:12px;border-bottom:1px solid var(--border)">
+          <input type="text" placeholder="Search participants..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;outline:none">
+        </div>
+        <div class="participants-list" id="participantsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="room-controls">
+    <div class="ctrl-group">
+      <button class="room-btn" id="btnMic" onclick="toggleMic()">
+        <div class="room-btn-icon"><i class="fas fa-microphone" id="micIcon"></i></div>
+        <div class="room-btn-label" id="micLabel">Mute</div>
+      </button>
+      <button class="room-btn" id="btnCam" onclick="toggleCam()">
+        <div class="room-btn-icon"><i class="fas fa-video" id="camIcon"></i></div>
+        <div class="room-btn-label" id="camLabel">Stop Video</div>
+      </button>
+    </div>
+
+    <div class="ctrl-group">
+      <button class="room-btn" id="btnShare" onclick="toggleScreenShare()">
+        <div class="room-btn-icon"><i class="fas fa-desktop" id="shareIcon"></i></div>
+        <div class="room-btn-label" id="shareLabel">Share</div>
+      </button>
+      <button class="room-btn" id="btnRecord" onclick="toggleRecording()">
+        <div class="room-btn-icon"><i class="fas fa-record-vinyl" id="recordIcon"></i></div>
+        <div class="room-btn-label" id="recordLabel">Record</div>
+      </button>
+      <button class="room-btn" onclick="sendReaction('👍')">
+        <div class="room-btn-icon"><i class="fas fa-thumbs-up"></i></div>
+        <div class="room-btn-label">React</div>
+      </button>
+      <button class="room-btn" onclick="toggleChat()">
+        <div class="room-btn-icon" style="position:relative">
+          <i class="fas fa-comment-dots"></i>
+          <span class="participant-count" id="chatBadge" style="display:none;position:absolute;top:-4px;right:-4px">0</span>
+        </div>
+        <div class="room-btn-label">Chat</div>
+      </button>
+      <button class="room-btn" onclick="toggleParticipants()">
+        <div class="room-btn-icon" style="position:relative">
+          <i class="fas fa-users"></i>
+          <span class="participant-count" id="pCountBadge" style="position:absolute;top:-4px;right:-4px">1</span>
+        </div>
+        <div class="room-btn-label">People</div>
+      </button>
+      <button class="room-btn" onclick="toggleMoreMenu()">
+        <div class="room-btn-icon"><i class="fas fa-ellipsis-h"></i></div>
+        <div class="room-btn-label">More</div>
+      </button>
+    </div>
+
+    <div class="ctrl-group">
+      <button class="end-btn" onclick="endCall()"><i class="fas fa-phone-slash" style="margin-right:8px"></i>End</button>
+    </div>
+
+    <!-- More Menu -->
+    <div class="more-menu" id="moreMenu">
+      <div class="more-item" onclick="openInviteModal()"><i class="fas fa-user-plus"></i>Invite People</div>
+      <div class="more-item" onclick="copyMeetingLink()"><i class="fas fa-link"></i>Copy Meeting Link</div>
+      <div class="more-item" onclick="toggleLayout()"><i class="fas fa-th"></i>Change Layout</div>
+      <div class="more-item" onclick="openSettings()"><i class="fas fa-cog"></i>Settings</div>
+      <div class="more-item" onclick="raiseHand()"><i class="fas fa-hand-paper"></i>Raise Hand</div>
+      <div class="more-item" onclick="sendReaction('👏')"><i class="fas fa-hands-clapping"></i>Clap</div>
+      <div class="more-item" onclick="sendReaction('😂')"><i class="fas fa-laugh"></i>Laugh</div>
+      <div class="more-item" style="color:var(--red)" onclick="endCall()"><i class="fas fa-sign-out-alt" style="color:var(--red)"></i>Leave Meeting</div>
+    </div>
+  </div>
+</div>
+
+<!-- Security badge -->
+<div class="security-badge" id="secBadge" style="display:none">
+  <i class="fas fa-shield-alt"></i> Encrypted
+</div>
+
+<!-- Recording indicator -->
+<div class="rec-indicator" id="recIndicator">
+  <div class="rec-dot"></div> Recording
+</div>
+
+<!-- Toast -->
+<div class="meet-toast" id="meetToast"></div>
+
+<!-- Admit Toast (for host) -->
+<div class="admit-toast" id="admitToast">
+  <div class="admit-toast-title">👋 Someone wants to join</div>
+  <div class="admit-toast-name" id="admitToastName">Guest</div>
+  <div class="admit-toast-btns">
+    <button class="admit-btn yes" onclick="admitParticipant(true)">✓ Admit</button>
+    <button class="admit-btn no" onclick="admitParticipant(false)">✕ Deny</button>
+  </div>
+</div>
+
+<!-- Invite Modal -->
+<div class="invite-modal" id="inviteModal">
+  <div class="invite-card">
+    <div class="invite-title"><i class="fas fa-user-plus" style="color:var(--primary);margin-right:10px"></i>Invite to Meeting</div>
+    <div class="invite-sub">Share this link to invite others to join</div>
+    <div class="invite-link-box">
+      <div class="invite-link-url" id="inviteLinkUrl">Loading...</div>
+      <button class="copy-btn" onclick="copyInviteLink()"><i class="fas fa-copy"></i> Copy</button>
+    </div>
+    <div class="invite-share-title">SHARE VIA</div>
+    <div class="invite-share-btns">
+      <button class="share-btn" onclick="shareViaWhatsApp()"><i class="fab fa-whatsapp" style="color:#25d366"></i>WhatsApp</button>
+      <button class="share-btn" onclick="shareViaEmail()"><i class="fas fa-envelope" style="color:var(--blue)"></i>Email</button>
+      <button class="share-btn" onclick="shareViaCopy()"><i class="fas fa-copy" style="color:var(--primary)"></i>Copy All</button>
+    </div>
+    <div style="background:var(--bg3);border-radius:10px;padding:12px 14px;margin-bottom:20px;font-size:12px;color:var(--text2)">
+      <div style="font-weight:700;color:var(--text);margin-bottom:4px">Meeting Details</div>
+      <div>ID: <span id="meetInfoId" style="color:var(--primary)"></span></div>
+    </div>
+    <button class="invite-close" onclick="closeInviteModal()">Close</button>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="settings-modal" id="settingsModal">
+  <div class="settings-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div style="font-size:18px;font-weight:800"><i class="fas fa-cog" style="color:var(--primary);margin-right:8px"></i>Audio & Video Settings</div>
+      <button onclick="closeSettings()" style="background:transparent;border:none;color:var(--text2);font-size:20px;cursor:pointer">×</button>
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bottom:8px"><i class="fas fa-microphone" style="margin-right:6px"></i>Microphone</label>
+      <select id="micSelect" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-size:13px;outline:none">
+        <option>Default Microphone</option>
+      </select>
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bottom:8px"><i class="fas fa-volume-up" style="margin-right:6px"></i>Speaker</label>
+      <select id="spkSelect" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-size:13px;outline:none">
+        <option>Default Speaker</option>
+      </select>
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bottom:8px"><i class="fas fa-video" style="margin-right:6px"></i>Camera</label>
+      <select id="camSelect" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-size:13px;outline:none">
+        <option>Default Camera</option>
+      </select>
+    </div>
+    <button onclick="saveSettings()" style="width:100%;padding:12px;background:var(--primary);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer">Save Settings</button>
+  </div>
+</div>
+
+<!-- Socket.IO Client -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  AZOLVE MEET — Real WebRTC Engine with Socket.IO Signaling
+// ═══════════════════════════════════════════════════════
+
+const SIGNAL_SERVER = (location.hostname==='localhost'||location.hostname==='127.0.0.1') ? 'http://localhost:3000' : 'https://azolve-api.onrender.com';
+const PUBLIC_BASE = 'https://azolve.io';  // Main domain
+
+// ── ICE / STUN servers ──
+const ICE_SERVERS = {
+  iceServers: [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    { urls: 'stun:stun2.l.google.com:19302' },
+    { urls: 'stun:global.stun.twilio.com:3478' }
+  ]
+};
+
+// ── State ──
+let meetingId = '';
+let meetingType = 'team';
+let localStream = null;
+let screenStream = null;
+let micEnabled = true;
+let camEnabled = true;
+let screenSharing = false;
+let isRecording = false;
+let mediaRecorder = null;
+let recordedChunks = [];
+let myRole = 'participant'; // 'host' or 'participant'
+let myName = 'Guest';
+let myUserId = '';
+let layoutMode = 'auto';
+let timerInterval = null;
+let timerSeconds = 0;
+let sidebarOpen = false;
+let currentTab = 'chat';
+let unreadChat = 0;
+let handRaised = false;
+let sidebarVisible = false;
+
+// ── WebRTC state ──
+let socket = null;
+let peerConnections = {}; // socketId -> RTCPeerConnection
+let remoteStreams = {};   // socketId -> MediaStream
+let participants = {};    // socketId -> { name, socketId, micOn, videoOn }
+let pendingAdmit = null;  // { socketId, name } - waiting to be admitted
+
+// ── Init ──
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  meetingId = params.get('id') || generateMeetingId();
+  meetingType = params.get('type') || 'team';
+  const meetingName = params.get('name') || 'Azolve Meeting';
+
+  document.getElementById('lobbyMeetingTitle').textContent = meetingName;
+  document.getElementById('lobbyMeetingType').textContent =
+    meetingType === 'one-on-one' ? '1-on-1' :
+    meetingType === 'webinar' ? 'Webinar' : 'Team Meeting';
+
+  // Pre-fill name from stored user
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const displayName = user.name || user.firstName || 'Guest';
+  myUserId = user._id || user.id || ('guest_' + Math.random().toString(36).substr(2, 8));
+  document.getElementById('lobbyName').value = displayName;
+  document.getElementById('lobbyAvatarLetter').textContent = displayName.charAt(0).toUpperCase();
+
+  startLobbyPreview();
+  populateDevices();
+});
+
+// ── Generate Meeting ID ──
+function generateMeetingId() {
+  const chars = 'abcdefghijklmnopqrstuvwxyz';
+  const seg = () => Array.from({length:3}, () => chars[Math.floor(Math.random()*26)]).join('');
+  return `${seg()}-${seg()}-${seg()}`;
+}
+
+// ── Lobby Camera Preview ──
+async function startLobbyPreview() {
+  try {
+    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    document.getElementById('lobbyVideo').srcObject = localStream;
+    document.getElementById('lobbyVideoOff').style.display = 'none';
+  } catch(e) {
+    document.getElementById('lobbyVideoOff').style.display = 'flex';
+    document.getElementById('lobbyVideo').style.display = 'none';
+    camEnabled = false;
+    document.getElementById('lobbyCamBtn').classList.add('off');
+    document.getElementById('lobbyCamBtn').innerHTML = '<i class="fas fa-video-slash"></i>';
+    micEnabled = false;
+    document.getElementById('lobbyMicBtn').classList.add('off');
+    document.getElementById('lobbyMicBtn').innerHTML = '<i class="fas fa-microphone-slash"></i>';
+  }
+}
+
+function toggleLobbyMic() {
+  micEnabled = !micEnabled;
+  if (localStream) localStream.getAudioTracks().forEach(t => t.enabled = micEnabled);
+  const btn = document.getElementById('lobbyMicBtn');
+  btn.classList.toggle('off', !micEnabled);
+  btn.innerHTML = micEnabled ? '<i class="fas fa-microphone"></i>' : '<i class="fas fa-microphone-slash"></i>';
+}
+
+function toggleLobbyCam() {
+  camEnabled = !camEnabled;
+  if (localStream) localStream.getVideoTracks().forEach(t => t.enabled = camEnabled);
+  const btn = document.getElementById('lobbyCamBtn');
+  btn.classList.toggle('off', !camEnabled);
+  btn.innerHTML = camEnabled ? '<i class="fas fa-video"></i>' : '<i class="fas fa-video-slash"></i>';
+  document.getElementById('lobbyVideoOff').style.display = camEnabled ? 'none' : 'flex';
+  document.getElementById('lobbyVideo').style.display = camEnabled ? 'block' : 'none';
+}
+
+async function populateDevices() {
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const mics = devices.filter(d => d.kind === 'audioinput');
+    const spks = devices.filter(d => d.kind === 'audiooutput');
+    const cams = devices.filter(d => d.kind === 'videoinput');
+    const micSel = document.getElementById('micSelect');
+    const spkSel = document.getElementById('spkSelect');
+    const camSel = document.getElementById('camSelect');
+    mics.forEach((d,i) => { micSel.innerHTML += `<option value="${d.deviceId}">${d.label || 'Mic '+(i+1)}</option>`; });
+    spks.forEach((d,i) => { spkSel.innerHTML += `<option value="${d.deviceId}">${d.label || 'Speaker '+(i+1)}</option>`; });
+    cams.forEach((d,i) => { camSel.innerHTML += `<option value="${d.deviceId}">${d.label || 'Camera '+(i+1)}</option>`; });
+  } catch(e) {}
+}
+
+// ══════════════════════════════════════════════
+//  JOIN MEETING — Connect to signaling server
+// ══════════════════════════════════════════════
+async function joinMeeting() {
+  myName = document.getElementById('lobbyName').value.trim() || 'Guest';
+  document.getElementById('lobbyAvatarLetter').textContent = myName.charAt(0).toUpperCase();
+
+  // Ensure local stream
+  if (!localStream) {
+    try {
+      localStream = await navigator.mediaDevices.getUserMedia({ video: camEnabled, audio: micEnabled });
+    } catch(e) {
+      localStream = null;
+    }
+  }
+
+  // Apply mic/cam state
+  if (localStream) {
+    localStream.getAudioTracks().forEach(t => t.enabled = micEnabled);
+    localStream.getVideoTracks().forEach(t => t.enabled = camEnabled);
+  }
+
+  // Connect to signaling server
+  connectSignaling();
+}
+
+function connectSignaling() {
+  socket = io(SIGNAL_SERVER, {
+    transports: ['websocket', 'polling'],
+    reconnectionAttempts: 5,
+    timeout: 10000,
+  });
+
+  socket.on('connect', () => {
+    console.log('✅ Connected to signaling server:', socket.id);
+    // Request to join the meeting room
+    socket.emit('meeting:request_join', {
+      meetingId,
+      userId: myUserId,
+      name: myName,
+      noWaitingRoom: false,
+    });
+  });
+
+  socket.on('connect_error', (err) => {
+    console.error('❌ Signaling connection error:', err);
+    // Fallback: join as standalone (no other participants)
+    enterRoomAsHost();
+    showMeetToast('⚠️ Signaling offline — solo mode', 'warn');
+  });
+
+  // ── Server says we joined ──
+  socket.on('meeting:joined', async (data) => {
+    const { role, participants: existingPeers, meetingId: mid } = data;
+    myRole = role;
+    console.log(`🎥 Joined meeting as ${role}, existing peers:`, existingPeers.length);
+    enterRoom();
+
+    // For each existing peer, initiate a WebRTC offer
+    for (const peer of existingPeers) {
+      await createPeerConnection(peer.socketId, peer.name, true); // true = we make offer
+    }
+  });
+
+  // ── Waiting room ──
+  socket.on('meeting:waiting', () => {
+    document.getElementById('lobby').style.display = 'none';
+    document.getElementById('waitingScreen').style.display = 'flex';
+    document.getElementById('waitingMeetingId').textContent = meetingId;
+    showMeetToast('⏳ Waiting to be admitted...');
+  });
+
+  socket.on('meeting:denied', () => {
+    document.getElementById('waitingScreen').style.display = 'none';
+    document.getElementById('deniedScreen').style.display = 'flex';
+  });
+
+  // ── Host: someone requests to join ──
+  socket.on('meeting:admit_request', (data) => {
+    pendingAdmit = data;
+    const toast = document.getElementById('admitToast');
+    document.getElementById('admitToastName').textContent = data.name;
+    toast.classList.add('show');
+    showMeetToast(`👋 ${data.name} wants to join`);
+  });
+
+  // ── New peer joined (after admit or direct join) ──
+  socket.on('meeting:peer_joined', async (data) => {
+    const { socketId, name } = data;
+    console.log('👤 Peer joined:', name, socketId);
+    await createPeerConnection(socketId, name, false); // false = we wait for their offer
+    addSystemMessage(`${name} joined the meeting`);
+    showMeetToast(`👤 ${name} joined`);
+    updateParticipantsList();
+  });
+
+  // ── Peer left ──
+  socket.on('meeting:peer_left', (data) => {
+    const { socketId } = data;
+    const name = participants[socketId]?.name || 'Someone';
+    removePeer(socketId);
+    addSystemMessage(`${name} left the meeting`);
+    showMeetToast(`👋 ${name} left`);
+    updateParticipantsList();
+  });
+
+  // ── Meeting ended by host ──
+  socket.on('meeting:ended', () => {
+    showMeetToast('Meeting ended by host');
+    setTimeout(() => {
+      cleanupAndLeave();
+      window.location.href = 'meetings.html';
+    }, 2000);
+  });
+
+  // ── You were removed ──
+  socket.on('meeting:removed', () => {
+    showMeetToast('⚠️ You were removed from the meeting');
+    setTimeout(() => {
+      cleanupAndLeave();
+      window.location.href = 'meetings.html';
+    }, 2000);
+  });
+
+  // ── Force mute ──
+  socket.on('meeting:force_mute', () => {
+    if (micEnabled) {
+      micEnabled = false;
+      if (localStream) localStream.getAudioTracks().forEach(t => t.enabled = false);
+      document.getElementById('btnMic').classList.add('off');
+      document.getElementById('micIcon').className = 'fas fa-microphone-slash';
+      document.getElementById('micLabel').textContent = 'Unmute';
+      showMeetToast('🔇 You were muted by the host');
+      renderVideoGrid();
+    }
+  });
+
+  // ── WebRTC: receive offer ──
+  socket.on('meeting:offer', async (data) => {
+    const { from, offer } = data;
+    console.log('📩 Received offer from:', from);
+    let pc = peerConnections[from];
+    if (!pc) {
+      pc = await createPeerConnection(from, participants[from]?.name || 'Guest', false);
+    }
+    await pc.setRemoteDescription(new RTCSessionDescription(offer));
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+    socket.emit('meeting:answer', { to: from, answer, meetingId });
+  });
+
+  // ── WebRTC: receive answer ──
+  socket.on('meeting:answer', async (data) => {
+    const { from, answer } = data;
+    console.log('📩 Received answer from:', from);
+    const pc = peerConnections[from];
+    if (pc) {
+      await pc.setRemoteDescription(new RTCSessionDescription(answer));
+    }
+  });
+
+  // ── WebRTC: receive ICE candidate ──
+  socket.on('meeting:ice', async (data) => {
+    const { from, candidate } = data;
+    const pc = peerConnections[from];
+    if (pc && candidate) {
+      try {
+        await pc.addIceCandidate(new RTCIceCandidate(candidate));
+      } catch(e) { /* ignore */ }
+    }
+  });
+
+  // ── Chat ──
+  socket.on('meeting:chat', (data) => {
+    const { from, name, message, ts } = data;
+    addChatMessage(name, message, false);
+    if (!sidebarVisible || currentTab !== 'chat') {
+      unreadChat++;
+      const badge = document.getElementById('chatBadge');
+      badge.style.display = 'flex';
+      badge.textContent = unreadChat;
+    }
+  });
+
+  // ── Reaction ──
+  socket.on('meeting:reaction', (data) => {
+    const { name, reaction } = data;
+    showFloatingReaction(reaction);
+    showMeetToast(`${name} reacted ${reaction}`);
+  });
+
+  // ── Hand raised ──
+  socket.on('meeting:hand', (data) => {
+    const { name, raised } = data;
+    if (raised) showMeetToast(`✋ ${name} raised their hand`);
+  });
+
+  // ── Participant count ──
+  socket.on('meeting:participant_count', (data) => {
+    updateCounts();
+  });
+
+  socket.on('disconnect', () => {
+    console.log('❌ Disconnected from signaling server');
+  });
+}
+
+// ══════════════════════════════════════════════
+//  WebRTC Peer Connection
+// ══════════════════════════════════════════════
+async function createPeerConnection(remoteSocketId, remoteName, makeOffer) {
+  if (peerConnections[remoteSocketId]) return peerConnections[remoteSocketId];
+
+  const pc = new RTCPeerConnection(ICE_SERVERS);
+  peerConnections[remoteSocketId] = pc;
+
+  // Track participant
+  participants[remoteSocketId] = {
+    socketId: remoteSocketId,
+    name: remoteName || 'Guest',
+    micOn: true,
+    videoOn: true
+  };
+
+  // Add local tracks
+  if (localStream) {
+    localStream.getTracks().forEach(track => {
+      pc.addTrack(track, localStream);
+    });
+  }
+
+  // Handle remote stream
+  const remoteStream = new MediaStream();
+  remoteStreams[remoteSocketId] = remoteStream;
+  pc.ontrack = (event) => {
+    event.streams[0].getTracks().forEach(track => {
+      remoteStream.addTrack(track);
+    });
+    renderVideoGrid();
+    updateParticipantsList();
+  };
+
+  // Handle ICE candidates
+  pc.onicecandidate = (event) => {
+    if (event.candidate && socket) {
+      socket.emit('meeting:ice', {
+        to: remoteSocketId,
+        candidate: event.candidate,
+        meetingId
+      });
+    }
+  };
+
+  // Handle connection state changes
+  pc.onconnectionstatechange = () => {
+    console.log(`🔗 Peer ${remoteName} state:`, pc.connectionState);
+    if (pc.connectionState === 'connected') {
+      showMeetToast(`✅ Connected to ${remoteName}`);
+      renderVideoGrid();
+    } else if (pc.connectionState === 'failed' || pc.connectionState === 'disconnected') {
+      showMeetToast(`⚠️ Connection issue with ${remoteName}`);
+    }
+  };
+
+  // If we're the initiator, create and send offer
+  if (makeOffer) {
+    try {
+      const offer = await pc.createOffer({
+        offerToReceiveAudio: true,
+        offerToReceiveVideo: true
+      });
+      await pc.setLocalDescription(offer);
+      socket.emit('meeting:offer', { to: remoteSocketId, offer, meetingId });
+    } catch(e) {
+      console.error('Error creating offer:', e);
+    }
+  }
+
+  renderVideoGrid();
+  return pc;
+}
+
+function removePeer(socketId) {
+  if (peerConnections[socketId]) {
+    peerConnections[socketId].close();
+    delete peerConnections[socketId];
+  }
+  delete remoteStreams[socketId];
+  delete participants[socketId];
+  renderVideoGrid();
+}
+
+// ══════════════════════════════════════════════
+//  Enter Room
+// ══════════════════════════════════════════════
+function enterRoom() {
+  document.getElementById('lobby').style.display = 'none';
+  document.getElementById('waitingScreen').style.display = 'none';
+  document.getElementById('room').style.display = 'flex';
+  document.getElementById('secBadge').style.display = 'flex';
+
+  // Set meeting info
+  document.getElementById('roomMeetingId').textContent = meetingId;
+  document.getElementById('inviteLinkUrl').textContent = PUBLIC_BASE + '/meet.html?id=' + meetingId;
+  document.getElementById('meetInfoId').textContent = meetingId;
+
+  renderVideoGrid();
+  startTimer();
+  updateParticipantsList();
+  showWaitingBanner();
+  addSystemMessage('Meeting started. You are the ' + myRole + '.');
+  addSystemMessage('Share the invite link to add participants.');
+  showMeetToast(myRole === 'host' ? '🎉 You are the host' : '✅ You joined the meeting');
+}
+
+function enterRoomAsHost() {
+  myRole = 'host';
+  enterRoom();
+}
+
+// ══════════════════════════════════════════════
+//  VIDEO GRID RENDERING
+// ══════════════════════════════════════════════
+function renderVideoGrid() {
+  const grid = document.getElementById('videoGrid');
+  const peerCount = Object.keys(remoteStreams).length;
+  const totalCount = 1 + peerCount; // local + remotes
+
+  let layoutClass = 'layout-1';
+  if (totalCount === 2) layoutClass = 'layout-2';
+  else if (totalCount === 3) layoutClass = 'layout-3';
+  else if (totalCount === 4) layoutClass = 'layout-4';
+  else if (totalCount > 4) layoutClass = 'layout-many';
+
+  grid.className = `video-grid ${layoutClass}`;
+  grid.innerHTML = '';
+
+  // Local tile
+  const localTile = document.createElement('div');
+  localTile.className = 'video-tile';
+  localTile.id = 'tile-local';
+  if (camEnabled && localStream && localStream.getVideoTracks().length > 0) {
+    localTile.innerHTML = `
+      <video autoplay muted playsinline id="localVid" style="width:100%;height:100%;object-fit:cover"></video>
+      ${myRole === 'host' ? '<div class="tile-host"><i class="fas fa-crown"></i> Host</div>' : ''}
+      <div class="tile-name">
+        <i class="fas ${micEnabled ? 'fa-microphone' : 'fa-microphone-slash'}" style="color:${micEnabled?'#fff':'var(--red)'}"></i>
+        ${myName} (You)
+      </div>
+      ${!micEnabled ? '<div class="tile-muted"><i class="fas fa-microphone-slash"></i></div>' : ''}
+    `;
+  } else {
+    localTile.innerHTML = `
+      <div class="video-tile-off">
+        <div class="tile-av">${myName.charAt(0)}</div>
+        <div style="font-size:13px;color:var(--text2)">${myName}</div>
+      </div>
+      ${myRole === 'host' ? '<div class="tile-host"><i class="fas fa-crown"></i> Host</div>' : ''}
+      <div class="tile-name">
+        <i class="fas ${micEnabled?'fa-microphone':'fa-microphone-slash'}" style="color:${micEnabled?'#fff':'var(--red)'}"></i>
+        ${myName} (You)
+      </div>
+    `;
+  }
+  grid.appendChild(localTile);
+  if (camEnabled && localStream) {
+    const vid = document.getElementById('localVid');
+    if (vid) vid.srcObject = localStream;
+  }
+
+  // Remote tiles
+  const colors = ['#6366f1','#10b981','#f59e0b','#ec4899','#3b82f6'];
+  Object.keys(remoteStreams).forEach((sid, idx) => {
+    const stream = remoteStreams[sid];
+    const p = participants[sid] || { name: 'Guest', micOn: true, videoOn: true };
+    const color = colors[idx % colors.length];
+    const hasVideo = stream && stream.getVideoTracks().length > 0;
+    const tile = document.createElement('div');
+    tile.className = 'video-tile';
+    tile.id = 'tile-' + sid;
+
+    if (hasVideo) {
+      tile.innerHTML = `
+        <video autoplay playsinline id="vid-${sid}" style="width:100%;height:100%;object-fit:cover"></video>
+        <div class="tile-name">
+          <i class="fas ${p.micOn?'fa-microphone':'fa-microphone-slash'}" style="color:${p.micOn?'#fff':'var(--red)'}"></i>
+          ${p.name}
+        </div>
+        ${!p.micOn ? '<div class="tile-muted"><i class="fas fa-microphone-slash"></i></div>' : ''}
+      `;
+    } else {
+      tile.innerHTML = `
+        <div class="video-tile-off">
+          <div class="tile-av" style="background:${color}">${p.name.charAt(0)}</div>
+          <div style="font-size:13px;color:var(--text2)">${p.name}</div>
+        </div>
+        <div class="tile-name">
+          <i class="fas ${p.micOn?'fa-microphone':'fa-microphone-slash'}" style="color:${p.micOn?'#fff':'var(--red)'}"></i>
+          ${p.name}
+        </div>
+      `;
+    }
+    grid.appendChild(tile);
+
+    if (hasVideo) {
+      const vid = document.getElementById('vid-' + sid);
+      if (vid) vid.srcObject = stream;
+    }
+  });
+
+  updateCounts();
+}
+
+// ══════════════════════════════════════════════
+//  CONTROLS
+// ══════════════════════════════════════════════
+function toggleMic() {
+  micEnabled = !micEnabled;
+  if (localStream) localStream.getAudioTracks().forEach(t => t.enabled = micEnabled);
+  const btn = document.getElementById('btnMic');
+  btn.classList.toggle('off', !micEnabled);
+  document.getElementById('micIcon').className = micEnabled ? 'fas fa-microphone' : 'fas fa-microphone-slash';
+  document.getElementById('micLabel').textContent = micEnabled ? 'Mute' : 'Unmute';
+  renderVideoGrid();
+  showMeetToast(micEnabled ? '🎤 Microphone on' : '🔇 Microphone off');
+}
+
+function toggleCam() {
+  camEnabled = !camEnabled;
+  if (localStream) localStream.getVideoTracks().forEach(t => t.enabled = camEnabled);
+  const btn = document.getElementById('btnCam');
+  btn.classList.toggle('off', !camEnabled);
+  document.getElementById('camIcon').className = camEnabled ? 'fas fa-video' : 'fas fa-video-slash';
+  document.getElementById('camLabel').textContent = camEnabled ? 'Stop Video' : 'Start Video';
+  renderVideoGrid();
+  showMeetToast(camEnabled ? '📹 Camera on' : '📷 Camera off');
+}
+
+async function toggleScreenShare() {
+  if (!screenSharing) {
+    try {
+      screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+      document.getElementById('screenVideo').srcObject = screenStream;
+      document.getElementById('screenShareOverlay').style.display = 'flex';
+      document.getElementById('btnShare').classList.add('share-on');
+      document.getElementById('shareLabel').textContent = 'Stop Share';
+      screenSharing = true;
+      showMeetToast('🖥️ Screen sharing started');
+      screenStream.getVideoTracks()[0].addEventListener('ended', () => stopScreenShare());
+
+      // Replace video track in all peer connections
+      const screenTrack = screenStream.getVideoTracks()[0];
+      Object.values(peerConnections).forEach(pc => {
+        const sender = pc.getSenders().find(s => s.track?.kind === 'video');
+        if (sender) sender.replaceTrack(screenTrack);
+      });
+    } catch(e) {
+      if (e.name !== 'NotAllowedError') showMeetToast('⚠️ Could not start screen share');
+    }
+  } else {
+    stopScreenShare();
+  }
+}
+
+async function stopScreenShare() {
+  if (screenStream) { screenStream.getTracks().forEach(t => t.stop()); screenStream = null; }
+  document.getElementById('screenShareOverlay').style.display = 'none';
+  document.getElementById('btnShare').classList.remove('share-on');
+  document.getElementById('shareLabel').textContent = 'Share';
+  screenSharing = false;
+  showMeetToast('🖥️ Screen sharing stopped');
+
+  // Restore video track in all peer connections
+  if (localStream) {
+    const videoTrack = localStream.getVideoTracks()[0];
+    if (videoTrack) {
+      Object.values(peerConnections).forEach(pc => {
+        const sender = pc.getSenders().find(s => s.track?.kind === 'video');
+        if (sender) sender.replaceTrack(videoTrack);
+      });
+    }
+  }
+}
+
+function toggleRecording() {
+  if (!isRecording) {
+    const streams = [localStream, ...Object.values(remoteStreams)].filter(Boolean);
+    const combined = new MediaStream([
+      ...streams.flatMap(s => s.getTracks ? s.getTracks() : [])
+    ]);
+    try {
+      mediaRecorder = new MediaRecorder(combined || localStream);
+      recordedChunks = [];
+      mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+      mediaRecorder.onstop = downloadRecording;
+      mediaRecorder.start();
+      isRecording = true;
+      document.getElementById('btnRecord').classList.add('recording');
+      document.getElementById('recordIcon').className = 'fas fa-stop-circle';
+      document.getElementById('recordLabel').textContent = 'Stop Rec';
+      document.getElementById('recIndicator').style.display = 'flex';
+      showMeetToast('⏺️ Recording started');
+    } catch(e) { showMeetToast('⚠️ Recording not supported'); }
+  } else {
+    if (mediaRecorder) mediaRecorder.stop();
+    isRecording = false;
+    document.getElementById('btnRecord').classList.remove('recording');
+    document.getElementById('recordIcon').className = 'fas fa-record-vinyl';
+    document.getElementById('recordLabel').textContent = 'Record';
+    document.getElementById('recIndicator').style.display = 'none';
+    showMeetToast('⏹️ Recording stopped');
+  }
+}
+
+function downloadRecording() {
+  const blob = new Blob(recordedChunks, { type: 'video/webm' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `meeting-${meetingId}-${Date.now()}.webm`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Timer ──
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timerSeconds++;
+    const h = String(Math.floor(timerSeconds/3600)).padStart(2,'0');
+    const m = String(Math.floor((timerSeconds%3600)/60)).padStart(2,'0');
+    const s = String(timerSeconds%60).padStart(2,'0');
+    document.getElementById('roomTimer').textContent = `${h}:${m}:${s}`;
+  }, 1000);
+}
+
+// ── Counts ──
+function updateCounts() {
+  const total = 1 + Object.keys(remoteStreams).length;
+  document.getElementById('participantCount').textContent = total;
+  document.getElementById('pCountBadge').textContent = total;
+  const wb = document.getElementById('waitingBanner');
+  if (total > 1) wb.classList.remove('show');
+}
+
+function showWaitingBanner() {
+  const wb = document.getElementById('waitingBanner');
+  wb.classList.add('show');
+}
+
+// ── Participants list ──
+function updateParticipantsList() {
+  updateCounts();
+  const list = document.getElementById('participantsList');
+  const colors = ['linear-gradient(135deg,var(--secondary),var(--primary))','linear-gradient(135deg,#6366f1,#8b5cf6)','linear-gradient(135deg,#f59e0b,#ef4444)'];
+
+  // Local entry
+  let html = `
+    <div class="participant-item">
+      <div class="participant-av" style="background:${colors[0]}">${myName.charAt(0)}</div>
+      <div class="participant-info">
+        <div class="participant-name">${myName} (You)</div>
+        <div class="participant-status">${myRole === 'host' ? '👑 Host' : 'Participant'}</div>
+      </div>
+      <div class="participant-icons">
+        <i class="fas ${micEnabled?'fa-microphone':'fa-microphone-slash'} p-icon ${micEnabled?'':'muted'}"></i>
+        <i class="fas ${camEnabled?'fa-video':'fa-video-slash'} p-icon"></i>
+      </div>
+    </div>
+  `;
+
+  // Remote entries
+  Object.values(participants).forEach((p, idx) => {
+    const color = colors[(idx+1) % colors.length];
+    const isHost = myRole === 'host';
+    html += `
+      <div class="participant-item">
+        <div class="participant-av" style="background:${color}">${p.name.charAt(0)}</div>
+        <div class="participant-info">
+          <div class="participant-name">${p.name}</div>
+          <div class="participant-status">Participant</div>
+        </div>
+        <div class="participant-icons">
+          <i class="fas ${p.micOn?'fa-microphone':'fa-microphone-slash'} p-icon ${p.micOn?'':'muted'}"></i>
+          <i class="fas ${p.videoOn?'fa-video':'fa-video-slash'} p-icon"></i>
+        </div>
+        ${isHost ? `
+          <div class="p-actions">
+            <button class="p-action-btn" onclick="hostMuteParticipant('${p.socketId}')" title="Mute"><i class="fas fa-microphone-slash"></i></button>
+            <button class="p-action-btn danger" onclick="hostRemoveParticipant('${p.socketId}')" title="Remove"><i class="fas fa-user-times"></i></button>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  });
+
+  list.innerHTML = html;
+}
+
+// ── Host controls ──
+function admitParticipant(admit) {
+  if (!pendingAdmit) return;
+  socket.emit('meeting:admit', {
+    meetingId,
+    socketId: pendingAdmit.socketId,
+    admit,
+  });
+  document.getElementById('admitToast').classList.remove('show');
+  pendingAdmit = null;
+}
+
+function hostMuteParticipant(socketId) {
+  if (socket && myRole === 'host') {
+    socket.emit('meeting:mute_participant', { meetingId, socketId });
+    showMeetToast('🔇 Muted participant');
+  }
+}
+
+function hostRemoveParticipant(socketId) {
+  if (socket && myRole === 'host') {
+    if (confirm('Remove this participant from the meeting?')) {
+      socket.emit('meeting:remove', { meetingId, socketId });
+      removePeer(socketId);
+      updateParticipantsList();
+    }
+  }
+}
+
+function leaveWaiting() {
+  document.getElementById('waitingScreen').style.display = 'none';
+  document.getElementById('lobby').style.display = 'flex';
+  if (socket) socket.disconnect();
+}
+
+// ── End call ──
+function endCall() {
+  if (myRole === 'host') {
+    if (!confirm('End the meeting for everyone?')) return;
+  }
+  cleanupAndLeave();
+  window.location.href = 'meetings.html';
+}
+
+function cleanupAndLeave() {
+  if (socket) {
+    socket.emit('meeting:leave', { meetingId });
+    socket.disconnect();
+  }
+  Object.values(peerConnections).forEach(pc => pc.close());
+  peerConnections = {};
+  if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+  if (screenStream) { screenStream.getTracks().forEach(t => t.stop()); screenStream = null; }
+  if (timerInterval) clearInterval(timerInterval);
+}
+
+// ══════════════════════════════════════════════
+//  CHAT
+// ══════════════════════════════════════════════
+function toggleChat() {
+  sidebarVisible = !sidebarVisible || currentTab !== 'chat';
+  currentTab = 'chat';
+  switchTab('chat');
+  document.getElementById('sidebarPanel').classList.toggle('hidden', !sidebarVisible);
+  unreadChat = 0;
+  const badge = document.getElementById('chatBadge');
+  badge.style.display = 'none';
+}
+
+function toggleParticipants() {
+  sidebarVisible = !sidebarVisible || currentTab !== 'participants';
+  currentTab = 'participants';
+  switchTab('participants');
+  document.getElementById('sidebarPanel').classList.toggle('hidden', !sidebarVisible);
+  updateParticipantsList();
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+  document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+}
+
+function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  addChatMessage(myName, msg, true);
+  if (socket) socket.emit('meeting:chat', { meetingId, message: msg, name: myName });
+  input.value = '';
+}
+
+function addChatMessage(name, text, isOwn) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `chat-msg ${isOwn ? 'own' : ''}`;
+  div.innerHTML = `
+    <div class="chat-msg-name">${name}</div>
+    <div class="chat-msg-text">${text}</div>
+  `;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addSystemMessage(text) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-system';
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ══════════════════════════════════════════════
+//  REACTIONS & HAND
+// ══════════════════════════════════════════════
+function sendReaction(emoji) {
+  showFloatingReaction(emoji);
+  if (socket) socket.emit('meeting:reaction', { meetingId, reaction: emoji, name: myName });
+  toggleMoreMenu(false);
+}
+
+function showFloatingReaction(emoji) {
+  const el = document.createElement('div');
+  el.className = 'reaction-float';
+  el.textContent = emoji;
+  el.style.left = (20 + Math.random() * 60) + '%';
+  el.style.bottom = '100px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2500);
+}
+
+function raiseHand() {
+  handRaised = !handRaised;
+  if (socket) socket.emit('meeting:hand', { meetingId, raised: handRaised, name: myName });
+  showMeetToast(handRaised ? '✋ Hand raised' : '✋ Hand lowered');
+  toggleMoreMenu(false);
+}
+
+// ══════════════════════════════════════════════
+//  LAYOUT, INVITE, SETTINGS
+// ══════════════════════════════════════════════
+function toggleLayout() {
+  const modes = ['auto', 'speaker', 'gallery'];
+  const idx = modes.indexOf(layoutMode);
+  layoutMode = modes[(idx + 1) % modes.length];
+  renderVideoGrid();
+  showMeetToast('Layout: ' + layoutMode);
+  toggleMoreMenu(false);
+}
+
+function copyMeetingId() {
+  navigator.clipboard.writeText(meetingId).then(() => showMeetToast('Meeting ID copied!'));
+}
+
+function copyMeetingLink() {
+  const link = PUBLIC_BASE + '/meet.html?id=' + meetingId;
+  navigator.clipboard.writeText(link).then(() => showMeetToast('Meeting link copied!'));
+  toggleMoreMenu(false);
+}
+
+function toggleMoreMenu(forceState) {
+  const menu = document.getElementById('moreMenu');
+  if (forceState === false) { menu.classList.remove('open'); return; }
+  menu.classList.toggle('open');
+}
+
+function openInviteModal() {
+  document.getElementById('inviteModal').classList.add('open');
+  document.getElementById('inviteLinkUrl').textContent = PUBLIC_BASE + '/meet.html?id=' + meetingId;
+  document.getElementById('meetInfoId').textContent = meetingId;
+}
+
+function closeInviteModal() {
+  document.getElementById('inviteModal').classList.remove('open');
+}
+
+function copyInviteLink() {
+  const link = PUBLIC_BASE + '/meet.html?id=' + meetingId;
+  navigator.clipboard.writeText(link).then(() => showMeetToast('Link copied!'));
+}
+
+function shareViaWhatsApp() {
+  const link = PUBLIC_BASE + '/meet.html?id=' + meetingId;
+  window.open('https://wa.me/?text=' + encodeURIComponent('Join my Azolve meeting: ' + link));
+}
+
+function shareViaEmail() {
+  const link = PUBLIC_BASE + '/meet.html?id=' + meetingId;
+  window.location.href = 'mailto:?subject=Join%20my%20Azolve%20Meeting&body=' + encodeURIComponent('Join my meeting here: ' + link);
+}
+
+function shareViaCopy() {
+  const link = PUBLIC_BASE + '/meet.html?id=' + meetingId;
+  const text = `Azolve Meeting\nID: ${meetingId}\nLink: ${link}`;
+  navigator.clipboard.writeText(text).then(() => showMeetToast('Meeting details copied!'));
+}
+
+function openSettings() {
+  document.getElementById('settingsModal').classList.add('open');
+}
+
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('open');
+}
+
+function saveSettings() {
+  closeSettings();
+  showMeetToast('Settings saved');
+}
+
+// ══════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════
+let toastTimeout;
+function showMeetToast(msg) {
+  const toast = document.getElementById('meetToast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// Close menus on outside click
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#moreMenu') && !e.target.closest('.room-btn')) {
+    document.getElementById('moreMenu')?.classList.remove('open');
+  }
+  if (!e.target.closest('.invite-modal .invite-card') && e.target.closest('.invite-modal')) {
+    closeInviteModal();
+  }
+  if (!e.target.closest('.settings-modal .settings-card') && e.target.closest('.settings-modal')) {
+    closeSettings();
+  }
+});
+</script>
+</body>
+</html>

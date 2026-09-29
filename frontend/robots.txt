@@ -1,0 +1,27 @@
+# Azolve - Business Management Platform
+# https://azolve.io
+
+User-agent: *
+Allow: /
+Allow: /landing.html
+Allow: /login.html
+Allow: /register.html
+
+# Block internal app pages from search engines
+Disallow: /app-dashboard.html
+Disallow: /founder-panel.html
+Disallow: /enhanced-dashboard.html
+Disallow: /meet.html
+Disallow: /meetings.html
+Disallow: /support-dashboard.html
+Disallow: /pos-terminal.html
+Disallow: /invoice-preview-test.html
+Disallow: /test-connection.html
+Disallow: /js/
+Disallow: /apps/
+
+# Sitemap
+Sitemap: https://azolve.io/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Churn Dashboard · Azolve</title>
+  <link rel="stylesheet" href="../css/azolve-v2.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    .risk-row{display:grid;grid-template-columns:1fr auto auto auto;gap:14px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--az-border-2);transition:var(--az-transition)}
+    .risk-row:hover{background:var(--az-bg-soft)}
+    .risk-row:last-child{border-bottom:0}
+    .risk-name{font-weight:600;color:var(--az-text)}
+    .risk-meta{font-size:12px;color:var(--az-text-3);margin-top:2px}
+    .risk-score{font-weight:700;font-size:18px;text-align:right;min-width:60px}
+    .risk-score.high{color:var(--az-danger)} .risk-score.med{color:var(--az-warning)} .risk-score.low{color:var(--az-success)}
+    .risk-meter-wrap{width:140px}
+    .factor-pill{display:inline-block;padding:3px 10px;background:#fef3c7;color:#92400e;border-radius:999px;font-size:11px;font-weight:600;margin:2px 4px 2px 0}
+  </style>
+</head>
+<body class="az-app az-embedded">
+  <div class="az-page">
+
+    <!-- Hero -->
+    <div class="az-hero az-hero-pink">
+      <div class="az-hero-inner">
+        <div class="az-hero-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="az-hero-text">
+          <h1>Churn Prediction</h1>
+          <p>AI-powered prediction of customers at risk of leaving. Take action before they go.</p>
+        </div>
+        <div class="az-hero-actions">
+          <button class="az-btn"><i class="fa-solid fa-envelope"></i> Send Win-back Campaign</button>
+          <button class="az-btn az-btn-primary" id="recalcBtn"><i class="fa-solid fa-rotate"></i> Recalculate</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="az-grid az-grid-4" style="margin-bottom:20px">
+      <div class="az-stat az-stat-info">
+        <div class="az-stat-row">
+          <div>
+            <div class="az-stat-label">Total Customers</div>
+            <div class="az-stat-value" id="statTotal">—</div>
+            <div class="az-stat-trend up"><i class="fa-solid fa-arrow-up"></i> +8 this month</div>
+          </div>
+          <div class="az-stat-icon"><i class="fa-solid fa-users"></i></div>
+        </div>
+      </div>
+      <div class="az-stat az-stat-danger">
+        <div class="az-stat-row">
+          <div>
+            <div class="az-stat-label">High Risk</div>
+            <div class="az-stat-value" id="statHigh">—</div>
+            <div class="az-stat-trend down"><i class="fa-solid fa-triangle-exclamation"></i> Needs attention</div>
+          </div>
+          <div class="az-stat-icon"><i class="fa-solid fa-fire"></i></div>
+        </div>
+      </div>
+      <div class="az-stat az-stat-warning">
+        <div class="az-stat-row">
+          <div>
+            <div class="az-stat-label">Medium Risk</div>
+            <div class="az-stat-value" id="statMed">—</div>
+            <div class="az-stat-trend flat">Watch closely</div>
+          </div>
+          <div class="az-stat-icon"><i class="fa-solid fa-eye"></i></div>
+        </div>
+      </div>
+      <div class="az-stat az-stat-success">
+        <div class="az-stat-row">
+          <div>
+            <div class="az-stat-label">Healthy</div>
+            <div class="az-stat-value" id="statHealthy">—</div>
+            <div class="az-stat-trend up"><i class="fa-solid fa-heart"></i> Engaged</div>
+          </div>
+          <div class="az-stat-icon"><i class="fa-solid fa-shield-heart"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- At-Risk Customers -->
+    <div class="az-card" style="padding:0">
+      <div style="padding:18px 24px;border-bottom:1px solid var(--az-border-2);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <div>
+          <div class="az-card-title"><i class="fa-solid fa-user-clock" style="color:var(--az-danger);margin-right:8px"></i>Customers at Risk</div>
+          <div class="az-card-subtitle">Sorted by churn probability — highest risk first</div>
+        </div>
+        <div class="az-flex">
+          <select class="az-select" style="max-width:160px" id="riskFilter">
+            <option value="all">All risk levels</option>
+            <option value="high">High only</option>
+            <option value="med">Medium only</option>
+          </select>
+          <button class="az-btn az-btn-sm"><i class="fa-solid fa-download"></i> Export</button>
+        </div>
+      </div>
+
+      <div id="riskList">
+        <div class="az-empty">
+          <div class="az-empty-icon"><i class="fa-solid fa-spinner fa-spin"></i></div>
+          <div class="az-empty-title">Computing churn scores…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insights -->
+    <div class="az-grid az-grid-2" style="margin-top:20px">
+      <div class="az-card">
+        <div class="az-card-title" style="margin-bottom:14px"><i class="fa-solid fa-lightbulb" style="color:var(--az-warning);margin-right:8px"></i>Top Churn Factors</div>
+        <div class="az-flex-col" style="gap:14px">
+          <div>
+            <div class="az-flex-between" style="margin-bottom:6px"><strong>No invoice in 60+ days</strong><span style="color:var(--az-text-3);font-size:13px">42%</span></div>
+            <div class="az-progress"><div class="az-progress-bar danger" style="width:42%"></div></div>
+          </div>
+          <div>
+            <div class="az-flex-between" style="margin-bottom:6px"><strong>Late payments increasing</strong><span style="color:var(--az-text-3);font-size:13px">28%</span></div>
+            <div class="az-progress"><div class="az-progress-bar warning" style="width:28%"></div></div>
+          </div>
+          <div>
+            <div class="az-flex-between" style="margin-bottom:6px"><strong>Open support tickets</strong><span style="color:var(--az-text-3);font-size:13px">18%</span></div>
+            <div class="az-progress"><div class="az-progress-bar warning" style="width:18%"></div></div>
+          </div>
+          <div>
+            <div class="az-flex-between" style="margin-bottom:6px"><strong>Reduced order frequency</strong><span style="color:var(--az-text-3);font-size:13px">12%</span></div>
+            <div class="az-progress"><div class="az-progress-bar" style="width:12%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="az-card">
+        <div class="az-card-title" style="margin-bottom:14px"><i class="fa-solid fa-rocket" style="color:var(--az-primary);margin-right:8px"></i>Recommended Actions</div>
+        <div class="az-flex-col" style="gap:10px">
+          <div class="az-list-item" style="border:1px solid var(--az-border-2);border-radius:10px;padding:12px">
+            <div style="width:36px;height:36px;border-radius:10px;background:var(--az-info-light);color:var(--az-info);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-phone"></i></div>
+            <div class="az-list-item-main">
+              <div class="az-list-item-title">Schedule check-in calls</div>
+              <div class="az-list-item-desc">Reach out to top 5 high-risk accounts this week</div>
+            </div>
+            <button class="az-btn az-btn-sm az-btn-primary">Start</button>
+          </div>
+          <div class="az-list-item" style="border:1px solid var(--az-border-2);border-radius:10px;padding:12px">
+            <div style="width:36px;height:36px;border-radius:10px;background:var(--az-success-light);color:#047857;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-tag"></i></div>
+            <div class="az-list-item-main">
+              <div class="az-list-item-title">Offer loyalty discount</div>
+              <div class="az-list-item-desc">10–15% off next invoice for medium-risk customers</div>
+            </div>
+            <button class="az-btn az-btn-sm">Configure</button>
+          </div>
+          <div class="az-list-item" style="border:1px solid var(--az-border-2);border-radius:10px;padding:12px">
+            <div style="width:36px;height:36px;border-radius:10px;background:var(--az-warning-light);color:#b45309;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-bell"></i></div>
+            <div class="az-list-item-main">
+              <div class="az-list-item-title">Auto-alert on risk spike</div>
+              <div class="az-list-item-desc">Get notified when a customer crosses the danger threshold</div>
+            </div>
+            <button class="az-btn az-btn-sm">Enable</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = '/api/churn';
+
+    const SAMPLE = {
+      stats: { total: 247, high: 18, medium: 41, healthy: 188 },
+      atRisk: [
+        { _id:'c1', name:'Acme Industries Pvt Ltd',  score:92, level:'high', revenue:248000, lastInvoice:'78 days ago', factors:['No invoice 78d','3 late payments','2 open tickets'] },
+        { _id:'c2', name:'Globex Trading Co.',        score:88, level:'high', revenue:182000, lastInvoice:'62 days ago', factors:['No invoice 62d','Order frequency ↓ 70%'] },
+        { _id:'c3', name:'Initech Solutions',         score:84, level:'high', revenue:96000,  lastInvoice:'55 days ago', factors:['Late payments ↑','No order in 8 weeks'] },
+        { _id:'c4', name:'Hooli Technologies',        score:76, level:'high', revenue:412000, lastInvoice:'48 days ago', factors:['Reduced engagement','1 open ticket'] },
+        { _id:'c5', name:'Soylent Foods Pvt Ltd',     score:68, level:'med',  revenue:72000,  lastInvoice:'35 days ago', factors:['Late payments ↑'] },
+        { _id:'c6', name:'Pied Piper Tech',           score:62, level:'med',  revenue:54000,  lastInvoice:'30 days ago', factors:['Order frequency ↓'] },
+        { _id:'c7', name:'Wonka Industries',          score:58, level:'med',  revenue:128000, lastInvoice:'28 days ago', factors:['1 open ticket'] },
+        { _id:'c8', name:'Stark Industries Ltd',      score:54, level:'med',  revenue:340000, lastInvoice:'24 days ago', factors:['Slight order ↓'] }
+      ]
+    };
+
+    function levelBadge(level){
+      if(level==='high') return '<span class="az-badge az-badge-danger">HIGH RISK</span>';
+      if(level==='med')  return '<span class="az-badge az-badge-warning">MEDIUM</span>';
+      return '<span class="az-badge az-badge-success">HEALTHY</span>';
+    }
+    function meterColor(score){
+      if(score>=70) return 'linear-gradient(135deg,#ef4444,#dc2626)';
+      if(score>=40) return 'linear-gradient(135deg,#f59e0b,#d97706)';
+      return 'linear-gradient(135deg,#10b981,#059669)';
+    }
+    function inr(n){ return '₹'+Number(n||0).toLocaleString('en-IN'); }
+    function escape(s){ return String(s||'').replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c])); }
+
+    function renderStats(s){
+      document.getElementById('statTotal').textContent   = (s.total||0).toLocaleString();
+      document.getElementById('statHigh').textContent    = (s.high||0).toLocaleString();
+      document.getElementById('statMed').textContent     = (s.medium||0).toLocaleString();
+      document.getElementById('statHealthy').textContent = (s.healthy||0).toLocaleString();
+    }
+
+    function renderList(items){
+      const list = document.getElementById('riskList');
+      if(!items || !items.length){
+        list.innerHTML = `<div class="az-empty">
+          <div class="az-empty-icon"><i class="fa-solid fa-shield-heart"></i></div>
+          <div class="az-empty-title">All customers are healthy 🎉</div>
+          <div class="az-empty-desc">No accounts currently flagged as at-risk. Great job!</div>
+        </div>`;
+        return;
+      }
+      list.innerHTML = items.map(c => {
+        const cls = c.level==='high'?'high':c.level==='med'?'med':'low';
+        return `<div class="risk-row">
+          <div>
+            <div class="risk-name">${escape(c.name)} ${levelBadge(c.level)}</div>
+            <div class="risk-meta">
+              ${inr(c.revenue)} lifetime · last invoice ${escape(c.lastInvoice)}
+            </div>
+            <div style="margin-top:6px">${(c.factors||[]).map(f=>`<span class="factor-pill">${escape(f)}</span>`).join('')}</div>
+          </div>
+          <div class="risk-meter-wrap">
+            <div class="az-meter"><div class="az-meter-fill" style="width:${c.score}%;background:${meterColor(c.score)}"></div></div>
+            <div style="font-size:11px;color:#94a3b8;text-align:right;margin-top:4px">churn probability</div>
+          </div>
+          <div class="risk-score ${cls}">${c.score}<span style="font-size:12px;color:#94a3b8;font-weight:500">%</span></div>
+          <div>
+            <button class="az-btn az-btn-sm az-btn-primary"><i class="fa-solid fa-message"></i> Reach out</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    let currentItems = SAMPLE.atRisk;
+    document.getElementById('riskFilter').addEventListener('change', e => {
+      const v = e.target.value;
+      const filtered = v==='all' ? currentItems : currentItems.filter(c => c.level===v);
+      renderList(filtered);
+    });
+    document.getElementById('recalcBtn').addEventListener('click', async () => {
+      document.getElementById('recalcBtn').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Calculating…';
+      await new Promise(r => setTimeout(r, 1200));
+      load();
+      document.getElementById('recalcBtn').innerHTML = '<i class="fa-solid fa-rotate"></i> Recalculate';
+    });
+
+    async function load(){
+      try {
+        const r = await fetch(`${API}/at-risk`);
+        if(!r.ok) throw new Error('api');
+        const { data } = await r.json();
+        renderStats(data.stats || SAMPLE.stats);
+        currentItems = data.atRisk || SAMPLE.atRisk;
+        renderList(currentItems);
+      } catch {
+        renderStats(SAMPLE.stats);
+        currentItems = SAMPLE.atRisk;
+        renderList(currentItems);
+      }
+    }
+    load();
+  </script>
+</body>
+</html>

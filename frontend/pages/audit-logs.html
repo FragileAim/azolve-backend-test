@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Audit Logs · Azolve</title>
+  <link rel="stylesheet" href="../css/azolve-v2.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    .changes-detail{font-family:ui-monospace,monospace;font-size:11px;color:#475569;background:#f8fafc;padding:10px;border-radius:8px;margin-top:6px;max-height:120px;overflow:auto;border:1px solid #e2e8f0}
+    .ip-cell{font-family:ui-monospace,monospace;font-size:12px;color:#64748b}
+    .user-cell{display:flex;align-items:center;gap:10px}
+  </style>
+</head>
+<body class="az-app az-embedded">
+  <div class="az-page">
+
+    <!-- Hero -->
+    <div class="az-hero az-hero-violet">
+      <div class="az-hero-inner">
+        <div class="az-hero-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+        <div class="az-hero-text">
+          <h1>Audit Logs</h1>
+          <p>Complete activity history — track who did what, when. Stay compliant with detailed records of every change.</p>
+        </div>
+        <div class="az-hero-actions">
+          <button class="az-btn" id="exportBtn"><i class="fa-solid fa-download"></i> Export CSV</button>
+          <button class="az-btn az-btn-primary" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Refresh</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="az-grid az-grid-4" style="margin-bottom:20px">
+      <div class="az-stat az-stat-info">
+        <div class="az-stat-row">
+          <div>
+            <div class="az-stat-label">Total Events</div>
+            <div class="az-stat-value" id="statTotal">—</div>
+            <div class="az-stat-trend up"><i class="fa-solid fa-arrow-up"></i> Tracked since launch</div>
+          </div>
+          <div class="az-stat-icon"><i class="fa-solid fa-database"></i></div>
+        </div>
+      </div>
+      <div class="az-stat az-stat-success">
+        <div class="az-stat-row">
+          <div>
+            <div class="az-stat-label">Events Today</div>
+            <div class="az-stat-value" id="statToday">—</div>
+            <div class="az-stat-trend flat">Last 24 hours</div>
+          </div>
+          <div class="az-stat-icon"><i class="fa-solid fa-calendar-day"></i></div>
+        </div>
+      </div>
+      <div class="az-stat az-stat-danger">
+        <div class="az-stat-row">
+          <div>
+            <div class="az-stat-label">High / Critical</div>
+            <div class="az-stat-value" id="statSevere">—</div>
+            <div class="az-stat-trend flat">Need review</div>
+          </div>
+          <div class="az-stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        </div>
+      </div>
+      <div class="az-stat az-stat-warning">
+        <div class="az-stat-row">
+          <div>
+            <div class="az-stat-label">Active Users</div>
+            <div class="az-stat-value" id="statUsers">—</div>
+            <div class="az-stat-trend flat">Across all events</div>
+          </div>
+          <div class="az-stat-icon"><i class="fa-solid fa-users"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters + Table -->
+    <div class="az-card" style="padding:0">
+      <div style="padding:20px 24px;border-bottom:1px solid var(--az-border-2)">
+        <div class="az-card-title" style="margin-bottom:14px"><i class="fa-solid fa-filter" style="color:var(--az-primary);margin-right:8px"></i>Filter Events</div>
+        <div class="az-toolbar" style="margin-bottom:0">
+          <input class="az-input" id="searchBox" placeholder="🔍 Search description, user, resource..." />
+          <select class="az-select" id="filterAction"><option value="">All actions</option></select>
+          <select class="az-select" id="filterResource"><option value="">All resources</option></select>
+          <select class="az-select" id="filterSeverity">
+            <option value="">All severities</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+          <input type="date" class="az-input" id="filterFrom" title="From date" />
+          <input type="date" class="az-input" id="filterTo" title="To date" />
+        </div>
+      </div>
+
+      <table class="az-table">
+        <thead>
+          <tr>
+            <th style="width:160px">Time</th>
+            <th>User</th>
+            <th>Action</th>
+            <th>Resource</th>
+            <th>Severity</th>
+            <th>IP Address</th>
+            <th style="width:80px"></th>
+          </tr>
+        </thead>
+        <tbody id="logBody">
+          <tr><td colspan="7" class="az-empty">
+            <div class="az-empty-icon"><i class="fa-solid fa-spinner fa-spin"></i></div>
+            <div class="az-empty-title">Loading audit logs…</div>
+          </td></tr>
+        </tbody>
+      </table>
+
+      <div class="az-flex-between" style="padding:16px 24px;border-top:1px solid var(--az-border-2)">
+        <span style="color:var(--az-text-3);font-size:13px" id="paginationInfo">—</span>
+        <div class="az-flex">
+          <button class="az-btn az-btn-sm" id="prevBtn"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+          <button class="az-btn az-btn-sm" id="nextBtn">Next <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = '/api/audit-logs';
+    let page = 1, totalPages = 1, currentFilters = {};
+
+    // Sample data so the page looks alive even before backend is wired
+    const SAMPLE_LOGS = [
+      { _id:'s1', createdAt: new Date(Date.now()-5*60*1000), userId:{name:'Demo Owner'}, userEmail:'demo+v2@azolve.io', action:'invoice.create', resource:'Invoice', resourceName:'INV-2026-0142', severity:'low',  ipAddress:'103.21.58.12' },
+      { _id:'s2', createdAt: new Date(Date.now()-22*60*1000), userId:{name:'Sarah Patel'},  userEmail:'sarah@acme.in',     action:'client.update', resource:'Client',  resourceName:'Acme Industries',     severity:'medium', ipAddress:'49.207.182.4'  },
+      { _id:'s3', createdAt: new Date(Date.now()-65*60*1000), userId:{name:'Rohan Verma'},  userEmail:'rohan@azolve.io',    action:'user.login',    resource:'User',    resourceName:'rohan@azolve.io',     severity:'low',    ipAddress:'202.87.43.221'  },
+      { _id:'s4', createdAt: new Date(Date.now()-3*60*60*1000), userId:{name:'System'},     userEmail:'system',             action:'payment.received', resource:'Invoice', resourceName:'INV-2026-0140 · ₹1,24,000', severity:'low', ipAddress:'—' },
+      { _id:'s5', createdAt: new Date(Date.now()-5*60*60*1000), userId:{name:'Demo Owner'}, userEmail:'demo+v2@azolve.io',  action:'settings.update', resource:'Company', resourceName:'My Custom Workspace', severity:'high', ipAddress:'103.21.58.12' },
+      { _id:'s6', createdAt: new Date(Date.now()-9*60*60*1000), userId:{name:'Priya Singh'},userEmail:'priya@azolve.io',    action:'invoice.delete', resource:'Invoice', resourceName:'INV-2026-0098',     severity:'critical', ipAddress:'117.55.4.91' },
+      { _id:'s7', createdAt: new Date(Date.now()-26*60*60*1000), userId:{name:'Rohan Verma'},userEmail:'rohan@azolve.io',  action:'employee.create', resource:'Employee',resourceName:'Anjali Sharma',       severity:'low',    ipAddress:'202.87.43.221' },
+      { _id:'s8', createdAt: new Date(Date.now()-2*86400*1000), userId:{name:'Demo Owner'},userEmail:'demo+v2@azolve.io',  action:'user.invite',    resource:'User',    resourceName:'newuser@acme.in',      severity:'medium', ipAddress:'103.21.58.12' }
+    ];
+    const SAMPLE_STATS = {
+      total: 1842, today: 27,
+      bySeverity:[{_id:'low',count:1620},{_id:'medium',count:158},{_id:'high',count:54},{_id:'critical',count:10}],
+      byUser:[{_id:'u1'},{_id:'u2'},{_id:'u3'},{_id:'u4'},{_id:'u5'}],
+      byAction:[{_id:'invoice.create',count:412},{_id:'client.update',count:198},{_id:'user.login',count:621},{_id:'payment.received',count:107},{_id:'settings.update',count:34}],
+      byResource:[{_id:'Invoice',count:520},{_id:'Client',count:198},{_id:'User',count:621},{_id:'Company',count:34}]
+    };
+
+    function fmtDate(d){
+      const dt = new Date(d), now = new Date(), diff = (now-dt)/1000;
+      if(diff < 60) return 'just now';
+      if(diff < 3600) return Math.floor(diff/60)+'m ago';
+      if(diff < 86400) return Math.floor(diff/3600)+'h ago';
+      if(diff < 7*86400) return Math.floor(diff/86400)+'d ago';
+      return dt.toLocaleString();
+    }
+    function escape(s){ return String(s||'').replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c])); }
+    function initials(name){ return String(name||'?').split(' ').map(s=>s[0]).slice(0,2).join('').toUpperCase(); }
+    function severityBadge(s){
+      const map = { low:['',''], medium:['az-badge-warning',''], high:['az-badge-danger',''], critical:['az-badge-danger','font-weight:700'] };
+      const [cls,extra] = map[s] || map.low;
+      return `<span class="az-badge ${cls}" style="${extra}">${s||'low'}</span>`;
+    }
+
+    function renderStats(data){
+      document.getElementById('statTotal').textContent = (data.total||0).toLocaleString();
+      document.getElementById('statToday').textContent = (data.today||0).toLocaleString();
+      document.getElementById('statSevere').textContent = (data.bySeverity||[]).filter(x=>['high','critical'].includes(x._id)).reduce((s,x)=>s+x.count,0).toLocaleString();
+      document.getElementById('statUsers').textContent = ((data.byUser||[]).length || 0).toLocaleString();
+      const act = document.getElementById('filterAction');
+      act.innerHTML = '<option value="">All actions</option>';
+      (data.byAction||[]).forEach(a=>{ const o=document.createElement('option'); o.value=a._id; o.textContent=`${a._id} (${a.count})`; act.appendChild(o); });
+      const res = document.getElementById('filterResource');
+      res.innerHTML = '<option value="">All resources</option>';
+      (data.byResource||[]).forEach(r=>{ const o=document.createElement('option'); o.value=r._id; o.textContent=`${r._id} (${r.count})`; res.appendChild(o); });
+    }
+
+    function renderRows(rows){
+      const tbody = document.getElementById('logBody');
+      if(!rows || !rows.length){
+        tbody.innerHTML = `<tr><td colspan="7"><div class="az-empty">
+          <div class="az-empty-icon"><i class="fa-regular fa-folder-open"></i></div>
+          <div class="az-empty-title">No audit logs found</div>
+          <div class="az-empty-desc">Try adjusting your filters or check back later.</div>
+        </div></td></tr>`;
+        return;
+      }
+      tbody.innerHTML = rows.map(log => `
+        <tr>
+          <td><div style="font-size:13px;font-weight:500">${fmtDate(log.createdAt)}</div><div style="font-size:11px;color:#94a3b8">${new Date(log.createdAt).toLocaleString()}</div></td>
+          <td><div class="user-cell"><span class="az-avatar az-avatar-sm">${initials(log.userId?.name)}</span><div><div style="font-weight:500">${escape(log.userId?.name||log.userEmail||'System')}</div><div style="font-size:11px;color:#94a3b8">${escape(log.userEmail||'')}</div></div></div></td>
+          <td><span class="az-mono">${escape(log.action)}</span></td>
+          <td><div style="font-weight:500">${escape(log.resource)}</div>${log.resourceName?`<div style="font-size:12px;color:#64748b">${escape(log.resourceName)}</div>`:''}</td>
+          <td>${severityBadge(log.severity)}</td>
+          <td class="ip-cell">${escape(log.ipAddress||'—')}</td>
+          <td><button class="az-btn az-btn-sm az-btn-ghost" onclick="showDetail('${log._id}')"><i class="fa-regular fa-eye"></i></button></td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadStats(){
+      try {
+        const r = await fetch(`${API}/stats`); if(!r.ok) throw new Error('api');
+        const { data } = await r.json();
+        renderStats(data);
+      } catch { renderStats(SAMPLE_STATS); }
+    }
+
+    async function loadLogs(){
+      const params = new URLSearchParams({ page, limit: 25, ...currentFilters });
+      try {
+        const r = await fetch(`${API}?${params}`);
+        if(!r.ok) throw new Error('api');
+        const { data, total, pages } = await r.json();
+        totalPages = pages || 1;
+        renderRows(data);
+        document.getElementById('paginationInfo').textContent = `Page ${page} of ${totalPages} · ${total} total events`;
+      } catch {
+        // Fallback to sample
+        renderRows(SAMPLE_LOGS);
+        document.getElementById('paginationInfo').textContent = `Showing ${SAMPLE_LOGS.length} sample events · connect backend for live data`;
+        totalPages = 1;
+      }
+    }
+
+    async function showDetail(id){
+      try {
+        const r = await fetch(`${API}/${id}`);
+        const { data } = await r.json();
+        alert(JSON.stringify(data, null, 2));
+      } catch {
+        const sample = SAMPLE_LOGS.find(s=>s._id===id);
+        alert(JSON.stringify(sample, null, 2));
+      }
+    }
+
+    document.getElementById('searchBox').addEventListener('input', e => {
+      currentFilters.search = e.target.value || undefined;
+      page = 1; clearTimeout(window._t); window._t = setTimeout(loadLogs, 300);
+    });
+    ['filterAction','filterResource','filterSeverity','filterFrom','filterTo'].forEach(id => {
+      document.getElementById(id).addEventListener('change', e => {
+        const key = id.replace('filter','').toLowerCase();
+        currentFilters[key] = e.target.value || undefined;
+        page = 1; loadLogs();
+      });
+    });
+    document.getElementById('prevBtn').addEventListener('click', () => { if(page>1){page--;loadLogs();} });
+    document.getElementById('nextBtn').addEventListener('click', () => { if(page<totalPages){page++;loadLogs();} });
+    document.getElementById('refreshBtn').addEventListener('click', () => { loadStats(); loadLogs(); });
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const params = new URLSearchParams(currentFilters);
+      window.open(`${API}/export/csv?${params}`, '_blank');
+    });
+
+    loadStats(); loadLogs();
+  </script>
+</body>
+</html>

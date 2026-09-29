@@ -1,0 +1,16 @@
+{
+  "_meta": { "name": "বাংলা", "code": "bn", "dir": "ltr" },
+  "common": {
+    "save": "সংরক্ষণ করুন", "cancel": "বাতিল", "delete": "মুছুন", "edit": "সম্পাদনা",
+    "search": "অনুসন্ধান", "loading": "লোড হচ্ছে...", "yes": "হ্যাঁ", "no": "না",
+    "name": "নাম", "email": "ইমেইল", "total": "মোট",
+    "dashboard": "ড্যাশবোর্ড"
+  },
+  "nav": {
+    "home": "হোম", "clients": "ক্লায়েন্ট", "invoices": "চালান", "products": "পণ্য",
+    "employees": "কর্মচারী"
+  },
+  "invoice": {
+    "title": "চালান", "grand_total": "সর্বমোট", "paid": "পরিশোধিত", "pending": "বকেয়া"
+  }
+}

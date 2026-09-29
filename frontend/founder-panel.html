@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <meta name="theme-color" content="#714B67">
+<title>Azolve Founder Panel</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0a0e1a;--bg2:#0f1628;--bg3:#151d35;--card:#121929;--card2:#1a2340;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --primary:#6366f1;--accent:#a855f7;--pink:#ec4899;--green:#10b981;
+  --yellow:#f59e0b;--red:#ef4444;--cyan:#06b6d4;--orange:#f97316;
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;
+  --radius:14px;--shadow:0 4px 24px rgba(0,0,0,0.4);
+  --sidebar-w:260px;--topbar-h:64px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+#loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;
+  background:radial-gradient(ellipse at 30% 50%,rgba(99,102,241,0.15) 0%,transparent 60%),
+  radial-gradient(ellipse at 70% 20%,rgba(168,85,247,0.1) 0%,transparent 50%),var(--bg);}
+.login-box{background:var(--card);border:1px solid var(--border2);border-radius:24px;padding:48px;width:420px;box-shadow:0 32px 64px rgba(0,0,0,0.5);}
+.login-logo{width:64px;height:64px;background:linear-gradient(135deg,#6366f1,#a855f7);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#fff;margin:0 auto 20px;box-shadow:0 8px 24px rgba(99,102,241,0.4);}
+.login-title{text-align:center;font-size:24px;font-weight:800;margin-bottom:6px;}
+.login-sub{text-align:center;color:var(--text2);font-size:14px;margin-bottom:32px;}
+.lf-group{margin-bottom:18px;}
+.lf-group label{font-size:13px;font-weight:600;color:var(--text2);display:block;margin-bottom:6px;}
+.lf-group input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border-color 0.2s;}
+.lf-group input:focus{border-color:var(--primary);}
+.login-btn{width:100%;padding:13px;border:none;border-radius:12px;background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s,transform 0.1s;}
+.login-btn:hover{opacity:0.9;transform:translateY(-1px);}
+.login-error{color:var(--red);font-size:13px;margin-top:10px;text-align:center;display:none;}
+#appShell{display:none;}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow:hidden;}
+.sidebar-header{padding:20px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sidebar-brand{display:flex;align-items:center;gap:12px;}
+.s-logo{width:40px;height:40px;background:linear-gradient(135deg,#6366f1,#a855f7);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0;}
+.s-brand-name{font-size:16px;font-weight:800;}
+.s-brand-sub{font-size:11px;color:var(--accent);font-weight:600;letter-spacing:0.5px;}
+.sidebar-search{padding:12px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sidebar-search input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;outline:none;font-family:inherit;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px;}
+.sidebar-nav::-webkit-scrollbar{width:4px;}
+.sidebar-nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+.nav-group{margin-bottom:4px;}
+.nav-group-label{padding:10px 12px 4px;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1.2px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;color:var(--text2);font-size:13.5px;font-weight:500;transition:all 0.15s;position:relative;margin-bottom:1px;}
+.nav-item:hover{background:var(--bg3);color:var(--text);}
+.nav-item.active{background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(168,85,247,0.1));color:var(--text);}
+.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:linear-gradient(180deg,var(--primary),var(--accent));border-radius:0 3px 3px 0;}
+.nav-item .nav-icon{width:20px;text-align:center;font-size:14px;flex-shrink:0;}
+.nav-item .nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;min-width:20px;text-align:center;}
+.nav-item .nav-badge.green{background:var(--green);}
+.nav-item .nav-badge.yellow{background:var(--yellow);color:#000;}
+.sidebar-footer{padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0;}
+.user-card{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;cursor:pointer;transition:background 0.15s;}
+.user-card:hover{background:var(--bg3);}
+.user-av{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}
+.user-name{font-size:13px;font-weight:600;}
+.user-role{font-size:11px;color:var(--accent);font-weight:600;}
+.logout-btn{margin-left:auto;color:var(--text3);font-size:14px;cursor:pointer;}
+.logout-btn:hover{color:var(--red);}
+.topbar{position:fixed;left:var(--sidebar-w);right:0;top:0;height:var(--topbar-h);background:rgba(10,14,26,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;z-index:90;}
+.page-title-bar{flex:1;}
+.page-title-bar h2{font-size:18px;font-weight:700;}
+.page-title-bar p{font-size:12px;color:var(--text2);margin-top:1px;}
+.topbar-actions{display:flex;align-items:center;gap:10px;}
+.topbar-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--border2);background:var(--card2);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;position:relative;transition:all 0.15s;}
+.topbar-btn:hover{color:var(--text);border-color:var(--primary);}
+.topbar-btn .dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid var(--bg);}
+.topbar-clock{font-size:13px;color:var(--text2);font-weight:500;padding:0 8px;}
+.main{margin-left:var(--sidebar-w);margin-top:var(--topbar-h);padding:28px;min-height:calc(100vh - var(--topbar-h));}
+.page{display:none;}.page.active{display:block;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);}
+.card-header h3{font-size:15px;font-weight:700;}
+.card-body{padding:22px;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;position:relative;overflow:hidden;transition:transform 0.2s,border-color 0.2s;}
+.stat-card:hover{transform:translateY(-2px);border-color:var(--border2);}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.stat-card.purple::before{background:linear-gradient(90deg,#6366f1,#a855f7);}
+.stat-card.green::before{background:linear-gradient(90deg,#10b981,#06d6a0);}
+.stat-card.yellow::before{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
+.stat-card.red::before{background:linear-gradient(90deg,#ef4444,#f97316);}
+.stat-card.cyan::before{background:linear-gradient(90deg,#06b6d4,#3b82f6);}
+.stat-card.pink::before{background:linear-gradient(90deg,#ec4899,#a855f7);}
+.stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px;}
+.stat-icon.purple{background:rgba(99,102,241,0.15);color:#818cf8;}
+.stat-icon.green{background:rgba(16,185,129,0.15);color:#34d399;}
+.stat-icon.yellow{background:rgba(245,158,11,0.15);color:#fbbf24;}
+.stat-icon.red{background:rgba(239,68,68,0.15);color:#f87171;}
+.stat-icon.cyan{background:rgba(6,182,212,0.15);color:#22d3ee;}
+.stat-icon.pink{background:rgba(236,72,153,0.15);color:#f472b6;}
+.stat-value{font-size:28px;font-weight:800;line-height:1;margin-bottom:4px;}
+.stat-label{font-size:12px;color:var(--text2);font-weight:500;margin-bottom:10px;}
+.stat-change{font-size:12px;font-weight:600;}
+.stat-change.up{color:var(--green);}.stat-change.down{color:var(--red);}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead th{padding:12px 16px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody td{padding:13px 16px;font-size:13.5px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(255,255,255,0.02);}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;}
+.badge-active{background:rgba(16,185,129,0.15);color:#34d399;}
+.badge-trial{background:rgba(245,158,11,0.15);color:#fbbf24;}
+.badge-suspended{background:rgba(239,68,68,0.15);color:#f87171;}
+.badge-pending{background:rgba(99,102,241,0.15);color:#818cf8;}
+.badge-resolved{background:rgba(6,182,212,0.15);color:#22d3ee;}
+.badge-open{background:rgba(239,68,68,0.15);color:#f87171;}
+.badge-pro{background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(168,85,247,0.2));color:#a78bfa;border:1px solid rgba(99,102,241,0.3);}
+.badge-starter{background:rgba(6,182,212,0.1);color:#22d3ee;}
+.badge-enterprise{background:linear-gradient(135deg,rgba(236,72,153,0.2),rgba(168,85,247,0.2));color:#f472b6;border:1px solid rgba(236,72,153,0.3);}
+.badge.dot::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:9px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.btn-primary{background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;box-shadow:0 4px 12px rgba(99,102,241,0.3);}
+.btn-primary:hover{opacity:0.9;transform:translateY(-1px);}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2);}
+.btn-outline:hover{border-color:var(--primary);color:var(--text);}
+.btn-danger{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#f87171;}
+.btn-danger:hover{background:rgba(239,68,68,0.25);}
+.btn-success{background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#34d399;}
+.btn-success:hover{background:rgba(16,185,129,0.25);}
+.btn-sm{padding:5px 12px;font-size:12px;border-radius:7px;}
+.btn-xs{padding:3px 9px;font-size:11px;border-radius:6px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;}
+.grid-70-30{display:grid;grid-template-columns:1fr 380px;gap:20px;}
+.toolbar{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:9px;padding:7px 12px;flex:1;min-width:200px;}
+.search-box input{background:none;border:none;outline:none;color:var(--text);font-size:13px;font-family:inherit;width:100%;}
+.search-box i{color:var(--text3);font-size:13px;}
+.filter-select{background:var(--bg3);border:1px solid var(--border2);border-radius:9px;padding:7px 12px;color:var(--text);font-size:13px;outline:none;cursor:pointer;font-family:inherit;}
+.avatar{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.progress{background:var(--bg3);border-radius:99px;height:6px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:99px;transition:width 0.3s;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:1000;display:none;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--card);border:1px solid var(--border2);border-radius:20px;width:90%;max-width:580px;max-height:85vh;overflow-y:auto;box-shadow:0 32px 64px rgba(0,0,0,0.5);animation:modalIn 0.2s ease;}
+@keyframes modalIn{from{transform:scale(0.95);opacity:0;}to{transform:scale(1);opacity:1;}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);}
+.modal-header h3{font-size:17px;font-weight:700;}
+.modal-close{background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;line-height:1;padding:2px;}
+.modal-close:hover{color:var(--red);}
+.modal-body{padding:24px;}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;}
+.form-group{margin-bottom:16px;}
+.form-label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;}
+.form-control{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:9px;padding:10px 14px;color:var(--text);font-size:14px;outline:none;font-family:inherit;transition:border-color 0.2s;}
+.form-control:focus{border-color:var(--primary);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+#toastContainer{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px;}
+.toast{background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;font-size:14px;font-weight:500;box-shadow:var(--shadow);min-width:280px;animation:toastIn 0.3s ease;border-left:4px solid var(--green);}
+.toast.error{border-left-color:var(--red);}
+.toast.warning{border-left-color:var(--yellow);}
+@keyframes toastIn{from{transform:translateX(100%);opacity:0;}to{transform:translateX(0);opacity:1;}}
+.sparkline{display:flex;align-items:flex-end;gap:3px;height:36px;}
+.spark-bar{flex:1;background:rgba(99,102,241,0.3);border-radius:3px 3px 0 0;min-height:4px;}
+.spark-bar:hover{background:var(--primary);}
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+.activity-item:last-child{border-bottom:none;}
+.activity-dot{width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;}
+.activity-text{font-size:13.5px;font-weight:500;}
+.activity-time{font-size:12px;color:var(--text3);margin-top:2px;}
+.ticket-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;cursor:pointer;transition:border-color 0.2s;}
+.ticket-card:hover{border-color:var(--primary);}
+.ticket-card.priority-high{border-left:3px solid var(--red);}
+.ticket-card.priority-medium{border-left:3px solid var(--yellow);}
+.ticket-card.priority-low{border-left:3px solid var(--green);}
+.toggle{width:38px;height:20px;background:var(--bg3);border-radius:99px;cursor:pointer;position:relative;transition:background 0.2s;border:1px solid var(--border2);display:inline-block;}
+.toggle::after{content:'';position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:2px;left:2px;transition:left 0.2s;}
+.toggle.on{background:var(--primary);border-color:var(--primary);}
+.toggle.on::after{left:20px;}
+.flag-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);}
+.flag-row:last-child{border-bottom:none;}
+.flag-info h4{font-size:14px;font-weight:600;margin-bottom:2px;}
+.flag-info p{font-size:12px;color:var(--text2);}
+.health-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.health-item:last-child{border-bottom:none;}
+.health-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.health-dot.ok{background:var(--green);box-shadow:0 0 6px var(--green);}
+.health-dot.warn{background:var(--yellow);box-shadow:0 0 6px var(--yellow);}
+.health-dot.err{background:var(--red);box-shadow:0 0 6px var(--red);}
+.health-name{flex:1;font-size:13.5px;font-weight:500;}
+.health-val{font-size:12px;color:var(--text2);}
+.ann-card{background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(168,85,247,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:14px;padding:18px 22px;margin-bottom:12px;display:flex;align-items:center;gap:14px;}
+.ann-icon{font-size:22px;flex-shrink:0;}
+.ann-title{font-weight:700;font-size:14px;margin-bottom:3px;}
+.ann-text{font-size:13px;color:var(--text2);}
+.ann-date{font-size:12px;color:var(--text3);white-space:nowrap;}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:6px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <img src="assets/logo-medium.png" alt="Azolve" style="height:55px;width:auto;margin-bottom:12px;">
+    <div class="login-title">Founder Panel</div>
+    <div class="login-sub">Internal dashboard — Authorized personnel only</div>
+    <div class="lf-group"><label>Email Address</label><input type="email" id="lEmail" placeholder="abhishek@azolve.io" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="lf-group"><label>Password</label><input type="password" id="lPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="login-btn" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Enter Founder Panel</button>
+    <div class="login-error" id="loginError">Invalid credentials. Use the Founder Panel access provided by Azolve.</div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div id="appShell">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <img src="assets/logo-navbar.png" alt="Azolve" style="height:30px;width:auto;">
+        <div><div class="s-brand-sub" style="margin-top:4px;">Founder Panel</div></div>
+      </div>
+    </div>
+    <div class="sidebar-search"><input type="text" placeholder="Search menu..." oninput="filterNav(this.value)"></div>
+    <div class="sidebar-nav">
+      <div class="nav-group">
+        <div class="nav-group-label">Overview</div>
+        <div class="nav-item active" data-page="dashboard" onclick="go('dashboard')"><span class="nav-icon"><i class="fas fa-home"></i></span>Dashboard</div>
+        <div class="nav-item" data-page="analytics" onclick="go('analytics')"><span class="nav-icon"><i class="fas fa-chart-line"></i></span>Analytics</div>
+        <div class="nav-item" data-page="revenue" onclick="go('revenue')"><span class="nav-icon"><i class="fas fa-dollar-sign"></i></span>Revenue & MRR<span class="nav-badge green">Real</span></div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Companies</div>
+        <div class="nav-item" data-page="companies" onclick="go('companies')"><span class="nav-icon"><i class="fas fa-building"></i></span>All Companies</div>
+        <div class="nav-item" data-page="subscriptions" onclick="go('subscriptions')"><span class="nav-icon"><i class="fas fa-credit-card"></i></span>Subscriptions</div>
+        <div class="nav-item" data-page="onboarding" onclick="go('onboarding')"><span class="nav-icon"><i class="fas fa-rocket"></i></span>Onboarding Pipeline</div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Support</div>
+        <div class="nav-item" data-page="tickets" onclick="go('tickets')"><span class="nav-icon"><i class="fas fa-ticket-alt"></i></span>Tickets<span class="nav-badge" id="openTicketBadge">0</span></div>
+        <div class="nav-item" data-page="livechat" onclick="go('livechat')"><span class="nav-icon"><i class="fas fa-comments"></i></span>Live Chat<span class="nav-badge yellow" id="liveChatBadge">0</span></div>
+        <div class="nav-item" data-page="feedback" onclick="go('feedback')"><span class="nav-icon"><i class="fas fa-star"></i></span>Feedback & NPS</div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Meetings</div>
+        <div class="nav-item" onclick="window.open('meetings.html','_blank')"><span class="nav-icon"><i class="fas fa-video"></i></span>Azolve Meet<span class="nav-badge" style="background:linear-gradient(135deg,#714B67,#00A09D);font-size:9px">LIVE</span></div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Team</div>
+        <div class="nav-item" data-page="team" onclick="go('team')"><span class="nav-icon"><i class="fas fa-users"></i></span>Azolve Team</div>
+        <div class="nav-item" data-page="roles" onclick="go('roles')"><span class="nav-icon"><i class="fas fa-shield-alt"></i></span>Roles & Permissions</div>
+        <div class="nav-item" data-page="activity" onclick="go('activity')"><span class="nav-icon"><i class="fas fa-history"></i></span>Activity Log</div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Platform</div>
+        <div class="nav-item" data-page="features" onclick="go('features')"><span class="nav-icon"><i class="fas fa-flag"></i></span>Feature Flags</div>
+        <div class="nav-item" data-page="health" onclick="go('health')"><span class="nav-icon"><i class="fas fa-heartbeat"></i></span>System Health</div>
+        <div class="nav-item" data-page="announcements" onclick="go('announcements')"><span class="nav-icon"><i class="fas fa-bullhorn"></i></span>Announcements</div>
+        <div class="nav-item" data-page="api" onclick="go('api')"><span class="nav-icon"><i class="fas fa-code"></i></span>API Usage</div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Settings</div>
+        <div class="nav-item" data-page="plans" onclick="go('plans')"><span class="nav-icon"><i class="fas fa-layer-group"></i></span>Plans & Pricing</div>
+        <div class="nav-item" data-page="settings" onclick="go('settings')"><span class="nav-icon"><i class="fas fa-cog"></i></span>Platform Settings</div>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-av" id="founderAv">F</div>
+        <div><div class="user-name" id="founderName">Founder</div><div class="user-role" id="founderRole">Founder & CEO</div></div>
+        <div class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <div class="page-title-bar"><h2 id="topbarTitle">Dashboard</h2><p id="topbarSub">Welcome back!</p></div>
+    <div class="topbar-actions">
+      <div class="topbar-clock" id="topClock">--:--</div>
+      <button class="topbar-btn" onclick="go('announcements')"><i class="fas fa-bullhorn"></i></button>
+      <button class="topbar-btn"><i class="fas fa-bell"></i><span class="dot"></span></button>
+      <button class="topbar-btn" onclick="go('settings')"><i class="fas fa-cog"></i></button>
+      <button class="btn btn-primary btn-sm" onclick="showAddCompanyModal()"><i class="fas fa-plus"></i> Add Company</button>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid" id="dashStats"></div>
+      <div class="grid-70-30">
+        <div>
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-header"><h3><i class="fas fa-building" style="color:var(--primary);margin-right:8px"></i>Recently Registered Companies</h3><button class="btn btn-outline btn-sm" onclick="go('companies')">View All</button></div>
+            <div class="table-wrap"><table><thead><tr><th>Company</th><th>Plan</th><th>Registered</th><th>Status</th><th>Actions</th></tr></thead><tbody id="dashCompanyTable"></tbody></table></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-ticket-alt" style="color:var(--red);margin-right:8px"></i>Open Tickets</h3><button class="btn btn-outline btn-sm" onclick="go('tickets')">View All</button></div>
+            <div class="card-body" id="dashTickets"></div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-header"><h3><i class="fas fa-chart-bar" style="color:var(--accent);margin-right:8px"></i>Revenue (7 days)</h3></div>
+            <div class="card-body"><div id="revenueSparkline" style="margin-bottom:12px"></div><div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--text2)">This week</span><span style="font-weight:700;color:var(--green)">+$12,480</span></div></div>
+          </div>
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-header"><h3><i class="fas fa-heartbeat" style="color:var(--green);margin-right:8px"></i>System Health</h3></div>
+            <div class="card-body" id="dashHealth"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-history" style="color:var(--cyan);margin-right:8px"></i>Recent Activity</h3></div>
+            <div class="card-body" style="padding:12px 22px" id="dashActivity"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPANIES -->
+    <div class="page" id="page-companies">
+      <div class="card">
+        <div class="toolbar">
+          <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Search companies..." id="companySearch" oninput="renderCompanies()"></div>
+          <select class="filter-select" id="companyStatusFilter" onchange="renderCompanies()"><option value="">All Status</option><option>active</option><option>trial</option><option>suspended</option></select>
+          <select class="filter-select" id="companyPlanFilter" onchange="renderCompanies()"><option value="">All Plans</option><option>Starter</option><option>Pro</option><option>Enterprise</option></select>
+          <button class="btn btn-primary btn-sm" onclick="showAddCompanyModal()"><i class="fas fa-plus"></i> Add Company</button>
+          <button class="btn btn-outline btn-sm" onclick="exportCompanies()"><i class="fas fa-download"></i> Export</button>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Company</th><th>Owner</th><th>Plan</th><th>Users</th><th>Registered</th><th>MRR</th><th>Status</th><th>Actions</th></tr></thead><tbody id="companiesTableBody"></tbody></table></div>
+        <div style="padding:14px 20px;border-top:1px solid var(--border);font-size:13px;color:var(--text2)" id="companiesPager"></div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="page" id="page-analytics">
+      <div class="stats-grid" id="analyticsStats"></div>
+      <div class="grid-2" style="margin-bottom:20px">
+        <div class="card"><div class="card-header"><h3>Signups Over Time</h3></div><div class="card-body"><canvas id="signupsChart" height="180"></canvas></div></div>
+        <div class="card"><div class="card-header"><h3>Plan Distribution</h3></div><div class="card-body"><canvas id="planChart" height="180"></canvas></div></div>
+      </div>
+      <div class="grid-3">
+        <div class="card"><div class="card-header"><h3>Top Industries</h3></div><div class="card-body" id="topIndustries"></div></div>
+        <div class="card"><div class="card-header"><h3>NPS Overview</h3></div><div class="card-body" id="geoStats"></div></div>
+        <div class="card"><div class="card-header"><h3>Churn Risk</h3></div><div class="card-body" id="churnRisk"></div></div>
+      </div>
+    </div>
+
+    <!-- REVENUE -->
+    <div class="page" id="page-revenue">
+      <div class="stats-grid" id="revenueStats"></div>
+      <div class="grid-2" style="margin-bottom:20px">
+        <div class="card"><div class="card-header"><h3>MRR Growth</h3></div><div class="card-body"><canvas id="mrrChart" height="200"></canvas></div></div>
+        <div class="card"><div class="card-header"><h3>Revenue by Plan</h3></div><div class="card-body"><canvas id="revPlanChart" height="200"></canvas></div></div>
+      </div>
+      <div class="card"><div class="card-header"><h3>Recent Transactions</h3></div><div class="table-wrap"><table><thead><tr><th>Company</th><th>Plan</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead><tbody id="revenueTable"></tbody></table></div></div>
+    </div>
+
+    <!-- TICKETS -->
+    <div class="page" id="page-tickets">
+      <div class="grid-70-30">
+        <div class="card">
+          <div class="toolbar">
+            <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Search tickets..." oninput="renderTickets(this.value)"></div>
+            <select class="filter-select" id="ticketStatusFilter" onchange="renderTickets()"><option value="">All</option><option>open</option><option>pending</option><option>resolved</option></select>
+            <select class="filter-select" id="ticketPriorityFilter" onchange="renderTickets()"><option value="">All Priority</option><option>high</option><option>medium</option><option>low</option></select>
+            <button class="btn btn-primary btn-sm" onclick="showAddTicketModal()"><i class="fas fa-plus"></i> New Ticket</button>
+          </div>
+          <div class="card-body" id="ticketsList"></div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:20px"><div class="card-header"><h3>Ticket Stats</h3></div><div class="card-body" id="ticketStats"></div></div>
+          <div class="card"><div class="card-header"><h3>Assigned To</h3></div><div class="card-body" id="ticketAssignees"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVE CHAT -->
+    <div class="page" id="page-livechat">
+      <div class="grid-70-30">
+        <div class="card"><div class="card-header"><h3><i class="fas fa-comments" style="color:var(--cyan);margin-right:8px"></i>Active Conversations</h3></div><div class="card-body" id="chatList"></div></div>
+        <div class="card"><div class="card-header"><h3>Chat Window</h3></div><div style="height:400px;display:flex;align-items:center;justify-content:center;color:var(--text3);flex-direction:column;gap:10px"><i class="fas fa-comments" style="font-size:48px;opacity:0.3"></i><span>Select a conversation</span></div></div>
+      </div>
+    </div>
+
+    <!-- FEEDBACK -->
+    <div class="page" id="page-feedback">
+      <div class="stats-grid" id="feedbackStats"></div>
+      <div class="card"><div class="card-header"><h3>Customer Feedback & NPS</h3></div><div class="table-wrap"><table><thead><tr><th>Company</th><th>Score</th><th>Category</th><th>Comment</th><th>Date</th></tr></thead><tbody id="feedbackTable"></tbody></table></div></div>
+    </div>
+
+    <!-- TEAM -->
+    <div class="page" id="page-team">
+      <div class="card">
+        <div class="toolbar">
+          <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Search team..." oninput="renderTeam(this.value)"></div>
+          <select class="filter-select" id="teamRoleFilter" onchange="renderTeam()"><option value="">All Roles</option><option>Founder</option><option>CTO</option><option>Support</option><option>Sales</option><option>Developer</option></select>
+          <button class="btn btn-primary btn-sm" onclick="showAddTeamModal()"><i class="fas fa-plus"></i> Add Team Member</button>
+        </div>
+        <div class="card-body" id="teamGrid"></div>
+      </div>
+    </div>
+
+    <!-- ROLES -->
+    <div class="page" id="page-roles">
+      <div class="grid-2">
+        <div class="card"><div class="card-header"><h3>Roles</h3><button class="btn btn-primary btn-sm" onclick="showAddRoleModal()"><i class="fas fa-plus"></i> New Role</button></div><div class="card-body" id="rolesList"></div></div>
+        <div class="card"><div class="card-header"><h3>Permissions Matrix</h3></div><div class="card-body" id="permMatrix"></div></div>
+      </div>
+    </div>
+
+    <!-- ACTIVITY LOG -->
+    <div class="page" id="page-activity">
+      <div class="card">
+        <div class="toolbar">
+          <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Search logs..." oninput="renderActivityLog(this.value)"></div>
+          <button class="btn btn-outline btn-sm" onclick="exportActivity()"><i class="fas fa-download"></i> Export Logs</button>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Member</th><th>Action</th><th>Target</th><th>IP</th><th>Time</th></tr></thead><tbody id="activityLogTable"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- FEATURE FLAGS -->
+    <div class="page" id="page-features">
+      <div class="grid-2">
+        <div class="card"><div class="card-header"><h3>Global Feature Flags</h3><button class="btn btn-outline btn-sm" onclick="showAddFlagModal()"><i class="fas fa-plus"></i> Add Flag</button></div><div class="card-body" id="globalFlags"></div></div>
+        <div class="card"><div class="card-header"><h3>Per-Company Overrides</h3></div><div class="card-body" id="companyFlags"></div></div>
+      </div>
+    </div>
+
+    <!-- SYSTEM HEALTH -->
+    <div class="page" id="page-health">
+      <div class="stats-grid" id="healthStats"></div>
+      <div class="grid-2">
+        <div class="card"><div class="card-header"><h3><i class="fas fa-server" style="color:var(--green);margin-right:8px"></i>Service Status</h3></div><div class="card-body" id="serviceList"></div></div>
+        <div class="card"><div class="card-header"><h3><i class="fas fa-chart-area" style="color:var(--cyan);margin-right:8px"></i>Performance Metrics</h3></div><div class="card-body" id="perfStats"></div></div>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENTS -->
+    <div class="page" id="page-announcements">
+      <div class="grid-70-30">
+        <div class="card"><div class="card-header"><h3>Announcements</h3><button class="btn btn-primary btn-sm" onclick="showAddAnnouncementModal()"><i class="fas fa-plus"></i> New</button></div><div class="card-body" id="announcementsList"></div></div>
+        <div class="card">
+          <div class="card-header"><h3>Send Broadcast</h3></div>
+          <div class="card-body">
+            <div class="form-group"><label class="form-label">Target Audience</label><select class="form-control" id="bcast_audience"><option>All Companies</option><option>Pro Plan Only</option><option>Enterprise Only</option><option>Trial Users</option></select></div>
+            <div class="form-group"><label class="form-label">Subject</label><input type="text" class="form-control" id="bcast_subject" placeholder="Subject..."></div>
+            <div class="form-group"><label class="form-label">Message</label><textarea class="form-control" id="bcast_msg" rows="4" placeholder="Your message..."></textarea></div>
+            <div class="form-group"><label class="form-label">Channel</label><div style="display:flex;gap:14px;margin-top:4px"><label style="font-size:13px;display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" checked> In-app</label><label style="font-size:13px;display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> Email</label><label style="font-size:13px;display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> WhatsApp</label></div></div>
+            <button class="btn btn-primary" style="width:100%" onclick="sendBroadcast()"><i class="fas fa-paper-plane"></i> Send Broadcast</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API USAGE -->
+    <div class="page" id="page-api">
+      <div class="stats-grid" id="apiStats"></div>
+      <div class="card"><div class="card-header"><h3>API Usage by Company</h3></div><div class="table-wrap"><table><thead><tr><th>Company</th><th>Requests Today</th><th>Requests Month</th><th>Limit</th><th>Usage %</th><th>Status</th></tr></thead><tbody id="apiTable"></tbody></table></div></div>
+    </div>
+
+    <!-- PLANS -->
+    <div class="page" id="page-plans">
+      <div class="grid-3" style="margin-bottom:24px" id="planCards"></div>
+      <div class="card"><div class="card-header"><h3>Plan Assignments</h3><button class="btn btn-primary btn-sm" onclick="showChangePlanModal()"><i class="fas fa-exchange-alt"></i> Change Plan</button></div><div class="table-wrap"><table><thead><tr><th>Company</th><th>Current Plan</th><th>Started</th><th>Next Renewal</th><th>MRR</th><th>Actions</th></tr></thead><tbody id="planAssignTable"></tbody></table></div></div>
+    </div>
+
+    <!-- SUBSCRIPTIONS -->
+    <div class="page" id="page-subscriptions">
+      <div class="stats-grid" id="subStats"></div>
+      <div class="card">
+        <div class="toolbar">
+          <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Search subscriptions..."></div>
+          <select class="filter-select"><option>All Plans</option><option>Starter</option><option>Pro</option><option>Enterprise</option></select>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Company</th><th>Plan</th><th>Started</th><th>Renewal</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody id="subTable"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ONBOARDING -->
+    <div class="page" id="page-onboarding">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px">
+        <div style="padding:20px;border-right:1px solid var(--border);text-align:center;background:var(--card)"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px">Registered</div><div style="font-size:32px;font-weight:800;color:var(--primary)" id="ob-reg">0</div></div>
+        <div style="padding:20px;border-right:1px solid var(--border);text-align:center;background:var(--card)"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px">Setup in Progress</div><div style="font-size:32px;font-weight:800;color:var(--yellow)" id="ob-setup">0</div></div>
+        <div style="padding:20px;border-right:1px solid var(--border);text-align:center;background:var(--card)"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px">Trial Active</div><div style="font-size:32px;font-weight:800;color:var(--cyan)" id="ob-trial">0</div></div>
+        <div style="padding:20px;text-align:center;background:var(--card)"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px">Converted</div><div style="font-size:32px;font-weight:800;color:var(--green)" id="ob-conv">0</div></div>
+      </div>
+      <div class="card"><div class="card-header"><h3>Onboarding Pipeline</h3></div><div class="table-wrap"><table><thead><tr><th>Company</th><th>Owner</th><th>Registered</th><th>Stage</th><th>Progress</th><th>Actions</th></tr></thead><tbody id="onboardTable"></tbody></table></div></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="page" id="page-settings">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-sliders-h" style="color:var(--primary);margin-right:8px"></i>Platform Settings</h3></div>
+          <div class="card-body">
+            <div class="flag-row"><div class="flag-info"><h4>New Registrations</h4><p>Allow new companies to register</p></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="flag-row"><div class="flag-info"><h4>Maintenance Mode</h4><p>Show maintenance page to all users</p></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+            <div class="flag-row"><div class="flag-info"><h4>Trial Period</h4><p>Enable free trial for new signups</p></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="flag-row"><div class="flag-info"><h4>Email Notifications</h4><p>Send automated emails to companies</p></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="flag-row"><div class="flag-info"><h4>WhatsApp Alerts</h4><p>Send WhatsApp alerts for critical events</p></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="flag-row"><div class="flag-info"><h4>2FA Enforcement</h4><p>Require 2FA for all team logins</p></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-header"><h3><i class="fas fa-lock" style="color:var(--yellow);margin-right:8px"></i>Change Panel Password</h3></div>
+            <div class="card-body">
+              <div class="form-group"><label class="form-label">Current Password</label><input type="password" class="form-control" placeholder="••••••••"></div>
+              <div class="form-group"><label class="form-label">New Password</label><input type="password" class="form-control" placeholder="••••••••"></div>
+              <div class="form-group"><label class="form-label">Confirm Password</label><input type="password" class="form-control" placeholder="••••••••"></div>
+              <button class="btn btn-primary" onclick="toast('Password updated!')"><i class="fas fa-save"></i> Update Password</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-envelope" style="color:var(--cyan);margin-right:8px"></i>SMTP Config</h3></div>
+            <div class="card-body">
+              <div class="form-group"><label class="form-label">SMTP Host</label><input class="form-control" value="smtp.mailgun.org"></div>
+              <div class="form-group"><label class="form-label">Sender Email</label><input class="form-control" value="no-reply@azolve.io"></div>
+              <button class="btn btn-outline" onclick="toast('SMTP saved!')"><i class="fas fa-paper-plane"></i> Test & Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dev Tasks Page (Developer Role) -->
+    <div class="page" id="page-devtasks">
+      <div id="devTasksContent">
+        <div class="stats-row">
+          <div class="stat-card yellow"><div class="stat-icon yellow"><i class="fas fa-spinner"></i></div><div class="stat-value">2</div><div class="stat-label">In Progress</div></div>
+          <div class="stat-card cyan"><div class="stat-icon cyan"><i class="fas fa-clock"></i></div><div class="stat-value">2</div><div class="stat-label">Pending</div></div>
+          <div class="stat-card green"><div class="stat-icon green"><i class="fas fa-check"></i></div><div class="stat-value">1</div><div class="stat-label">Completed</div></div>
+          <div class="stat-card purple"><div class="stat-icon purple"><i class="fas fa-tasks"></i></div><div class="stat-value">5</div><div class="stat-label">Total Tasks</div></div>
+        </div>
+        <div class="card" style="margin-top:20px">
+          <div class="card-header">
+            <h3><i class="fas fa-code-branch" style="color:var(--primary);margin-right:8px"></i>My Assigned Tasks</h3>
+            <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Task</button>
+          </div>
+          <div style="padding:20px">
+            <p style="color:var(--text2)">Loading tasks...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bug Queue Page (Developer Role) -->
+    <div class="page" id="page-bugqueue">
+      <div id="bugQueueContent">
+        <div class="stats-row">
+          <div class="stat-card red"><div class="stat-icon red"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-value">1</div><div class="stat-label">Critical</div></div>
+          <div class="stat-card yellow"><div class="stat-icon yellow"><i class="fas fa-exclamation-circle"></i></div><div class="stat-value">2</div><div class="stat-label">High</div></div>
+          <div class="stat-card cyan"><div class="stat-icon cyan"><i class="fas fa-info-circle"></i></div><div class="stat-value">1</div><div class="stat-label">Medium</div></div>
+          <div class="stat-card purple"><div class="stat-icon purple"><i class="fas fa-bug"></i></div><div class="stat-value">4</div><div class="stat-label">Total Bugs</div></div>
+        </div>
+        <div class="card" style="margin-top:20px">
+          <div class="card-header">
+            <h3><i class="fas fa-bug" style="color:var(--red);margin-right:8px"></i>Bug Queue</h3>
+          </div>
+          <div style="padding:20px">
+            <p style="color:var(--text2)">Loading bugs...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deployments Page (Developer Role) -->
+    <div class="page" id="page-deploys">
+      <div id="deploysContent">
+        <div class="stats-row">
+          <div class="stat-card green"><div class="stat-icon green"><i class="fas fa-check-circle"></i></div><div class="stat-value">2</div><div class="stat-label">Successful</div></div>
+          <div class="stat-card red"><div class="stat-icon red"><i class="fas fa-times-circle"></i></div><div class="stat-value">1</div><div class="stat-label">Failed</div></div>
+          <div class="stat-card yellow"><div class="stat-icon yellow"><i class="fas fa-clock"></i></div><div class="stat-value">1</div><div class="stat-label">Pending</div></div>
+          <div class="stat-card purple"><div class="stat-icon purple"><i class="fas fa-rocket"></i></div><div class="stat-value">4</div><div class="stat-label">Total Deployments</div></div>
+        </div>
+        <div class="card" style="margin-top:20px">
+          <div class="card-header">
+            <h3><i class="fas fa-rocket" style="color:var(--accent);margin-right:8px"></i>Deployment History</h3>
+            <button class="btn btn-primary btn-sm"><i class="fas fa-play"></i> New Deploy</button>
+          </div>
+          <div style="padding:20px">
+            <p style="color:var(--text2)">Loading deployments...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sales Pipeline Page (Sales Role) -->
+    <div class="page" id="page-pipeline">
+      <div id="pipelineContent">
+        <div class="stats-row">
+          <div class="stat-card green"><div class="stat-icon green"><i class="fas fa-trophy"></i></div><div class="stat-value">₹14.9L</div><div class="stat-label">Total Pipeline Value</div></div>
+          <div class="stat-card purple"><div class="stat-icon purple"><i class="fas fa-chart-line"></i></div><div class="stat-value">₹5.2L</div><div class="stat-label">Closed Won</div></div>
+          <div class="stat-card cyan"><div class="stat-icon cyan"><i class="fas fa-user-plus"></i></div><div class="stat-value">12</div><div class="stat-label">New Leads</div></div>
+          <div class="stat-card yellow"><div class="stat-icon yellow"><i class="fas fa-handshake"></i></div><div class="stat-value">3</div><div class="stat-label">Negotiating</div></div>
+        </div>
+        <div class="card" style="margin-top:20px">
+          <div class="card-header">
+            <h3><i class="fas fa-funnel-dollar" style="color:var(--green);margin-right:8px"></i>Sales Pipeline Stages</h3>
+          </div>
+          <div style="padding:20px">
+            <p style="color:var(--text2)">Loading pipeline...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leads Page (Sales Role) -->
+    <div class="page" id="page-leads">
+      <div id="leadsContent">
+        <div class="stats-row">
+          <div class="stat-card cyan"><div class="stat-icon cyan"><i class="fas fa-user-plus"></i></div><div class="stat-value">2</div><div class="stat-label">New Leads</div></div>
+          <div class="stat-card yellow"><div class="stat-icon yellow"><i class="fas fa-phone"></i></div><div class="stat-value">2</div><div class="stat-label">Contacted</div></div>
+          <div class="stat-card green"><div class="stat-icon green"><i class="fas fa-check-circle"></i></div><div class="stat-value">1</div><div class="stat-label">Qualified</div></div>
+          <div class="stat-card purple"><div class="stat-icon purple"><i class="fas fa-rupee-sign"></i></div><div class="stat-value">₹6.7L</div><div class="stat-label">Total Potential</div></div>
+        </div>
+        <div class="card" style="margin-top:20px">
+          <div class="card-header">
+            <h3><i class="fas fa-users" style="color:var(--cyan);margin-right:8px"></i>Lead Management</h3>
+            <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Lead</button>
+          </div>
+          <div style="padding:20px">
+            <p style="color:var(--text2)">Loading leads...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deals Page (Sales Role) -->
+    <div class="page" id="page-deals">
+      <div id="dealsContent">
+        <div class="stats-row">
+          <div class="stat-card green"><div class="stat-icon green"><i class="fas fa-trophy"></i></div><div class="stat-value">₹360K</div><div class="stat-label">Closed Won</div></div>
+          <div class="stat-card yellow"><div class="stat-icon yellow"><i class="fas fa-handshake"></i></div><div class="stat-value">₹60K</div><div class="stat-label">Negotiation</div></div>
+          <div class="stat-card cyan"><div class="stat-icon cyan"><i class="fas fa-file-alt"></i></div><div class="stat-value">₹150K</div><div class="stat-label">Proposal</div></div>
+          <div class="stat-card purple"><div class="stat-icon purple"><i class="fas fa-percentage"></i></div><div class="stat-value">₹93K</div><div class="stat-label">Weighted Pipeline</div></div>
+        </div>
+        <div class="card" style="margin-top:20px">
+          <div class="card-header">
+            <h3><i class="fas fa-handshake" style="color:var(--accent);margin-right:8px"></i>Active Deals</h3>
+            <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Deal</button>
+          </div>
+          <div style="padding:20px">
+            <p style="color:var(--text2)">Loading deals...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal"><div id="modalContent"></div></div>
+</div>
+<div id="toastContainer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/founder-panel.js"></script>
+</body>
+</html>

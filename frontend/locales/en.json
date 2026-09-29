@@ -1,0 +1,38 @@
+{
+  "_meta": { "name": "English", "code": "en", "dir": "ltr" },
+  "common": {
+    "save": "Save", "cancel": "Cancel", "delete": "Delete", "edit": "Edit", "create": "Create",
+    "search": "Search", "loading": "Loading...", "no_data": "No data found", "yes": "Yes", "no": "No",
+    "submit": "Submit", "back": "Back", "next": "Next", "previous": "Previous", "close": "Close",
+    "confirm": "Confirm", "actions": "Actions", "status": "Status", "date": "Date", "amount": "Amount",
+    "name": "Name", "email": "Email", "phone": "Phone", "address": "Address", "total": "Total",
+    "view": "View", "download": "Download", "upload": "Upload", "filter": "Filter", "export": "Export",
+    "import": "Import", "settings": "Settings", "logout": "Logout", "profile": "Profile",
+    "dashboard": "Dashboard", "today": "Today", "yesterday": "Yesterday", "this_week": "This Week",
+    "this_month": "This Month", "this_year": "This Year"
+  },
+  "nav": {
+    "home": "Home", "clients": "Clients", "invoices": "Invoices", "products": "Products",
+    "leads": "Leads", "deals": "Deals", "projects": "Projects", "tasks": "Tasks",
+    "employees": "Employees", "attendance": "Attendance", "leaves": "Leaves",
+    "tickets": "Support Tickets", "meetings": "Meetings", "calendar": "Calendar",
+    "reports": "Reports", "payments": "Payments", "expenses": "Expenses"
+  },
+  "invoice": {
+    "title": "Invoice", "invoice_number": "Invoice #", "invoice_date": "Invoice Date",
+    "due_date": "Due Date", "client": "Client", "items": "Items",
+    "quantity": "Quantity", "rate": "Rate", "tax": "Tax", "subtotal": "Subtotal",
+    "grand_total": "Grand Total", "paid": "Paid", "pending": "Pending", "overdue": "Overdue",
+    "send": "Send Invoice", "mark_paid": "Mark as Paid", "create_invoice": "Create Invoice"
+  },
+  "auth": {
+    "login": "Login", "register": "Register", "password": "Password",
+    "forgot_password": "Forgot Password?", "remember_me": "Remember Me",
+    "sign_in": "Sign In", "sign_up": "Sign Up", "welcome_back": "Welcome Back!"
+  },
+  "errors": {
+    "required": "This field is required", "invalid_email": "Invalid email address",
+    "min_length": "Must be at least {n} characters", "network": "Network error. Please try again.",
+    "unauthorized": "You are not authorized", "not_found": "Resource not found"
+  }
+}

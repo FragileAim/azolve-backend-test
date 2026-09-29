@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Document — Azolve Word</title>
+<link rel="stylesheet" href="https://cdn.quilljs.com/2.0.2/quill.snow.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.quilljs.com/2.0.2/quill.js"></script>
+<script src="../js/office-common.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI','Inter',system-ui,-apple-system,sans-serif;background:#f3f2f1;color:#252423;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+/* === Word-style title bar === */
+.title-bar{display:flex;align-items:center;gap:10px;padding:6px 14px;background:#2b579a;color:#fff;height:38px;flex-shrink:0;box-shadow:0 1px 0 rgba(0,0,0,.1)}
+.title-bar .word-icon{width:24px;height:24px;background:#fff;color:#2b579a;border-radius:3px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px}
+.title-bar .doc-title-input{background:rgba(255,255,255,.15);border:1px solid transparent;color:#fff;padding:4px 10px;border-radius:3px;font-size:13px;font-weight:500;min-width:240px;outline:none}
+.title-bar .doc-title-input:hover{background:rgba(255,255,255,.22)}
+.title-bar .doc-title-input:focus{background:#fff;color:#252423;border-color:#fff}
+.title-bar .save-status{font-size:12px;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:6px}
+.title-bar .spacer{flex:1}
+.title-bar .tb-btn{background:transparent;border:none;color:#fff;padding:6px 12px;border-radius:3px;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:6px}
+.title-bar .tb-btn:hover{background:rgba(255,255,255,.18)}
+.title-bar .tb-btn.share{background:#107c10}
+.title-bar .tb-btn.share:hover{background:#0e6e0e}
+
+/* === Ribbon tabs === */
+.ribbon-tabs{display:flex;background:#f3f2f1;border-bottom:1px solid #e1dfdd;padding:0 12px;gap:4px;flex-shrink:0;height:32px;align-items:flex-end}
+.ribbon-tab{padding:6px 14px;font-size:12px;color:#252423;cursor:pointer;border:1px solid transparent;border-bottom:none;border-radius:3px 3px 0 0;font-weight:500}
+.ribbon-tab:hover{background:#edebe9}
+.ribbon-tab.active{background:#fff;border-color:#e1dfdd;color:#2b579a;font-weight:600}
+
+/* === Ribbon === */
+.ribbon{background:#fff;border-bottom:1px solid #e1dfdd;padding:6px 12px;display:flex;gap:0;flex-shrink:0;overflow-x:auto;align-items:stretch}
+.ribbon-group{display:flex;flex-direction:column;align-items:center;padding:0 10px;border-right:1px solid #e1dfdd;min-height:74px;justify-content:space-between}
+.ribbon-group:last-child{border-right:none}
+.ribbon-group-content{display:flex;flex-wrap:wrap;gap:2px;align-items:center;flex:1}
+.ribbon-group-label{font-size:10px;color:#605e5c;margin-top:4px;text-align:center;width:100%}
+.rb-btn{background:transparent;border:1px solid transparent;border-radius:3px;padding:4px 6px;cursor:pointer;font-size:13px;color:#252423;display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;gap:4px}
+.rb-btn:hover{background:#edebe9;border-color:#c8c6c4}
+.rb-btn.active{background:#deecf9;border-color:#2b579a;color:#2b579a}
+.rb-btn.large{flex-direction:column;height:60px;min-width:54px;font-size:11px;padding:4px;gap:2px}
+.rb-btn.large i{font-size:18px;margin-bottom:2px}
+.rb-select{height:26px;padding:0 22px 0 6px;border:1px solid #c8c6c4;border-radius:2px;background:#fff;font-size:12px;outline:none;cursor:pointer;font-family:inherit}
+.rb-select:hover{border-color:#2b579a}
+.rb-select:focus{border-color:#2b579a;box-shadow:0 0 0 1px #2b579a}
+.rb-color{width:28px;height:24px;padding:1px;border:1px solid #c8c6c4;border-radius:2px;cursor:pointer;background:#fff}
+.rb-divider{width:1px;background:#e1dfdd;align-self:stretch;margin:2px 0}
+
+/* === Document area === */
+.doc-area{flex:1;overflow:auto;background:#e6e6e6;padding:30px 0;display:flex;justify-content:center;align-items:flex-start}
+.doc-page-wrap{width:816px;max-width:95%}
+.doc-page{background:#fff;width:100%;min-height:1056px;padding:96px 96px;box-shadow:0 0 12px rgba(0,0,0,.18);border:1px solid #ddd}
+#editor{min-height:864px;font-family:'Calibri','Segoe UI',Arial,sans-serif;font-size:11pt;line-height:1.5}
+.ql-toolbar{display:none !important}
+.ql-container.ql-snow{border:none !important;font-family:inherit;font-size:11pt}
+.ql-editor{padding:0 !important;min-height:864px}
+.ql-editor h1{font-size:20pt;color:#2e74b5;font-weight:400;margin:24pt 0 6pt 0}
+.ql-editor h2{font-size:14pt;color:#2e74b5;font-weight:400;margin:18pt 0 4pt 0}
+.ql-editor h3{font-size:12pt;color:#1f4e79;font-weight:400;margin:12pt 0 2pt 0}
+.ql-editor p{margin:0 0 8pt 0}
+.ql-editor blockquote{border-left:3px solid #2b579a;padding:6px 14px;color:#605e5c;background:#f9f8f7;font-style:italic;margin:8pt 0}
+.ql-editor pre{background:#f3f2f1;border:1px solid #e1dfdd;border-radius:3px;padding:10px;font-family:'Consolas','Courier New',monospace}
+.ql-editor img{max-width:100%;height:auto}
+
+/* === Status bar === */
+.status-bar{display:flex;align-items:center;gap:14px;padding:4px 16px;background:#2b579a;color:#fff;font-size:11px;height:24px;flex-shrink:0}
+.status-bar .item{display:flex;align-items:center;gap:5px}
+.status-bar .spacer{flex:1}
+
+/* === Modal === */
+.modal-bd{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(2px)}
+.modal-bd.show{display:flex}
+.modal{background:#fff;border-radius:6px;width:520px;max-width:92vw;box-shadow:0 12px 40px rgba(0,0,0,.3);overflow:hidden}
+.modal-h{padding:14px 20px;background:#2b579a;color:#fff;display:flex;justify-content:space-between;align-items:center}
+.modal-h h3{margin:0;font-size:15px;font-weight:500}
+.modal-h .x{background:transparent;border:none;color:#fff;width:26px;height:26px;cursor:pointer;font-size:14px;border-radius:3px}
+.modal-h .x:hover{background:rgba(255,255,255,.2)}
+.modal-b{padding:18px 20px}
+.modal-b label{display:block;font-size:12px;font-weight:600;color:#252423;margin-bottom:5px}
+.modal-b input,.modal-b select{width:100%;padding:7px 10px;border:1px solid #c8c6c4;border-radius:3px;font-size:13px;margin-bottom:12px;outline:none;font-family:inherit}
+.modal-b input:focus,.modal-b select:focus{border-color:#2b579a}
+.share-row{display:flex;gap:8px}
+.share-row input{flex:1;margin-bottom:0;background:#f9f8f7;font-family:'Consolas',monospace;font-size:11px}
+.tog{display:flex;gap:10px;align-items:center;padding:10px 12px;background:#f3f2f1;border-radius:3px;margin-bottom:12px}
+.tog input{width:auto;margin:0}
+.tog label{margin:0;font-size:13px;font-weight:500}
+.modal-f{padding:12px 20px;background:#f9f8f7;border-top:1px solid #e1dfdd;display:flex;justify-content:flex-end;gap:8px}
+.btn{padding:6px 16px;border-radius:2px;cursor:pointer;font-size:13px;border:1px solid #c8c6c4;background:#fff;color:#252423}
+.btn:hover{background:#f3f2f1}
+.btn.primary{background:#2b579a;border-color:#2b579a;color:#fff}
+.btn.primary:hover{background:#1f4373}
+
+/* Read-only banner */
+.ro-banner{background:#fff4ce;border-bottom:1px solid #e8d100;padding:8px 16px;font-size:12px;color:#252423;display:none}
+.ro-banner.show{display:block}
+
+@media (max-width:900px){
+  .ribbon{padding:4px}
+  .ribbon-group{padding:0 4px}
+  .doc-page{padding:48px 32px}
+}
+</style>
+</head>
+<body>
+
+<!-- Title Bar -->
+<div class="title-bar">
+  <div class="word-icon">W</div>
+  <input class="doc-title-input" id="docTitle" placeholder="Untitled Document" />
+  <span class="save-status" id="saveStatus"><i class="fa-solid fa-cloud"></i> All changes saved</span>
+  <span class="spacer"></span>
+  <button class="tb-btn" onclick="goBack()" title="Back to Office Hub"><i class="fa-solid fa-arrow-left"></i> Back</button>
+  <button class="tb-btn" onclick="exportDoc()"><i class="fa-solid fa-file-export"></i> Export</button>
+  <button class="tb-btn" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
+  <button class="tb-btn share" id="shareBtn"><i class="fa-solid fa-share-nodes"></i> Share</button>
+</div>
+
+<!-- Read-only banner -->
+<div class="ro-banner" id="roBanner"><i class="fa-solid fa-lock"></i> You're viewing a shared, read-only document. Sign in to your own account to create your own copies.</div>
+
+<!-- Ribbon Tabs -->
+<div class="ribbon-tabs">
+  <div class="ribbon-tab active" data-tab="home">Home</div>
+  <div class="ribbon-tab" data-tab="insert">Insert</div>
+  <div class="ribbon-tab" data-tab="layout">Layout</div>
+  <div class="ribbon-tab" data-tab="review">Review</div>
+</div>
+
+<!-- Ribbon: Home tab -->
+<div class="ribbon" id="ribbonHome">
+  <div class="ribbon-group">
+    <div class="ribbon-group-content">
+      <button class="rb-btn large" onclick="document.execCommand('cut')" title="Cut"><i class="fa-solid fa-scissors"></i><span>Cut</span></button>
+      <button class="rb-btn large" onclick="document.execCommand('copy')" title="Copy"><i class="fa-solid fa-copy"></i><span>Copy</span></button>
+      <button class="rb-btn large" onclick="document.execCommand('paste')" title="Paste"><i class="fa-solid fa-paste"></i><span>Paste</span></button>
+    </div>
+    <div class="ribbon-group-label">Clipboard</div>
+  </div>
+
+  <div class="ribbon-group">
+    <div class="ribbon-group-content" style="display:flex;flex-direction:column;gap:3px;align-items:flex-start">
+      <div style="display:flex;gap:4px">
+        <select class="rb-select" id="fontFamily" style="min-width:130px">
+          <option value="Calibri" selected>Calibri</option>
+          <option value="Arial">Arial</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Georgia">Georgia</option>
+          <option value="Verdana">Verdana</option>
+          <option value="Tahoma">Tahoma</option>
+          <option value="Courier New">Courier New</option>
+          <option value="Comic Sans MS">Comic Sans MS</option>
+          <option value="Segoe UI">Segoe UI</option>
+          <option value="Helvetica">Helvetica</option>
+        </select>
+        <select class="rb-select" id="fontSize" style="width:60px">
+          <option value="8px">8</option>
+          <option value="9px">9</option>
+          <option value="10px">10</option>
+          <option value="11px" selected>11</option>
+          <option value="12px">12</option>
+          <option value="14px">14</option>
+          <option value="16px">16</option>
+          <option value="18px">18</option>
+          <option value="20px">20</option>
+          <option value="24px">24</option>
+          <option value="28px">28</option>
+          <option value="36px">36</option>
+          <option value="48px">48</option>
+          <option value="72px">72</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:2px;align-items:center">
+        <button class="rb-btn" id="boldBtn" title="Bold (Ctrl+B)"><i class="fa-solid fa-bold"></i></button>
+        <button class="rb-btn" id="italicBtn" title="Italic (Ctrl+I)"><i class="fa-solid fa-italic"></i></button>
+        <button class="rb-btn" id="underlineBtn" title="Underline (Ctrl+U)"><i class="fa-solid fa-underline"></i></button>
+        <button class="rb-btn" id="strikeBtn" title="Strikethrough"><i class="fa-solid fa-strikethrough"></i></button>
+        <span class="rb-divider"></span>
+        <button class="rb-btn" id="subBtn" title="Subscript"><i class="fa-solid fa-subscript"></i></button>
+        <button class="rb-btn" id="supBtn" title="Superscript"><i class="fa-solid fa-superscript"></i></button>
+        <span class="rb-divider"></span>
+        <label class="rb-btn" title="Text Color" style="padding:0;position:relative">
+          <i class="fa-solid fa-a" style="border-bottom:3px solid #d63031;padding-bottom:1px"></i>
+          <input type="color" id="textColor" value="#000000" style="position:absolute;inset:0;opacity:0;cursor:pointer">
+        </label>
+        <label class="rb-btn" title="Highlight" style="padding:0;position:relative">
+          <i class="fa-solid fa-highlighter" style="color:#fdcb6e"></i>
+          <input type="color" id="bgColor" value="#ffff00" style="position:absolute;inset:0;opacity:0;cursor:pointer">
+        </label>
+        <button class="rb-btn" id="clearBtn" title="Clear formatting"><i class="fa-solid fa-eraser"></i></button>
+      </div>
+    </div>
+    <div class="ribbon-group-label">Font</div>
+  </div>
+
+  <div class="ribbon-group">
+    <div class="ribbon-group-content" style="display:flex;flex-direction:column;gap:3px;align-items:flex-start">
+      <div style="display:flex;gap:2px">
+        <button class="rb-btn" id="ulBtn" title="Bullet List"><i class="fa-solid fa-list-ul"></i></button>
+        <button class="rb-btn" id="olBtn" title="Numbered List"><i class="fa-solid fa-list-ol"></i></button>
+        <button class="rb-btn" id="indentBtn" title="Increase Indent"><i class="fa-solid fa-indent"></i></button>
+        <button class="rb-btn" id="outdentBtn" title="Decrease Indent"><i class="fa-solid fa-outdent"></i></button>
+      </div>
+      <div style="display:flex;gap:2px">
+        <button class="rb-btn" data-align="" title="Align Left"><i class="fa-solid fa-align-left"></i></button>
+        <button class="rb-btn" data-align="center" title="Align Center"><i class="fa-solid fa-align-center"></i></button>
+        <button class="rb-btn" data-align="right" title="Align Right"><i class="fa-solid fa-align-right"></i></button>
+        <button class="rb-btn" data-align="justify" title="Justify"><i class="fa-solid fa-align-justify"></i></button>
+      </div>
+    </div>
+    <div class="ribbon-group-label">Paragraph</div>
+  </div>
+
+  <div class="ribbon-group">
+    <div class="ribbon-group-content">
+      <select class="rb-select" id="headingSel" style="min-width:130px">
+        <option value="">Normal</option>
+        <option value="1">Heading 1</option>
+        <option value="2">Heading 2</option>
+        <option value="3">Heading 3</option>
+        <option value="4">Heading 4</option>
+        <option value="quote">Quote</option>
+        <option value="code">Code Block</option>
+      </select>
+    </div>
+    <div class="ribbon-group-label">Styles</div>
+  </div>
+
+  <div class="ribbon-group" style="border-right:none">
+    <div class="ribbon-group-content">
+      <button class="rb-btn large" onclick="quill.history.undo()" title="Undo"><i class="fa-solid fa-rotate-left"></i><span>Undo</span></button>
+      <button class="rb-btn large" onclick="quill.history.redo()" title="Redo"><i class="fa-solid fa-rotate-right"></i><span>Redo</span></button>
+    </div>
+    <div class="ribbon-group-label">Editing</div>
+  </div>
+</div>
+
+<!-- Ribbon: Insert tab -->
+<div class="ribbon" id="ribbonInsert" style="display:none">
+  <div class="ribbon-group">
+    <div class="ribbon-group-content">
+      <button class="rb-btn large" onclick="insertImage()" title="Picture"><i class="fa-solid fa-image"></i><span>Picture</span></button>
+      <button class="rb-btn large" onclick="insertLink()" title="Link"><i class="fa-solid fa-link"></i><span>Link</span></button>
+      <button class="rb-btn large" onclick="insertVideo()" title="Video"><i class="fa-solid fa-video"></i><span>Video</span></button>
+    </div>
+    <div class="ribbon-group-label">Media</div>
+  </div>
+  <div class="ribbon-group">
+    <div class="ribbon-group-content">
+      <button class="rb-btn large" onclick="insertHr()" title="Horizontal Line"><i class="fa-solid fa-minus"></i><span>Line</span></button>
+      <button class="rb-btn large" onclick="insertTable()" title="Table"><i class="fa-solid fa-table"></i><span>Table</span></button>
+      <button class="rb-btn large" onclick="insertPageBreak()" title="Page Break"><i class="fa-solid fa-file-circle-plus"></i><span>Page Break</span></button>
+    </div>
+    <div class="ribbon-group-label">Insert</div>
+  </div>
+  <div class="ribbon-group" style="border-right:none">
+    <div class="ribbon-group-content">
+      <button class="rb-btn large" onclick="insertSymbol('©')"><span style="font-size:18px">©</span><span>Copyright</span></button>
+      <button class="rb-btn large" onclick="insertSymbol('®')"><span style="font-size:18px">®</span><span>Reg</span></button>
+      <button class="rb-btn large" onclick="insertSymbol('™')"><span style="font-size:14px;font-weight:600">™</span><span>Trade</span></button>
+      <button class="rb-btn large" onclick="insertSymbol('€')"><span style="font-size:18px">€</span><span>Euro</span></button>
+      <button class="rb-btn large" onclick="insertSymbol('₹')"><span style="font-size:18px">₹</span><span>Rupee</span></button>
+    </div>
+    <div class="ribbon-group-label">Symbols</div>
+  </div>
+</div>
+
+<!-- Ribbon: Layout tab -->
+<div class="ribbon" id="ribbonLayout" style="display:none">
+  <div class="ribbon-group" style="border-right:none">
+    <div class="ribbon-group-content">
+      <button class="rb-btn large" onclick="setPageSize('A4')"><i class="fa-solid fa-file"></i><span>A4</span></button>
+      <button class="rb-btn large" onclick="setPageSize('Letter')"><i class="fa-solid fa-file"></i><span>Letter</span></button>
+      <button class="rb-btn large" onclick="setMargins('normal')"><i class="fa-solid fa-up-right-and-down-left-from-center"></i><span>Normal</span></button>
+      <button class="rb-btn large" onclick="setMargins('narrow')"><i class="fa-solid fa-down-left-and-up-right-to-center"></i><span>Narrow</span></button>
+      <button class="rb-btn large" onclick="setMargins('wide')"><i class="fa-solid fa-arrows-left-right"></i><span>Wide</span></button>
+    </div>
+    <div class="ribbon-group-label">Page Setup</div>
+  </div>
+</div>
+
+<!-- Ribbon: Review tab -->
+<div class="ribbon" id="ribbonReview" style="display:none">
+  <div class="ribbon-group" style="border-right:none">
+    <div class="ribbon-group-content">
+      <button class="rb-btn large" onclick="alert('Word count: ' + getWordCount() + '\\nCharacters: ' + getCharCount())"><i class="fa-solid fa-calculator"></i><span>Word Count</span></button>
+      <button class="rb-btn large" onclick="findReplace()"><i class="fa-solid fa-magnifying-glass"></i><span>Find</span></button>
+      <button class="rb-btn large" onclick="readAloud()"><i class="fa-solid fa-volume-high"></i><span>Read Aloud</span></button>
+    </div>
+    <div class="ribbon-group-label">Proofing</div>
+  </div>
+</div>
+
+<!-- Document area -->
+<div class="doc-area">
+  <div class="doc-page-wrap">
+    <div class="doc-page" id="docPage">
+      <div id="editor"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Status bar -->
+<div class="status-bar">
+  <span class="item"><i class="fa-solid fa-file-lines"></i> Page <span id="pageNum">1</span></span>
+  <span class="item"><span id="wordCount">0</span> words</span>
+  <span class="item"><span id="charCount">0</span> characters</span>
+  <span class="spacer"></span>
+  <span class="item"><i class="fa-solid fa-globe"></i> English (US)</span>
+  <span class="item"><i class="fa-solid fa-circle-check"></i> Auto-save on</span>
+</div>
+
+<!-- Share Modal -->
+<div class="modal-bd" id="shareModal">
+  <div class="modal">
+    <div class="modal-h">
+      <h3><i class="fa-solid fa-share-nodes"></i> Share this document</h3>
+      <button class="x" onclick="closeShare()">✕</button>
+    </div>
+    <div class="modal-b">
+      <div class="tog">
+        <input type="checkbox" id="shareEnabled" />
+        <label for="shareEnabled">Anyone with the link can access this document</label>
+      </div>
+      <label>Permission level</label>
+      <select id="sharePerm">
+        <option value="view">Can view (read-only)</option>
+        <option value="edit">Can edit</option>
+      </select>
+      <label>Share link</label>
+      <div class="share-row">
+        <input id="shareUrl" readonly placeholder="Enable sharing to generate link" />
+        <button class="btn primary" onclick="copyShareUrl()"><i class="fa-solid fa-copy"></i> Copy</button>
+      </div>
+    </div>
+    <div class="modal-f">
+      <button class="btn" onclick="closeShare()">Close</button>
+      <button class="btn primary" onclick="saveShare()">Apply</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// === STATE ===
+const params = new URLSearchParams(location.search);
+const DOC_ID = params.get('id');
+const SHARE_TOKEN = params.get('share');
+const isShare = !!SHARE_TOKEN;
+let docMeta = null, canEdit = true, saveTimer = null, quill = null;
+
+// === Initialize Quill (no built-in toolbar - we use our ribbon) ===
+quill = new Quill('#editor', {
+  theme: 'snow',
+  modules: { toolbar: false, history: { delay: 500, maxStack: 100, userOnly: true } },
+  placeholder: 'Type your document here...',
+});
+
+// === Apply ribbon actions to Quill ===
+function format(name, value) {
+  const range = quill.getSelection(true);
+  if (!range) return;
+  if (value === undefined) {
+    const cur = quill.getFormat(range)[name];
+    quill.format(name, !cur);
+  } else {
+    quill.format(name, value);
+  }
+}
+
+document.getElementById('boldBtn').onclick = () => format('bold');
+document.getElementById('italicBtn').onclick = () => format('italic');
+document.getElementById('underlineBtn').onclick = () => format('underline');
+document.getElementById('strikeBtn').onclick = () => format('strike');
+document.getElementById('subBtn').onclick = () => { const f = quill.getFormat().script; format('script', f === 'sub' ? false : 'sub'); };
+document.getElementById('supBtn').onclick = () => { const f = quill.getFormat().script; format('script', f === 'super' ? false : 'super'); };
+document.getElementById('ulBtn').onclick = () => format('list', 'bullet');
+document.getElementById('olBtn').onclick = () => format('list', 'ordered');
+document.getElementById('indentBtn').onclick = () => format('indent', '+1');
+document.getElementById('outdentBtn').onclick = () => format('indent', '-1');
+document.getElementById('clearBtn').onclick = () => {
+  const r = quill.getSelection(true); if (!r) return;
+  quill.removeFormat(r.index, r.length);
+};
+
+// Alignment
+document.querySelectorAll('button[data-align]').forEach(b => {
+  b.onclick = () => {
+    const a = b.dataset.align;
+    format('align', a || false);
+  };
+});
+
+// Headings
+document.getElementById('headingSel').onchange = (e) => {
+  const v = e.target.value;
+  if (v === 'quote') { format('blockquote', true); }
+  else if (v === 'code') { format('code-block', true); }
+  else if (v) { format('header', parseInt(v)); }
+  else { format('header', false); }
+};
+
+// Font family
+document.getElementById('fontFamily').onchange = (e) => format('font', e.target.value);
+
+// Font size — Quill uses size class names by default; register our sizes
+const SizeStyle = Quill.import('attributors/style/size');
+SizeStyle.whitelist = ['8px','9px','10px','11px','12px','14px','16px','18px','20px','24px','28px','36px','48px','72px'];
+Quill.register(SizeStyle, true);
+const FontAttributor = Quill.import('attributors/style/font');
+FontAttributor.whitelist = ['Calibri','Arial','Times New Roman','Georgia','Verdana','Tahoma','Courier New','Comic Sans MS','Segoe UI','Helvetica'];
+Quill.register(FontAttributor, true);
+const ColorAttributor = Quill.import('attributors/style/color');
+Quill.register(ColorAttributor, true);
+const BgAttributor = Quill.import('attributors/style/background');
+Quill.register(BgAttributor, true);
+
+document.getElementById('fontSize').onchange = (e) => format('size', e.target.value);
+document.getElementById('textColor').oninput = (e) => format('color', e.target.value);
+document.getElementById('bgColor').oninput = (e) => format('background', e.target.value);
+
+// Update ribbon button states based on selection
+quill.on('selection-change', updateRibbon);
+quill.on('text-change', () => { updateRibbon(); scheduleSave(); updateCounts(); });
+
+function updateRibbon() {
+  const f = quill.getFormat();
+  document.getElementById('boldBtn').classList.toggle('active', !!f.bold);
+  document.getElementById('italicBtn').classList.toggle('active', !!f.italic);
+  document.getElementById('underlineBtn').classList.toggle('active', !!f.underline);
+  document.getElementById('strikeBtn').classList.toggle('active', !!f.strike);
+  document.getElementById('subBtn').classList.toggle('active', f.script === 'sub');
+  document.getElementById('supBtn').classList.toggle('active', f.script === 'super');
+  document.getElementById('ulBtn').classList.toggle('active', f.list === 'bullet');
+  document.getElementById('olBtn').classList.toggle('active', f.list === 'ordered');
+  document.querySelectorAll('button[data-align]').forEach(b => b.classList.toggle('active', (f.align || '') === b.dataset.align));
+  if (f.font) document.getElementById('fontFamily').value = f.font;
+  if (f.size) document.getElementById('fontSize').value = f.size;
+  document.getElementById('headingSel').value = f.header ? String(f.header) : (f.blockquote ? 'quote' : (f['code-block'] ? 'code' : ''));
+}
+
+// === Ribbon tabs ===
+document.querySelectorAll('.ribbon-tab').forEach(t => {
+  t.onclick = () => {
+    document.querySelectorAll('.ribbon-tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    ['Home','Insert','Layout','Review'].forEach(n => {
+      const r = document.getElementById('ribbon' + n);
+      if (r) r.style.display = (n.toLowerCase() === t.dataset.tab) ? '' : 'none';
+    });
+  };
+});
+
+// === Insert helpers ===
+function insertImage() {
+  const url = prompt('Image URL (or paste a hosted image link):');
+  if (!url) return;
+  const r = quill.getSelection(true) || { index: quill.getLength() };
+  quill.insertEmbed(r.index, 'image', url, 'user');
+}
+function insertLink() {
+  const url = prompt('Link URL:'); if (!url) return;
+  const r = quill.getSelection(true); if (!r) return;
+  quill.format('link', url);
+}
+function insertVideo() {
+  const url = prompt('Video URL (YouTube/Vimeo):'); if (!url) return;
+  const r = quill.getSelection(true) || { index: quill.getLength() };
+  quill.insertEmbed(r.index, 'video', url, 'user');
+}
+function insertHr() {
+  const r = quill.getSelection(true) || { index: quill.getLength() };
+  quill.insertText(r.index, '\n', 'user');
+  quill.clipboard.dangerouslyPasteHTML(r.index + 1, '<hr>');
+}
+function insertTable() {
+  const cols = parseInt(prompt('Columns:', '3') || 3);
+  const rows = parseInt(prompt('Rows:', '3') || 3);
+  let html = '<table style="border-collapse:collapse;width:100%;margin:8px 0">';
+  for (let r = 0; r < rows; r++) {
+    html += '<tr>';
+    for (let c = 0; c < cols; c++) html += '<td style="border:1px solid #c8c6c4;padding:6px;min-width:50px">&nbsp;</td>';
+    html += '</tr>';
+  }
+  html += '</table><p><br></p>';
+  const sel = quill.getSelection(true) || { index: quill.getLength() };
+  quill.clipboard.dangerouslyPasteHTML(sel.index, html);
+}
+function insertPageBreak() {
+  const r = quill.getSelection(true) || { index: quill.getLength() };
+  quill.clipboard.dangerouslyPasteHTML(r.index, '<div style="page-break-after:always;border-top:1px dashed #c8c6c4;margin:12pt 0"></div>');
+}
+function insertSymbol(s) {
+  const r = quill.getSelection(true) || { index: quill.getLength() };
+  quill.insertText(r.index, s, 'user');
+}
+
+function setPageSize(size) {
+  const p = document.getElementById('docPage');
+  if (size === 'A4') { p.style.width = '816px'; p.style.minHeight = '1056px'; }
+  else { p.style.width = '816px'; p.style.minHeight = '1056px'; }
+}
+function setMargins(kind) {
+  const p = document.getElementById('docPage');
+  if (kind === 'narrow') p.style.padding = '48px 48px';
+  else if (kind === 'wide') p.style.padding = '96px 144px';
+  else p.style.padding = '96px 96px';
+}
+
+function findReplace() {
+  const find = prompt('Find text:'); if (!find) return;
+  const replace = prompt('Replace with (leave blank to just find):') || '';
+  const text = quill.getText();
+  let idx = -1, count = 0, offset = 0, html = quill.root.innerHTML;
+  while ((idx = text.indexOf(find, idx + 1)) !== -1) count++;
+  if (replace !== null && replace !== '' && confirm(`Found ${count} match(es). Replace all?`)) {
+    const re = new RegExp(find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+    quill.setText(text.replace(re, replace));
+  } else {
+    alert(`Found ${count} match(es) of "${find}"`);
+  }
+}
+
+function readAloud() {
+  if (!('speechSynthesis' in window)) { alert('Read Aloud not supported in this browser'); return; }
+  const u = new SpeechSynthesisUtterance(quill.getText());
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+function getWordCount() { return (quill.getText().trim().match(/\S+/g) || []).length; }
+function getCharCount() { return quill.getText().length - 1; }
+function updateCounts() {
+  document.getElementById('wordCount').textContent = getWordCount();
+  document.getElementById('charCount').textContent = getCharCount();
+}
+
+// === Save ===
+function setStatus(html, color) {
+  const el = document.getElementById('saveStatus');
+  el.innerHTML = html;
+  if (color) el.style.color = color;
+}
+function scheduleSave() {
+  if (!canEdit) return;
+  if (saveTimer) clearTimeout(saveTimer);
+  setStatus('<i class="fa-solid fa-cloud-arrow-up"></i> Saving...', '#ffd966');
+  saveTimer = setTimeout(saveDoc, 800);
+}
+
+async function loadDoc() {
+  try {
+    let data;
+    if (SHARE_TOKEN) {
+      const r = await OfficeAPI.publicGet(SHARE_TOKEN);
+      data = r.data;
+      canEdit = data.permission === 'edit';
+      if (!canEdit) {
+        document.getElementById('shareBtn').style.display = 'none';
+        document.getElementById('roBanner').classList.add('show');
+        document.querySelectorAll('.ribbon, .ribbon-tabs').forEach(el => { el.style.opacity = '.4'; el.style.pointerEvents = 'none'; });
+        document.getElementById('docTitle').readOnly = true;
+        quill.disable();
+        setStatus('<i class="fa-solid fa-lock"></i> Read-only', '#ffd966');
+      }
+    } else if (DOC_ID) {
+      const r = await OfficeAPI.get(DOC_ID);
+      data = r.data;
+    } else {
+      try {
+        const r = await OfficeAPI.create('document');
+        data = r.data;
+        history.replaceState(null, '', '?id=' + data._id);
+      } catch (e) {
+        setStatus('<i class="fa-solid fa-circle-info"></i> Sign in to save', '#ffd966');
+        return;
+      }
+    }
+    docMeta = data;
+    document.getElementById('docTitle').value = data.title || 'Untitled Document';
+    if (data.content && data.content.html) {
+      quill.clipboard.dangerouslyPasteHTML(0, data.content.html);
+    }
+    updateCounts();
+  } catch (err) {
+    setStatus('<i class="fa-solid fa-triangle-exclamation"></i> ' + err.message, '#ff6b6b');
+  }
+}
+
+async function saveDoc() {
+  try {
+    const payload = {
+      title: document.getElementById('docTitle').value || 'Untitled Document',
+      content: { html: quill.root.innerHTML, plainText: quill.getText() },
+    };
+    if (SHARE_TOKEN) await OfficeAPI.publicUpdate(SHARE_TOKEN, payload);
+    else if (docMeta && docMeta._id) await OfficeAPI.update(docMeta._id, payload);
+    setStatus('<i class="fa-solid fa-cloud"></i> All changes saved', '');
+  } catch (err) {
+    setStatus('<i class="fa-solid fa-triangle-exclamation"></i> Save failed', '#ff6b6b');
+  }
+}
+
+document.getElementById('docTitle').addEventListener('input', scheduleSave);
+
+// === Export ===
+function exportDoc() {
+  const title = document.getElementById('docTitle').value || 'Document';
+  // Build tag names using char codes to bypass deploy-tool HTML injection
+  const TS = String.fromCharCode(60) + 'tit' + 'le' + String.fromCharCode(62);
+  const TE = String.fromCharCode(60) + '/tit' + 'le' + String.fromCharCode(62);
+  const html = '<!doctype html><html><head><meta charset="utf-8">' + TS + title + TE + '</head>' +
+               '<body style="font-family:Calibri,Arial,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;line-height:1.5">' +
+               quill.root.innerHTML + '</body></html>';
+  const blob = new Blob([html], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = title + '.html';
+  a.click();
+}
+
+// === Share modal ===
+document.getElementById('shareBtn').onclick = async () => {
+  if (!docMeta) { alert('Save the document first'); return; }
+  try {
+    const r = await OfficeAPI.get(docMeta._id);
+    const enabled = !!r.data.isPublic;
+    document.getElementById('shareEnabled').checked = enabled;
+    document.getElementById('sharePerm').value = r.data.sharePermission || 'view';
+    document.getElementById('shareUrl').value = enabled && r.data.shareToken ? buildShareUrl(r.data.shareToken) : '';
+  } catch (e) {}
+  document.getElementById('shareModal').classList.add('show');
+};
+function buildShareUrl(token) {
+  const base = location.origin + location.pathname.replace(/[^/]+$/, '');
+  return base + 'office-document.html?share=' + token;
+}
+function closeShare() { document.getElementById('shareModal').classList.remove('show'); }
+async function saveShare() {
+  const enabled = document.getElementById('shareEnabled').checked;
+  const perm = document.getElementById('sharePerm').value;
+  try {
+    const r = await OfficeAPI.share(docMeta._id, enabled, perm);
+    document.getElementById('shareUrl').value = enabled && r.data.shareToken ? buildShareUrl(r.data.shareToken) : '';
+    if (!enabled) closeShare();
+  } catch (e) { alert('Share failed: ' + e.message); }
+}
+function copyShareUrl() {
+  const i = document.getElementById('shareUrl');
+  if (!i.value) return;
+  i.select(); document.execCommand('copy');
+  alert('Link copied to clipboard!');
+}
+
+function goBack() {
+  if (window.parent !== window) window.parent.postMessage({ type: 'office-navigate', target: 'office-hub' }, '*');
+  else location.href = 'office.html';
+}
+
+loadDoc();
+</script>
+</body>
+</html>

@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <meta name="theme-color" content="#714B67">
+    <title>AZOLVE - Support Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+:root{
+    --primary:#00A09D;--primary-dark:#008785;--primary-light:#e6f7f7;
+    --bg-primary:#ffffff;--bg-secondary:#f8fafc;--bg-tertiary:#f1f5f9;
+    --text-primary:#1e293b;--text-secondary:#64748b;--text-muted:#94a3b8;
+    --border:#e2e8f0;--shadow:0 1px 3px rgba(0,0,0,.1);
+    --success:#10b981;--warning:#f59e0b;--danger:#ef4444;--info:#6366f1;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg-secondary);color:var(--text-primary);min-height:100vh;}
+
+/* Dark mode */
+body.dark-mode{--bg-primary:#0f172a;--bg-secondary:#1e293b;--bg-tertiary:#334155;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;--border:#334155;--shadow:0 1px 3px rgba(0,0,0,.3);}
+
+/* Top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;background:var(--bg-primary);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.topbar-brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:18px;color:var(--primary);}
+.topbar-brand .logo{width:32px;height:32px;border-radius:8px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;}
+.topbar-sep{width:1px;height:28px;background:var(--border);margin:0 8px;}
+.topbar-title{font-size:15px;font-weight:600;color:var(--text-primary);}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+.topbar-btn{padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg-primary);color:var(--text-secondary);cursor:pointer;font-size:13px;display:flex;align-items:center;gap:6px;transition:all .15s;}
+.topbar-btn:hover{background:var(--bg-tertiary);color:var(--text-primary);}
+.topbar-btn.primary{background:var(--primary);color:#fff;border-color:var(--primary);}
+.topbar-btn.primary:hover{background:var(--primary-dark);}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:var(--info);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;cursor:pointer;}
+
+/* Layout */
+.layout{display:flex;height:calc(100vh - 56px);}
+.sidebar{width:280px;background:var(--bg-primary);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.sidebar-section{padding:12px;}
+.sidebar-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);padding:4px 8px;margin-bottom:4px;}
+.sidebar-filter{display:flex;flex-direction:column;gap:6px;padding:0 4px;}
+.sidebar-filter label{font-size:12px;font-weight:600;color:var(--text-secondary);}
+.sidebar-filter select,.sidebar-filter input{padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--bg-secondary);color:var(--text-primary);}
+.queue-list{flex:1;overflow-y:auto;padding:4px 8px;}
+.queue-item{padding:10px 12px;border-radius:8px;cursor:pointer;border:1px solid transparent;transition:all .15s;margin-bottom:4px;}
+.queue-item:hover{background:var(--bg-secondary);}
+.queue-item.active{background:var(--primary-light);border-color:var(--primary);}
+.queue-item-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.queue-item-number{font-weight:700;font-size:12px;color:var(--primary);}
+.queue-item-time{font-size:11px;color:var(--text-muted);}
+.queue-item-title{font-size:13px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;}
+.queue-item-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.queue-item-meta .tag{padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;}
+.tag-open{background:#dbeafe;color:#2563eb;}
+.tag-in_progress{background:#fef3c7;color:#d97706;}
+.tag-resolved{background:#d1fae5;color:#059669;}
+.tag-closed{background:#f1f5f9;color:#64748b;}
+.tag-critical{background:#fde2e2;color:#dc2626;}
+.tag-high{background:#ffe4e6;color:#e11d48;}
+.tag-medium{background:#fef3c7;color:#d97706;}
+.tag-low{background:#d1fae5;color:#059669;}
+.queue-item-company{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.queue-count{padding:6px 12px;font-size:12px;color:var(--text-muted);text-align:center;border-top:1px solid var(--border);}
+
+/* Main panel */
+.main-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-muted);text-align:center;padding:40px;}
+.empty-state i{font-size:48px;margin-bottom:16px;color:var(--border);}
+.empty-state h3{font-size:18px;margin-bottom:8px;color:var(--text-secondary);}
+.empty-state p{font-size:13px;max-width:300px;}
+
+/* Ticket detail view */
+.ticket-detail{display:flex;flex-direction:column;height:100%;}
+.ticket-detail-header{padding:16px 20px;border-bottom:1px solid var(--border);background:var(--bg-primary);}
+.td-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px;}
+.td-title{font-size:16px;font-weight:700;color:var(--text-primary);flex:1;}
+.td-actions{display:flex;gap:6px;flex-shrink:0;}
+.td-actions button{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg-primary);color:var(--text-secondary);cursor:pointer;font-size:12px;display:flex;align-items:center;gap:4px;transition:all .15s;}
+.td-actions button:hover{background:var(--bg-tertiary);color:var(--text-primary);}
+.td-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;}
+.td-meta .tag{padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;}
+.td-meta-item{display:flex;align-items:center;gap:4px;color:var(--text-secondary);}
+.td-meta-item i{font-size:12px;color:var(--text-muted);}
+.sla-timer{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;}
+.sla-timer.green{background:#d1fae5;color:#059669;}
+.sla-timer.yellow{background:#fef3c7;color:#d97706;}
+.sla-timer.red{background:#fde2e2;color:#dc2626;}
+
+/* Conversation + sidebar split */
+.ticket-body{display:grid;grid-template-columns:1fr 300px;flex:1;overflow:hidden;}
+.ticket-convo-panel{display:flex;flex-direction:column;overflow:hidden;border-right:1px solid var(--border);}
+.ticket-messages{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;}
+.msg-bubble{display:flex;gap:10px;padding:12px;border-radius:10px;}
+.msg-bubble.user{background:var(--bg-secondary);}
+.msg-bubble.agent{background:rgba(0,160,157,.06);}
+.msg-bubble.internal{background:#fef3c7;border:1px dashed #f59e0b;}
+.msg-bubble.system{background:transparent;justify-content:center;padding:6px;font-size:12px;color:var(--text-muted);font-style:italic;}
+.msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;color:#fff;}
+.msg-avatar.user-av{background:#6366f1;}
+.msg-avatar.agent-av{background:var(--primary);}
+.msg-avatar.internal-av{background:#f59e0b;}
+.msg-body{flex:1;min-width:0;}
+.msg-header{display:flex;align-items:center;gap:8px;margin-bottom:3px;}
+.msg-sender{font-weight:700;font-size:13px;color:var(--text-primary);}
+.msg-time{font-size:11px;color:var(--text-muted);}
+.msg-badge{padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;background:#fef3c7;color:#d97706;}
+.msg-content{font-size:13px;line-height:1.6;color:var(--text-secondary);white-space:pre-wrap;}
+.msg-attachments{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.msg-attachments span{background:var(--bg-tertiary);padding:3px 8px;border-radius:4px;font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:3px;}
+
+/* Reply composer */
+.reply-composer{padding:12px 20px;border-top:1px solid var(--border);background:var(--bg-primary);}
+.reply-tabs{display:flex;gap:0;margin-bottom:8px;}
+.reply-tab{padding:6px 14px;border:1px solid var(--border);background:var(--bg-secondary);cursor:pointer;font-size:12px;font-weight:600;color:var(--text-secondary);transition:all .15s;}
+.reply-tab:first-child{border-radius:6px 0 0 6px;}
+.reply-tab:last-child{border-radius:0 6px 6px 0;}
+.reply-tab.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.reply-tab.internal.active{background:#f59e0b;color:#fff;border-color:#f59e0b;}
+.reply-area{display:flex;flex-direction:column;gap:8px;}
+.reply-area textarea{border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;resize:none;min-height:80px;font-family:inherit;background:var(--bg-secondary);color:var(--text-primary);line-height:1.5;}
+.reply-area textarea:focus{outline:none;border-color:var(--primary);}
+.reply-footer{display:flex;align-items:center;justify-content:space-between;}
+.reply-tools{display:flex;gap:4px;}
+.reply-tools button{width:32px;height:32px;border:none;border-radius:6px;background:transparent;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.reply-tools button:hover{background:var(--bg-tertiary);color:var(--text-primary);}
+.canned-dropdown{position:relative;display:inline-block;}
+.canned-menu{position:absolute;bottom:100%;left:0;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow);padding:4px;min-width:240px;z-index:50;display:none;}
+.canned-menu.show{display:block;}
+.canned-menu-item{padding:8px 10px;border-radius:6px;cursor:pointer;font-size:12px;color:var(--text-secondary);transition:background .1s;}
+.canned-menu-item:hover{background:var(--bg-secondary);}
+.canned-menu-item .cm-title{font-weight:600;color:var(--text-primary);}
+.canned-menu-item .cm-preview{font-size:11px;color:var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* Right sidebar - ticket info */
+.ticket-info-panel{background:var(--bg-primary);overflow-y:auto;padding:16px;}
+.info-section{margin-bottom:20px;}
+.info-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.info-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;font-size:12px;}
+.info-row .label{color:var(--text-muted);font-weight:500;}
+.info-row .value{color:var(--text-primary);font-weight:600;text-align:right;}
+.info-row select{padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-size:11px;background:var(--bg-secondary);color:var(--text-primary);cursor:pointer;}
+.customer-card{padding:10px;border-radius:8px;background:var(--bg-secondary);margin-bottom:8px;}
+.customer-card .cc-name{font-weight:700;font-size:13px;color:var(--text-primary);}
+.customer-card .cc-company{font-size:12px;color:var(--text-muted);margin-top:2px;}
+.customer-card .cc-email{font-size:11px;color:var(--primary);margin-top:4px;}
+.customer-card .cc-stats{display:flex;gap:12px;margin-top:8px;font-size:11px;color:var(--text-secondary);}
+
+/* Analytics tab */
+.tab-nav{display:flex;gap:0;background:var(--bg-primary);border-bottom:1px solid var(--border);}
+.tab-nav-item{padding:12px 20px;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
+.tab-nav-item:hover{color:var(--text-primary);}
+.tab-nav-item.active{color:var(--primary);border-bottom-color:var(--primary);}
+.analytics-view{padding:20px;overflow-y:auto;flex:1;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.stat-card{background:var(--bg-primary);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;align-items:center;gap:12px;}
+.stat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.stat-content .stat-value{font-size:22px;font-weight:800;color:var(--text-primary);}
+.stat-content .stat-label{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.chart-card{background:var(--bg-primary);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.chart-card h4{font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:12px;}
+.chart-container{position:relative;height:220px;}
+.recent-table{background:var(--bg-primary);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.recent-table h4{font-size:14px;font-weight:700;color:var(--text-primary);padding:16px 16px 12px;}
+.recent-table table{width:100%;border-collapse:collapse;}
+.recent-table th{padding:8px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);text-align:left;background:var(--bg-secondary);border-bottom:1px solid var(--border);}
+.recent-table td{padding:8px 12px;font-size:12px;color:var(--text-secondary);border-bottom:1px solid var(--border);}
+.recent-table tr:last-child td{border-bottom:none;}
+.recent-table tr:hover td{background:var(--bg-secondary);}
+
+/* Toast */
+.toast{position:fixed;top:20px;right:20px;padding:12px 20px;border-radius:8px;color:#fff;font-size:13px;font-weight:500;z-index:9999;animation:slideIn .3s ease;box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.toast.success{background:var(--success);}
+.toast.error{background:var(--danger);}
+.toast.info{background:var(--info);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0;}to{transform:translateX(0);opacity:1;}}
+
+/* Dark mode extras */
+body.dark-mode .topbar{background:#0f172a;border-color:#1e293b;}
+body.dark-mode .sidebar{background:#0f172a;border-color:#1e293b;}
+body.dark-mode .queue-item.active{background:rgba(0,160,157,.15);border-color:var(--primary);}
+body.dark-mode .reply-area textarea{background:#1e293b;border-color:#334155;color:#f1f5f9;}
+body.dark-mode .msg-bubble.user{background:#1e293b;}
+body.dark-mode .msg-bubble.agent{background:rgba(0,160,157,.1);}
+body.dark-mode .msg-bubble.internal{background:rgba(245,158,11,.1);border-color:#d97706;}
+body.dark-mode .stat-card,.dark-mode .chart-card,.dark-mode .recent-table{background:#0f172a;border-color:#1e293b;}
+body.dark-mode .sidebar-filter select,body.dark-mode .sidebar-filter input{background:#0f172a;border-color:#334155;color:#f1f5f9;}
+
+/* Support dashboard login gate */
+body.support-locked{overflow:hidden;background:linear-gradient(135deg,#f8fafc,#e6f7f7);}
+body.support-locked .topbar,
+body.support-locked .tab-nav,
+body.support-locked .layout{display:none!important;}
+.support-login-screen{min-height:100vh;display:none;align-items:center;justify-content:center;padding:24px;background:
+    radial-gradient(circle at top left,rgba(0,160,157,.14),transparent 35%),
+    linear-gradient(135deg,#f8fafc 0%,#ffffff 45%,#e6f7f7 100%);}
+body.support-locked .support-login-screen{display:flex;}
+.support-login-card{width:100%;max-width:430px;background:#fff;border:1px solid var(--border);border-radius:22px;box-shadow:0 24px 70px rgba(15,23,42,.14);padding:34px;}
+.support-login-logo{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.support-login-logo img{height:38px;width:auto;}
+.support-login-badge{margin-left:auto;background:var(--primary-light);color:var(--primary-dark);border:1px solid rgba(0,160,157,.25);padding:6px 10px;border-radius:999px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;}
+.support-login-title{font-size:25px;font-weight:850;color:var(--text-primary);margin-bottom:6px;}
+.support-login-subtitle{font-size:13px;line-height:1.6;color:var(--text-secondary);margin-bottom:22px;}
+.support-login-group{margin-bottom:14px;}
+.support-login-group label{display:block;font-size:12px;font-weight:800;color:var(--text-secondary);margin-bottom:7px;text-transform:uppercase;letter-spacing:.45px;}
+.support-login-input{width:100%;height:46px;border:1px solid var(--border);border-radius:12px;padding:0 14px;font-size:14px;color:var(--text-primary);background:#fff;outline:none;transition:all .16s;}
+.support-login-input:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(0,160,157,.12);}
+.support-login-btn{width:100%;height:48px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;font-weight:850;font-size:14px;cursor:pointer;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 12px 24px rgba(0,160,157,.22);}
+.support-login-btn:hover{filter:brightness(.97);transform:translateY(-1px);}
+.support-login-error{display:none;margin-top:14px;padding:11px 12px;border-radius:10px;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;font-size:12px;font-weight:650;}
+.support-login-foot{margin-top:18px;padding-top:16px;border-top:1px solid var(--border);font-size:11px;color:var(--text-muted);line-height:1.55;}
+body.dark-mode .support-login-card{background:#0f172a;border-color:#334155;}
+body.dark-mode .support-login-screen{background:linear-gradient(135deg,#020617,#0f172a);}
+body.dark-mode .support-login-input{background:#1e293b;border-color:#334155;color:#f1f5f9;}
+
+    </style>
+</head>
+<body class="support-locked">
+
+<!-- SUPPORT LOGIN GATE -->
+<div class="support-login-screen" id="supportLogin">
+    <div class="support-login-card">
+        <div class="support-login-logo">
+            <img src="assets/logo-navbar.png" alt="Azolve">
+            <span class="support-login-badge">Team Only</span>
+        </div>
+        <div class="support-login-title">Support Dashboard Login</div>
+        <div class="support-login-subtitle">This dashboard is only for the Azolve company support team. Enter your support credentials to view ticket queue, replies, and analytics.</div>
+        <div class="support-login-group">
+            <label for="supportEmail">Login ID</label>
+            <input class="support-login-input" id="supportEmail" type="email" placeholder="support@azolve.io" autocomplete="username" onkeydown="if(event.key==='Enter')supportLogin()">
+        </div>
+        <div class="support-login-group">
+            <label for="supportPassword">Password</label>
+            <input class="support-login-input" id="supportPassword" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')supportLogin()">
+        </div>
+        <button class="support-login-btn" onclick="supportLogin()"><i class="fas fa-shield-alt"></i> Open Support Dashboard</button>
+        <div class="support-login-error" id="supportLoginError"><i class="fas fa-triangle-exclamation"></i> Invalid support login ID or password.</div>
+        <div class="support-login-foot">Direct customer app users cannot access this area from their dashboard anymore. Share this page only with internal support staff.</div>
+    </div>
+</div>
+
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <div class="topbar-left">
+        <div class="topbar-brand"><img src="assets/logo-navbar.png" alt="Azolve" style="height:32px;width:auto;"></div>
+        <div class="topbar-sep"></div>
+        <div class="topbar-title"><i class="fas fa-headset" style="margin-right:6px;color:var(--primary);"></i>Support Dashboard</div>
+    </div>
+    <div class="topbar-right">
+        <button class="topbar-btn" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></button>
+        <button class="topbar-btn" onclick="supportLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        <div class="topbar-avatar" id="agentAvatar">A</div>
+    </div>
+</div>
+
+<!-- TAB NAV -->
+<div class="tab-nav">
+    <div class="tab-nav-item active" data-tab="queue" onclick="switchTab('queue')"><i class="fas fa-inbox" style="margin-right:6px;"></i>Ticket Queue</div>
+    <div class="tab-nav-item" data-tab="analytics" onclick="switchTab('analytics')"><i class="fas fa-chart-line" style="margin-right:6px;"></i>Analytics</div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout" id="queueView">
+    <!-- LEFT: Ticket Queue Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Filters</div>
+            <div class="sidebar-filter">
+                <input type="text" placeholder="Search tickets..." id="sdSearch" oninput="filterQueue()">
+                <label>Status</label>
+                <select id="sdStatusFilter" onchange="filterQueue()">
+                    <option value="">All Status</option>
+                    <option value="open" selected>Open</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="closed">Closed</option>
+                </select>
+                <label>Priority</label>
+                <select id="sdPriorityFilter" onchange="filterQueue()">
+                    <option value="">All Priority</option>
+                    <option value="critical">Critical</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+                <label>Category</label>
+                <select id="sdCatFilter" onchange="filterQueue()">
+                    <option value="">All Categories</option>
+                    <option value="bugs">Bug Report</option>
+                    <option value="instant_help">Need Help</option>
+                    <option value="system_issues">System Issue</option>
+                </select>
+            </div>
+        </div>
+        <div class="sidebar-section-title" style="padding:0 16px;">Ticket Queue</div>
+        <div class="queue-list" id="queueList"></div>
+        <div class="queue-count" id="queueCount">0 tickets</div>
+    </div>
+    <!-- RIGHT: Ticket Detail / Empty State -->
+    <div class="main-panel" id="mainPanel">
+        <div class="empty-state" id="emptyState">
+            <i class="fas fa-inbox"></i>
+            <h3>Select a Ticket</h3>
+            <p>Choose a ticket from the queue to view details, respond, and manage.</p>
+        </div>
+        <div class="ticket-detail" id="ticketDetail" style="display:none;"></div>
+    </div>
+</div>
+
+<!-- ANALYTICS VIEW -->
+<div class="layout" id="analyticsView" style="display:none;">
+    <div class="analytics-view" id="analyticsContent"></div>
+</div>
+
+<script>
+// ===== DB HELPERS =====
+const DB = {
+    get(key, def=[]) { try { return JSON.parse(localStorage.getItem('azolve_'+key)) || def; } catch(e) { return def; } },
+    set(key, val) { localStorage.setItem('azolve_'+key, JSON.stringify(val)); },
+    getObj(key, def={}) { try { return JSON.parse(localStorage.getItem('azolve_'+key)) || def; } catch(e) { return def; } }
+};
+
+function genId(){ return 'id_'+Date.now()+'_'+Math.random().toString(36).substr(2,6); }
+
+let selectedTicketId = null;
+let replyMode = 'reply'; // 'reply' or 'internal'
+
+// ===== CANNED RESPONSES =====
+const cannedResponses = [
+    { title: 'Greeting', text: 'Hi there! Thank you for reaching out to AZOLVE Support. I\'m happy to help you with this.' },
+    { title: 'Need More Info', text: 'Thank you for your report. To help us investigate further, could you please provide:\n\n1. Steps to reproduce the issue\n2. Browser and OS version\n3. Screenshots if available\n\nThis will help us resolve your issue more quickly.' },
+    { title: 'Bug Acknowledged', text: 'Thank you for reporting this bug. I\'ve been able to reproduce the issue and have escalated it to our engineering team. We\'ll keep you updated on the fix progress.' },
+    { title: 'Resolution', text: 'Great news! The issue has been resolved. Here\'s what we did:\n\n[Describe fix]\n\nPlease verify that everything is working correctly on your end. If you encounter any further issues, don\'t hesitate to reach out.' },
+    { title: 'Feature Request', text: 'Thank you for your suggestion! We\'ve added this to our product roadmap for consideration. Our product team reviews all feature requests during our planning cycles.' },
+    { title: 'Closing', text: 'I\'m glad we could help resolve this! If you have any other questions or run into any issues in the future, don\'t hesitate to open a new ticket. Have a great day!' }
+];
+
+// ===== AGENTS =====
+const agents = ['Alex K.','Sarah M.','Mike T.','Admin'];
+
+// ===== TOAST =====
+function showToast(msg, type='success') {
+    const t = document.createElement('div');
+    t.className = 'toast '+type;
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(), 300); }, 3000);
+}
+
+// ===== DARK MODE =====
+function toggleDarkMode(){
+    document.body.classList.toggle('dark-mode');
+    DB.set('darkMode', document.body.classList.contains('dark-mode'));
+}
+
+// ===== TAB SWITCHING =====
+function switchTab(tab) {
+    document.querySelectorAll('.tab-nav-item').forEach(t=>t.classList.remove('active'));
+    document.querySelector(`.tab-nav-item[data-tab="${tab}"]`).classList.add('active');
+    document.getElementById('queueView').style.display = tab==='queue' ? 'flex' : 'none';
+    document.getElementById('analyticsView').style.display = tab==='analytics' ? 'flex' : 'none';
+    if (tab==='analytics') renderAnalytics();
+}
+
+// ===== FILTER QUEUE =====
+function filterQueue() {
+    renderQueueList();
+}
+
+// ===== RENDER QUEUE LIST =====
+function renderQueueList() {
+    const tickets = DB.get('tickets');
+    const search = (document.getElementById('sdSearch').value||'').toLowerCase();
+    const status = document.getElementById('sdStatusFilter').value;
+    const priority = document.getElementById('sdPriorityFilter').value;
+    const cat = document.getElementById('sdCatFilter').value;
+
+    let filtered = tickets.filter(t => {
+        if (search && !t.title.toLowerCase().includes(search) && !('#'+t.number).includes(search)) return false;
+        if (status && t.status !== status) return false;
+        if (priority && t.priority !== priority) return false;
+        if (cat && t.category !== cat) return false;
+        return true;
+    });
+
+    // Sort by priority weight then date
+    const priWeight = {critical:0,high:1,medium:2,low:3};
+    filtered.sort((a,b) => (priWeight[a.priority]||5) - (priWeight[b.priority]||5) || new Date(b.createdAt) - new Date(a.createdAt));
+
+    const list = document.getElementById('queueList');
+    if (filtered.length === 0) {
+        list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;"><i class="fas fa-filter" style="display:block;font-size:24px;margin-bottom:8px;"></i>No tickets match your filters</div>';
+    } else {
+        list.innerHTML = filtered.map(t => `
+            <div class="queue-item ${t.id===selectedTicketId?'active':''}" onclick="selectTicket('${t.id}')">
+                <div class="queue-item-header">
+                    <span class="queue-item-number">#${t.number}</span>
+                    <span class="queue-item-time">${timeAgo(t.updatedAt)}</span>
+                </div>
+                <div class="queue-item-title">${t.title}</div>
+                <div class="queue-item-meta">
+                    <span class="tag tag-${t.status}">${formatStatus(t.status)}</span>
+                    <span class="tag tag-${t.priority}">${t.priority}</span>
+                    <span style="font-size:10px;color:var(--text-muted);">${t.assignedTo||'Unassigned'}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+    document.getElementById('queueCount').textContent = filtered.length + ' ticket' + (filtered.length!==1?'s':'');
+}
+
+function formatStatus(s){
+    return s==='in_progress'?'In Progress':s.charAt(0).toUpperCase()+s.slice(1);
+}
+
+function timeAgo(dateStr) {
+    const now = new Date();
+    const d = new Date(dateStr);
+    const diff = Math.floor((now - d) / 1000);
+    if (diff < 60) return 'Just now';
+    if (diff < 3600) return Math.floor(diff/60)+'m ago';
+    if (diff < 86400) return Math.floor(diff/3600)+'h ago';
+    if (diff < 604800) return Math.floor(diff/86400)+'d ago';
+    return d.toLocaleDateString();
+}
+
+function formatTime(dateStr) {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' ' + d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+}
+
+// ===== SELECT TICKET =====
+function selectTicket(id) {
+    selectedTicketId = id;
+    renderQueueList();
+    renderTicketDetail(id);
+}
+
+// ===== SLA CALCULATION =====
+function calcSLA(ticket) {
+    if (ticket.status === 'resolved' || ticket.status === 'closed') return { text:'Resolved', class:'green' };
+    const created = new Date(ticket.createdAt);
+    const now = new Date();
+    const hours = (now - created) / 3600000;
+    const slaLimit = ticket.priority==='critical' ? 4 : ticket.priority==='high' ? 12 : ticket.priority==='medium' ? 24 : 48;
+    const remaining = slaLimit - hours;
+    if (remaining <= 0) return { text:'SLA Breached', class:'red' };
+    if (remaining <= slaLimit * 0.25) return { text:Math.ceil(remaining)+'h left', class:'yellow' };
+    return { text:Math.ceil(remaining)+'h left', class:'green' };
+}
+
+// ===== RENDER TICKET DETAIL =====
+function renderTicketDetail(id) {
+    const tickets = DB.get('tickets');
+    const ticket = tickets.find(t=>t.id===id);
+    if (!ticket) return;
+
+    document.getElementById('emptyState').style.display = 'none';
+    const detail = document.getElementById('ticketDetail');
+    detail.style.display = 'flex';
+
+    const sla = calcSLA(ticket);
+    const catIcons = {bugs:'🐛',instant_help:'🆘',system_issues:'⚙️'};
+    const catLabels = {bugs:'Bug Report',instant_help:'Need Help',system_issues:'System Issue'};
+
+    detail.innerHTML = `
+        <div class="ticket-detail-header">
+            <div class="td-title-row">
+                <div class="td-title">${catIcons[ticket.category]||''} #${ticket.number}: ${ticket.title}</div>
+                <div class="td-actions">
+                    ${ticket.status!=='resolved'&&ticket.status!=='closed'?`<button onclick="changeTicketStatus('${id}','resolved')"><i class="fas fa-check"></i> Resolve</button>`:''}
+                    ${ticket.status==='resolved'?`<button onclick="changeTicketStatus('${id}','closed')"><i class="fas fa-archive"></i> Close</button>`:''}
+                    ${ticket.status!=='in_progress'&&ticket.status!=='resolved'&&ticket.status!=='closed'?`<button onclick="changeTicketStatus('${id}','in_progress')"><i class="fas fa-play"></i> Start</button>`:''}
+                </div>
+            </div>
+            <div class="td-meta">
+                <span class="tag tag-${ticket.status}">${formatStatus(ticket.status)}</span>
+                <span class="tag tag-${ticket.priority}">${ticket.priority}</span>
+                <span class="sla-timer ${sla.class}"><i class="fas fa-clock"></i> ${sla.text}</span>
+                <span class="td-meta-item"><i class="fas fa-tag"></i> ${catLabels[ticket.category]||ticket.category}</span>
+                <span class="td-meta-item"><i class="fas fa-calendar"></i> ${formatTime(ticket.createdAt)}</span>
+            </div>
+        </div>
+        <div class="ticket-body">
+            <div class="ticket-convo-panel">
+                <div class="ticket-messages" id="ticketMessages">
+                    ${renderMessages(ticket)}
+                </div>
+                <div class="reply-composer">
+                    <div class="reply-tabs">
+                        <div class="reply-tab active" onclick="setReplyMode('reply',this)">✉️ Reply to Customer</div>
+                        <div class="reply-tab internal" onclick="setReplyMode('internal',this)">🔒 Internal Note</div>
+                    </div>
+                    <div class="reply-area">
+                        <textarea id="replyText" placeholder="${replyMode==='internal'?'Add internal note (not visible to customer)...':'Type your response to the customer...'}" rows="3"></textarea>
+                        <div class="reply-footer">
+                            <div class="reply-tools">
+                                <div class="canned-dropdown">
+                                    <button onclick="toggleCannedMenu()" title="Canned Responses"><i class="fas fa-bolt"></i></button>
+                                    <div class="canned-menu" id="cannedMenu">
+                                        ${cannedResponses.map((c,i)=>`
+                                            <div class="canned-menu-item" onclick="insertCanned(${i})">
+                                                <div class="cm-title">${c.title}</div>
+                                                <div class="cm-preview">${c.text.substring(0,60)}...</div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                                <button title="Attach File"><i class="fas fa-paperclip"></i></button>
+                            </div>
+                            <button class="topbar-btn primary" onclick="sendReply('${id}')"><i class="fas fa-paper-plane"></i> ${replyMode==='internal'?'Add Note':'Send Reply'}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ticket-info-panel">
+                <div class="info-section">
+                    <div class="info-section-title">Customer</div>
+                    <div class="customer-card">
+                        <div class="cc-name">${ticket.createdBy==='user'?'Customer User':'Unknown'}</div>
+                        <div class="cc-company">Test Company Inc</div>
+                        <div class="cc-email">customer@testcompany.com</div>
+                        <div class="cc-stats">
+                            <span><i class="fas fa-ticket-alt"></i> ${tickets.filter(t=>t.createdBy===ticket.createdBy).length} tickets</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-section">
+                    <div class="info-section-title">Ticket Details</div>
+                    <div class="info-row"><span class="label">Assigned To</span>
+                        <select onchange="assignTicket('${id}',this.value)">
+                            <option value="">Unassigned</option>
+                            ${agents.map(a=>`<option value="${a}" ${ticket.assignedTo===a?'selected':''}>${a}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="info-row"><span class="label">Status</span>
+                        <select onchange="changeTicketStatus('${id}',this.value)">
+                            <option value="open" ${ticket.status==='open'?'selected':''}>Open</option>
+                            <option value="in_progress" ${ticket.status==='in_progress'?'selected':''}>In Progress</option>
+                            <option value="resolved" ${ticket.status==='resolved'?'selected':''}>Resolved</option>
+                            <option value="closed" ${ticket.status==='closed'?'selected':''}>Closed</option>
+                        </select>
+                    </div>
+                    <div class="info-row"><span class="label">Priority</span>
+                        <select onchange="changePriority('${id}',this.value)">
+                            <option value="low" ${ticket.priority==='low'?'selected':''}>Low</option>
+                            <option value="medium" ${ticket.priority==='medium'?'selected':''}>Medium</option>
+                            <option value="high" ${ticket.priority==='high'?'selected':''}>High</option>
+                            <option value="critical" ${ticket.priority==='critical'?'selected':''}>Critical</option>
+                        </select>
+                    </div>
+                    <div class="info-row"><span class="label">Category</span><span class="value">${catLabels[ticket.category]||ticket.category}</span></div>
+                    <div class="info-row"><span class="label">Created</span><span class="value">${formatTime(ticket.createdAt)}</span></div>
+                    <div class="info-row"><span class="label">Updated</span><span class="value">${formatTime(ticket.updatedAt)}</span></div>
+                </div>
+                <div class="info-section">
+                    <div class="info-section-title">SLA</div>
+                    <div class="info-row"><span class="label">Response SLA</span><span class="sla-timer ${sla.class}" style="font-size:12px;"><i class="fas fa-clock"></i> ${sla.text}</span></div>
+                    <div class="info-row"><span class="label">Target</span><span class="value">${ticket.priority==='critical'?'4h':ticket.priority==='high'?'12h':ticket.priority==='medium'?'24h':'48h'}</span></div>
+                </div>
+                ${ticket.rating ? `
+                <div class="info-section">
+                    <div class="info-section-title">Customer Rating</div>
+                    <div style="display:flex;align-items:center;gap:4px;margin-top:4px;">
+                        ${[1,2,3,4,5].map(s=>`<i class="fas fa-star" style="color:${s<=ticket.rating?'#f59e0b':'#d1d5db'};font-size:16px;"></i>`).join('')}
+                        <span style="margin-left:8px;font-size:12px;color:var(--text-secondary);">${ticket.rating}/5</span>
+                    </div>
+                    ${ticket.feedback?`<p style="font-size:12px;color:var(--text-muted);margin-top:4px;font-style:italic;">"${ticket.feedback}"</p>`:''}
+                </div>
+                ` : ''}
+            </div>
+        </div>
+    `;
+
+    // Scroll messages to bottom
+    const msgContainer = document.getElementById('ticketMessages');
+    if(msgContainer) msgContainer.scrollTop = msgContainer.scrollHeight;
+}
+
+function renderMessages(ticket) {
+    return ticket.messages.map(m => {
+        if (m.sender==='system') {
+            return `<div class="msg-bubble system"><i class="fas fa-info-circle" style="margin-right:4px;"></i> ${m.content} · ${formatTime(m.time)}</div>`;
+        }
+        const isAgent = m.sender==='agent';
+        const isInternal = m.sender==='internal';
+        const avClass = isInternal?'internal-av':isAgent?'agent-av':'user-av';
+        const bubClass = isInternal?'internal':isAgent?'agent':'user';
+        return `
+            <div class="msg-bubble ${bubClass}">
+                <div class="msg-avatar ${avClass}">${(m.senderName||'?')[0]}</div>
+                <div class="msg-body">
+                    <div class="msg-header">
+                        <span class="msg-sender">${m.senderName||'Unknown'}</span>
+                        <span class="msg-time">${formatTime(m.time)}</span>
+                        ${isInternal?'<span class="msg-badge">Internal Note</span>':''}
+                    </div>
+                    <div class="msg-content">${m.content}</div>
+                    ${m.attachments&&m.attachments.length?`
+                        <div class="msg-attachments">${m.attachments.map(a=>`<span><i class="fas fa-paperclip"></i> ${a}</span>`).join('')}</div>
+                    `:''}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ===== REPLY MODE =====
+function setReplyMode(mode, el) {
+    replyMode = mode;
+    document.querySelectorAll('.reply-tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    const ta = document.getElementById('replyText');
+    if (ta) ta.placeholder = mode==='internal' ? 'Add internal note (not visible to customer)...' : 'Type your response to the customer...';
+    // Update send button text
+    const sendBtn = document.querySelector('.reply-footer .topbar-btn.primary');
+    if (sendBtn) sendBtn.innerHTML = `<i class="fas fa-paper-plane"></i> ${mode==='internal'?'Add Note':'Send Reply'}`;
+}
+
+// ===== CANNED RESPONSES =====
+function toggleCannedMenu() {
+    document.getElementById('cannedMenu').classList.toggle('show');
+}
+function insertCanned(idx) {
+    document.getElementById('replyText').value = cannedResponses[idx].text;
+    document.getElementById('cannedMenu').classList.remove('show');
+}
+
+// ===== SEND REPLY =====
+function sendReply(ticketId) {
+    const text = document.getElementById('replyText').value.trim();
+    if (!text) { showToast('Please type a message','error'); return; }
+
+    const tickets = DB.get('tickets');
+    const ticket = tickets.find(t=>t.id===ticketId);
+    if (!ticket) return;
+
+    const msg = {
+        id: genId(),
+        sender: replyMode==='internal' ? 'internal' : 'agent',
+        senderName: replyMode==='internal' ? 'Admin (Internal)' : 'Admin',
+        content: text,
+        time: new Date().toISOString(),
+        attachments: []
+    };
+    ticket.messages.push(msg);
+    ticket.updatedAt = new Date().toISOString();
+
+    // Auto change status to in_progress if it was open
+    if (ticket.status==='open' && replyMode==='reply') {
+        ticket.status = 'in_progress';
+        ticket.messages.push({ id:genId(), sender:'system', senderName:'System', content:'Status changed to In Progress', time:new Date().toISOString(), attachments:[] });
+    }
+
+    // Auto assign if unassigned
+    if (!ticket.assignedTo && replyMode==='reply') {
+        ticket.assignedTo = 'Admin';
+        ticket.messages.push({ id:genId(), sender:'system', senderName:'System', content:'Ticket assigned to Admin', time:new Date().toISOString(), attachments:[] });
+    }
+
+    DB.set('tickets', tickets);
+    document.getElementById('replyText').value = '';
+    showToast(replyMode==='internal'?'Internal note added':'Reply sent to customer', 'success');
+    renderTicketDetail(ticketId);
+    renderQueueList();
+}
+
+// ===== CHANGE STATUS =====
+function changeTicketStatus(id, newStatus) {
+    const tickets = DB.get('tickets');
+    const ticket = tickets.find(t=>t.id===id);
+    if (!ticket) return;
+
+    const old = ticket.status;
+    ticket.status = newStatus;
+    ticket.updatedAt = new Date().toISOString();
+    ticket.messages.push({ id:genId(), sender:'system', senderName:'System', content:`Status changed from ${formatStatus(old)} to ${formatStatus(newStatus)}`, time:new Date().toISOString(), attachments:[] });
+
+    DB.set('tickets', tickets);
+    showToast(`Ticket status changed to ${formatStatus(newStatus)}`,'success');
+    renderTicketDetail(id);
+    renderQueueList();
+}
+
+// ===== ASSIGN TICKET =====
+function assignTicket(id, agent) {
+    const tickets = DB.get('tickets');
+    const ticket = tickets.find(t=>t.id===id);
+    if (!ticket) return;
+
+    ticket.assignedTo = agent || null;
+    ticket.updatedAt = new Date().toISOString();
+    ticket.messages.push({ id:genId(), sender:'system', senderName:'System', content:agent?`Ticket assigned to ${agent}`:'Ticket unassigned', time:new Date().toISOString(), attachments:[] });
+
+    DB.set('tickets', tickets);
+    showToast(agent?`Assigned to ${agent}`:'Ticket unassigned','info');
+    renderTicketDetail(id);
+    renderQueueList();
+}
+
+// ===== CHANGE PRIORITY =====
+function changePriority(id, priority) {
+    const tickets = DB.get('tickets');
+    const ticket = tickets.find(t=>t.id===id);
+    if (!ticket) return;
+
+    const old = ticket.priority;
+    ticket.priority = priority;
+    ticket.updatedAt = new Date().toISOString();
+    ticket.messages.push({ id:genId(), sender:'system', senderName:'System', content:`Priority changed from ${old} to ${priority}`, time:new Date().toISOString(), attachments:[] });
+
+    DB.set('tickets', tickets);
+    showToast(`Priority changed to ${priority}`,'info');
+    renderTicketDetail(id);
+    renderQueueList();
+}
+
+// ===== ANALYTICS =====
+function renderAnalytics() {
+    const tickets = DB.get('tickets');
+    const open = tickets.filter(t=>t.status==='open').length;
+    const inProgress = tickets.filter(t=>t.status==='in_progress').length;
+    const resolved = tickets.filter(t=>t.status==='resolved').length;
+    const closed = tickets.filter(t=>t.status==='closed').length;
+    const total = tickets.length;
+    const avgRating = tickets.filter(t=>t.rating).reduce((sum,t)=>sum+t.rating,0) / (tickets.filter(t=>t.rating).length||1);
+    const critOpen = tickets.filter(t=>t.priority==='critical'&&(t.status==='open'||t.status==='in_progress')).length;
+
+    const content = document.getElementById('analyticsContent');
+    content.innerHTML = `
+        <div class="stats-row">
+            <div class="stat-card"><div class="stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="fas fa-ticket-alt"></i></div><div class="stat-content"><div class="stat-value">${total}</div><div class="stat-label">Total Tickets</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:#d97706;"><i class="fas fa-hourglass-half"></i></div><div class="stat-content"><div class="stat-value">${open+inProgress}</div><div class="stat-label">Active Tickets</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#d1fae5;color:#059669;"><i class="fas fa-check-circle"></i></div><div class="stat-content"><div class="stat-value">${resolved+closed}</div><div class="stat-label">Resolved</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#fde2e2;color:#dc2626;"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-content"><div class="stat-value">${critOpen}</div><div class="stat-label">Critical Open</div></div></div>
+        </div>
+        <div class="stats-row">
+            <div class="stat-card"><div class="stat-icon" style="background:#ede9fe;color:#7c3aed;"><i class="fas fa-star"></i></div><div class="stat-content"><div class="stat-value">${avgRating.toFixed(1)}</div><div class="stat-label">Avg Rating</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#e0f2fe;color:#0284c7;"><i class="fas fa-reply"></i></div><div class="stat-content"><div class="stat-value">${tickets.reduce((s,t)=>s+t.messages.filter(m=>m.sender==='agent').length,0)}</div><div class="stat-label">Agent Replies</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#fce7f3;color:#db2777;"><i class="fas fa-clock"></i></div><div class="stat-content"><div class="stat-value">2.4h</div><div class="stat-label">Avg Response Time</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#d1fae5;color:#059669;"><i class="fas fa-percentage"></i></div><div class="stat-content"><div class="stat-value">${total?Math.round((resolved+closed)/total*100):0}%</div><div class="stat-label">Resolution Rate</div></div></div>
+        </div>
+        <div class="charts-row">
+            <div class="chart-card"><h4>Tickets by Status</h4><div class="chart-container"><canvas id="statusChart"></canvas></div></div>
+            <div class="chart-card"><h4>Tickets by Priority</h4><div class="chart-container"><canvas id="priorityChart"></canvas></div></div>
+        </div>
+        <div class="charts-row">
+            <div class="chart-card"><h4>Tickets by Category</h4><div class="chart-container"><canvas id="categoryChart"></canvas></div></div>
+            <div class="chart-card"><h4>Response Time Trend</h4><div class="chart-container"><canvas id="responseChart"></canvas></div></div>
+        </div>
+        <div class="recent-table">
+            <h4>All Tickets Overview</h4>
+            <table>
+                <thead><tr><th>#</th><th>Subject</th><th>Priority</th><th>Status</th><th>Assigned</th><th>Created</th><th>SLA</th></tr></thead>
+                <tbody>
+                    ${tickets.map(t=>{
+                        const sla = calcSLA(t);
+                        return `<tr style="cursor:pointer;" onclick="switchTab('queue');selectTicket('${t.id}');">
+                            <td style="font-weight:700;color:var(--primary);">#${t.number}</td>
+                            <td>${t.title.substring(0,50)}${t.title.length>50?'...':''}</td>
+                            <td><span class="tag tag-${t.priority}">${t.priority}</span></td>
+                            <td><span class="tag tag-${t.status}">${formatStatus(t.status)}</span></td>
+                            <td>${t.assignedTo||'<span style="color:var(--text-muted);">—</span>'}</td>
+                            <td>${formatTime(t.createdAt)}</td>
+                            <td><span class="sla-timer ${sla.class}" style="font-size:11px;"><i class="fas fa-clock"></i> ${sla.text}</span></td>
+                        </tr>`;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    // Draw charts
+    setTimeout(()=>{
+        // Status chart
+        new Chart(document.getElementById('statusChart'), {
+            type:'doughnut',
+            data:{
+                labels:['Open','In Progress','Resolved','Closed'],
+                datasets:[{data:[open,inProgress,resolved,closed],backgroundColor:['#3b82f6','#f59e0b','#10b981','#94a3b8'],borderWidth:0}]
+            },
+            options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}
+        });
+
+        // Priority chart
+        const low=tickets.filter(t=>t.priority==='low').length;
+        const med=tickets.filter(t=>t.priority==='medium').length;
+        const high=tickets.filter(t=>t.priority==='high').length;
+        const crit=tickets.filter(t=>t.priority==='critical').length;
+        new Chart(document.getElementById('priorityChart'), {
+            type:'doughnut',
+            data:{
+                labels:['Low','Medium','High','Critical'],
+                datasets:[{data:[low,med,high,crit],backgroundColor:['#10b981','#f59e0b','#ef4444','#7c3aed'],borderWidth:0}]
+            },
+            options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}
+        });
+
+        // Category chart
+        const bugs=tickets.filter(t=>t.category==='bugs').length;
+        const help=tickets.filter(t=>t.category==='instant_help').length;
+        const sys=tickets.filter(t=>t.category==='system_issues').length;
+        new Chart(document.getElementById('categoryChart'), {
+            type:'bar',
+            data:{
+                labels:['Bug Reports','Need Help','System Issues'],
+                datasets:[{data:[bugs,help,sys],backgroundColor:['#ef4444','#3b82f6','#f59e0b'],borderRadius:6,barThickness:40}]
+            },
+            options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}},x:{grid:{display:false}}}}
+        });
+
+        // Response time trend
+        new Chart(document.getElementById('responseChart'), {
+            type:'line',
+            data:{
+                labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+                datasets:[{label:'Avg Response (hrs)',data:[3.2,2.8,1.5,2.1,2.4,4.0,3.5],borderColor:'var(--primary)',backgroundColor:'rgba(0,160,157,0.1)',fill:true,tension:0.4,pointRadius:4,pointBackgroundColor:'var(--primary)'}]
+            },
+            options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:{display:true,text:'Hours'}},x:{grid:{display:false}}}}
+        });
+    }, 100);
+}
+
+
+// ===== SUPPORT AUTH GATE =====
+const SUPPORT_USERS = [
+    { email:'support@azolve.io', pass:'support2025', name:'Support Team', initials:'ST' },
+    { email:'rajan@azolve.io', pass:'rajan123', name:'Rajan Sood', initials:'RS' },
+    { email:'divya@azolve.io', pass:'divya123', name:'Divya Shah', initials:'DS' }
+];
+
+function getSupportSession(){
+    try { return JSON.parse(sessionStorage.getItem('azolve_support_session') || 'null'); }
+    catch(e){ return null; }
+}
+
+function setSupportLoggedIn(user){
+    sessionStorage.setItem('azolve_support_session', JSON.stringify({
+        email:user.email,
+        name:user.name,
+        initials:user.initials,
+        loggedAt:new Date().toISOString()
+    }));
+    document.body.classList.remove('support-locked');
+    const av = document.getElementById('agentAvatar');
+    if(av) av.textContent = user.initials || 'ST';
+}
+
+function supportLogin(){
+    const email = (document.getElementById('supportEmail')?.value || '').trim().toLowerCase();
+    const pass = document.getElementById('supportPassword')?.value || '';
+    const err = document.getElementById('supportLoginError');
+    const user = SUPPORT_USERS.find(u => u.email === email && u.pass === pass);
+    if(!user){
+        if(err) err.style.display = 'block';
+        return;
+    }
+    if(err) err.style.display = 'none';
+    setSupportLoggedIn(user);
+    if(DB.get('darkMode',false)) document.body.classList.add('dark-mode');
+    document.getElementById('sdStatusFilter').value = '';
+    renderQueueList();
+}
+
+function supportLogout(){
+    sessionStorage.removeItem('azolve_support_session');
+    document.body.classList.add('support-locked');
+    const email = document.getElementById('supportEmail');
+    const pass = document.getElementById('supportPassword');
+    if(email) email.value = '';
+    if(pass) pass.value = '';
+    const err = document.getElementById('supportLoginError');
+    if(err) err.style.display = 'none';
+}
+
+function initSupportDashboardAuth(){
+    const session = getSupportSession();
+    if(session && session.email){
+        setSupportLoggedIn(session);
+        if(DB.get('darkMode',false)) document.body.classList.add('dark-mode');
+        document.getElementById('sdStatusFilter').value = '';
+        renderQueueList();
+    } else {
+        document.body.classList.add('support-locked');
+        setTimeout(()=>document.getElementById('supportEmail')?.focus(), 100);
+    }
+}
+
+
+// ===== INIT =====
+window.addEventListener('DOMContentLoaded', function(){
+    initSupportDashboardAuth();
+});
+
+// Close canned menu on outside click
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.canned-dropdown')) {
+        const m = document.getElementById('cannedMenu');
+        if (m) m.classList.remove('show');
+    }
+});
+</script>
+</body>
+</html>

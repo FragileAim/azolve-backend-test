@@ -1,0 +1,38 @@
+{
+  "_meta": { "name": "हिन्दी", "code": "hi", "dir": "ltr" },
+  "common": {
+    "save": "सहेजें", "cancel": "रद्द करें", "delete": "हटाएँ", "edit": "संपादित करें", "create": "बनाएँ",
+    "search": "खोजें", "loading": "लोड हो रहा है...", "no_data": "कोई डेटा नहीं मिला", "yes": "हाँ", "no": "नहीं",
+    "submit": "जमा करें", "back": "वापस", "next": "अगला", "previous": "पिछला", "close": "बंद करें",
+    "confirm": "पुष्टि करें", "actions": "क्रियाएँ", "status": "स्थिति", "date": "दिनांक", "amount": "राशि",
+    "name": "नाम", "email": "ईमेल", "phone": "फ़ोन", "address": "पता", "total": "कुल",
+    "view": "देखें", "download": "डाउनलोड", "upload": "अपलोड", "filter": "फ़िल्टर", "export": "निर्यात",
+    "import": "आयात", "settings": "सेटिंग्स", "logout": "लॉग आउट", "profile": "प्रोफ़ाइल",
+    "dashboard": "डैशबोर्ड", "today": "आज", "yesterday": "कल", "this_week": "इस हफ्ते",
+    "this_month": "इस महीने", "this_year": "इस साल"
+  },
+  "nav": {
+    "home": "होम", "clients": "ग्राहक", "invoices": "चालान", "products": "उत्पाद",
+    "leads": "लीड्स", "deals": "सौदे", "projects": "परियोजनाएँ", "tasks": "कार्य",
+    "employees": "कर्मचारी", "attendance": "उपस्थिति", "leaves": "छुट्टियाँ",
+    "tickets": "सहायता टिकट", "meetings": "बैठकें", "calendar": "कैलेंडर",
+    "reports": "रिपोर्ट्स", "payments": "भुगतान", "expenses": "खर्च"
+  },
+  "invoice": {
+    "title": "चालान", "invoice_number": "चालान संख्या", "invoice_date": "चालान दिनांक",
+    "due_date": "देय तिथि", "client": "ग्राहक", "items": "वस्तुएँ",
+    "quantity": "मात्रा", "rate": "दर", "tax": "कर", "subtotal": "उप-योग",
+    "grand_total": "कुल योग", "paid": "भुगतान हो गया", "pending": "लंबित", "overdue": "अतिदेय",
+    "send": "चालान भेजें", "mark_paid": "भुगतान के रूप में चिह्नित करें", "create_invoice": "चालान बनाएँ"
+  },
+  "auth": {
+    "login": "लॉग इन", "register": "पंजीकरण", "password": "पासवर्ड",
+    "forgot_password": "पासवर्ड भूल गए?", "remember_me": "मुझे याद रखें",
+    "sign_in": "साइन इन", "sign_up": "साइन अप", "welcome_back": "वापसी पर स्वागत है!"
+  },
+  "errors": {
+    "required": "यह फ़ील्ड आवश्यक है", "invalid_email": "अमान्य ईमेल पता",
+    "min_length": "कम से कम {n} अक्षर होने चाहिए", "network": "नेटवर्क त्रुटि। पुन: प्रयास करें।",
+    "unauthorized": "आप अधिकृत नहीं हैं", "not_found": "संसाधन नहीं मिला"
+  }
+}

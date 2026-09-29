@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Azolve — All your business on one platform</title>
+<meta name="description" content="Run your entire business in one place. CRM, Invoicing, HR, Inventory, Projects, AI Copilot — simple, efficient, yet affordable.">
+<link rel="icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* =====================================================================
+   AZOLVE — ODOO-STYLE DESIGN SYSTEM
+   Font: Playfair Display italic for headings · Caveat for annotations
+   Colors: White bg · Purple #714B67 CTA · Yellow #F7C948 highlight
+   Layout: Centered hero · Curved sections · Clean grid cards
+   ===================================================================== */
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  color:#1f1f2e;background:#fff;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6;
+}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+:root{
+  --purple:#714B67;
+  --purple-dk:#4f3347;
+  --purple-lt:#9b6e93;
+  --teal:#00A09D;
+  --yellow:#F7C948;
+  --ink:#1f1f2e;
+  --ink2:#4a4a68;
+  --ink3:#8888a0;
+  --bg:#fff;
+  --bg2:#f5f4f7;
+  --border:rgba(31,31,46,0.09);
+  --r:14px;
+  --shadow:0 4px 20px rgba(31,31,46,0.07);
+  --shadow-lg:0 20px 56px rgba(31,31,46,0.11);
+  --ease:cubic-bezier(.16,.84,.44,1);
+  --maxw:1200px;
+}
+
+/* ─── Utilities ── */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 56px}
+@media(max-width:768px){.wrap{padding:0 20px}}
+.serif-italic{font-family:'Playfair Display',Georgia,serif;font-style:italic}
+.hand{font-family:'Caveat',cursive}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Inter',sans-serif;font-weight:600;font-size:15px;
+  border-radius:var(--r);padding:13px 26px;cursor:pointer;
+  border:none;transition:all .2s var(--ease);line-height:1;white-space:nowrap;
+}
+.btn-purple{background:var(--purple);color:#fff;box-shadow:0 4px 14px rgba(113,75,103,.3)}
+.btn-purple:hover{background:var(--purple-dk);transform:translateY(-1px);box-shadow:0 8px 24px rgba(113,75,103,.4)}
+.btn-gray{background:#e8e7ec;color:var(--ink);border:1px solid var(--border)}
+.btn-gray:hover{background:#dddbe3;transform:translateY(-1px)}
+.btn-outline-purple{background:transparent;color:var(--purple);border:1.5px solid var(--purple)}
+.btn-outline-purple:hover{background:rgba(113,75,103,.06)}
+
+/* ─── Scroll reveal ── */
+.sr{opacity:0;transform:translateY(24px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.sr.on{opacity:1;transform:none}
+
+/* ===================================================================
+   NAVBAR
+   =================================================================== */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;
+  display:flex;align-items:center;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid transparent;
+  transition:border-color .25s,box-shadow .25s;
+}
+.navbar.scrolled{border-bottom-color:var(--border);box-shadow:0 2px 16px rgba(31,31,46,.06)}
+.nav-wrap{
+  display:flex;align-items:center;
+  max-width:var(--maxw);margin:0 auto;padding:0 56px;width:100%;
+}
+.nav-logo{
+  font-family:'Playfair Display',serif;font-style:italic;font-weight:800;
+  font-size:1.55rem;color:var(--purple);
+  margin-right:44px;display:flex;align-items:center;gap:8px;
+  letter-spacing:-.02em;
+}
+.nav-logo .dot{color:var(--teal)}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;list-style:none}
+.nav-links>li>a{
+  font-size:14.5px;font-weight:500;color:var(--ink2);
+  padding:8px 14px;border-radius:9px;
+  display:flex;align-items:center;gap:5px;
+  transition:color .15s,background .15s;
+}
+.nav-links>li>a:hover{color:var(--purple);background:#f5f0f8}
+.nav-links>li>a i{font-size:10px;transition:transform .2s}
+.nav-links>li:hover>a i{transform:rotate(180deg)}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.nav-signin{
+  font-size:14.5px;font-weight:500;color:var(--ink2);
+  padding:8px 16px;border-radius:9px;transition:color .15s,background .15s;
+}
+.nav-signin:hover{color:var(--purple);background:#f5f0f8}
+
+/* Mega-dropdown */
+.nav-drop{
+  position:absolute;top:calc(100%+8px);left:0;
+  background:#fff;border:1px solid var(--border);border-radius:18px;
+  box-shadow:var(--shadow-lg);padding:18px;
+  min-width:480px;display:none;grid-template-columns:1fr 1fr;gap:4px;
+  opacity:0;transform:translateY(-6px);transition:opacity .2s,transform .2s;
+}
+.nav-links>li{position:relative}
+.nav-links>li:hover .nav-drop{display:grid;opacity:1;transform:none}
+.nd-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 14px;border-radius:11px;cursor:pointer;transition:background .15s;
+  text-decoration:none;color:inherit;
+}
+.nd-item:hover{background:#f7f5fb}
+.nd-ico{
+  width:36px;height:36px;border-radius:9px;flex-shrink:0;
+  background:#f5f0f8;display:flex;align-items:center;justify-content:center;
+  color:var(--purple);font-size:14px;
+}
+.nd-txt h5{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px;font-family:'Inter',sans-serif}
+.nd-txt p{font-size:11.5px;color:var(--ink3);line-height:1.4}
+
+/* Mobile */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px}
+.hamburger span{width:22px;height:2px;background:var(--ink);border-radius:2px;transition:all .25s}
+.mobile-nav{display:none}
+@media(max-width:900px){
+  .nav-links,.nav-right .btn,.nav-signin{display:none}
+  .hamburger{display:flex}
+  .nav-wrap{padding:0 20px}
+  .mobile-nav.open{
+    display:flex;flex-direction:column;gap:4px;
+    position:fixed;top:64px;left:0;right:0;bottom:0;
+    background:#fff;padding:20px;overflow-y:auto;z-index:999;
+  }
+  .mobile-nav a{display:block;padding:14px 16px;font-size:16px;font-weight:500;border-radius:10px;color:var(--ink)}
+  .mobile-nav a:hover{background:#f5f0f8}
+  .mobile-nav .mstart{background:var(--purple);color:#fff;text-align:center;border-radius:var(--r);padding:14px;font-weight:600;margin-top:8px}
+}
+
+/* ===================================================================
+   HERO — centered, big italic serif, yellow highlight
+   =================================================================== */
+.hero{
+  padding:130px 0 0;
+  background:#fff;
+  text-align:center;
+  position:relative;
+}
+.hero-inner{max-width:var(--maxw);margin:0 auto;padding:0 56px;position:relative}
+@media(max-width:768px){.hero-inner{padding:0 20px}}
+
+.hero h1{
+  font-family:'Playfair Display',Georgia,serif;
+  font-style:italic;font-weight:800;
+  font-size:clamp(2.8rem,5.5vw,5rem);
+  line-height:1.05;letter-spacing:-.03em;
+  color:var(--ink);margin-bottom:22px;
+}
+/* Yellow highlight on "one platform." */
+.hero h1 .hl-yellow{
+  background:var(--yellow);
+  padding:2px 10px;border-radius:6px;
+  color:var(--ink);display:inline;
+}
+.hero-sub{
+  font-family:'Playfair Display',Georgia,serif;
+  font-style:italic;font-weight:700;
+  font-size:clamp(1.3rem,2.5vw,2rem);
+  color:var(--ink2);margin-bottom:36px;letter-spacing:-.02em;
+}
+/* Teal underline on "affordable" */
+.hero-sub .hl-teal{
+  position:relative;display:inline-block;
+}
+.hero-sub .hl-teal::after{
+  content:'';position:absolute;bottom:-3px;left:0;right:0;
+  height:3px;background:var(--teal);border-radius:3px;
+}
+.hero-btns{
+  display:flex;align-items:center;justify-content:center;
+  gap:14px;flex-wrap:wrap;margin-bottom:12px;position:relative;z-index:1;
+}
+/* Price annotation — handwritten */
+.price-note{
+  position:absolute;right:6%;top:-10px;
+  font-family:'Caveat',cursive;font-size:1.3rem;font-weight:700;
+  color:var(--purple);line-height:1.35;text-align:left;
+  pointer-events:none;
+}
+.price-note .arrow-svg{display:block;margin-top:-4px;margin-left:12px}
+@media(max-width:900px){.price-note{display:none}}
+
+/* Curved gray wave into app section */
+.hero-wave{
+  height:160px;margin-top:56px;
+  background:#fff;position:relative;overflow:hidden;
+}
+.hero-wave::after{
+  content:'';position:absolute;
+  bottom:-1px;left:-5%;right:-5%;
+  height:200px;
+  background:var(--bg2);
+  border-radius:50% 50% 0 0 / 80px 80px 0 0;
+}
+
+/* ===================================================================
+   APP GRID SECTION — on gray bg, with competitor annotations
+   =================================================================== */
+.apps-section{
+  background:var(--bg2);
+  padding:0 0 80px;
+  position:relative;
+}
+.apps-section .wrap{position:relative}
+
+/* Competitor annotation labels (handwritten) */
+.ann{
+  position:absolute;
+  font-family:'Caveat',cursive;font-size:1.35rem;font-weight:700;
+  color:var(--purple-dk);line-height:1.2;pointer-events:none;
+  display:flex;align-items:center;gap:6px;
+}
+.ann svg{flex-shrink:0}
+/* positions — desktop only */
+.ann-quickbooks{top:10px;left:-40px}
+.ann-notion{top:-30px;left:120px}
+.ann-docu{top:-40px;left:280px}
+.ann-salesforce{top:-40px;right:200px}
+.ann-powerapps{top:-10px;right:60px}
+.ann-chargebee{top:80px;right:-60px}
+.ann-seamless{top:180px;left:-80px;text-align:left}
+.ann-slack{top:200px;left:200px}
+.ann-harvest{top:200px;right:-60px}
+.ann-lightspeed{top:330px;left:60px}
+.ann-asana{top:330px;right:200px}
+.ann-hubspot{top:330px;right:-50px}
+.ann-svc{top:460px;left:-70px}
+.ann-zendesk{top:460px;left:200px}
+.ann-shopify{top:460px;right:180px}
+.ann-tableau{top:560px;right:-50px}
+.ann-sap{bottom:80px;left:220px}
+.ann-bamboo{bottom:80px;right:140px}
+@media(max-width:1100px){.ann{display:none}}
+
+/* The grid itself */
+.apps-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;
+  position:relative;z-index:1;
+}
+@media(max-width:900px){.apps-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:560px){.apps-grid{grid-template-columns:repeat(3,1fr)}}
+
+.app-card{
+  background:#fff;border-radius:16px;
+  padding:20px 12px 16px;text-align:center;
+  box-shadow:0 2px 8px rgba(31,31,46,.06);
+  border:1px solid rgba(31,31,46,.06);
+  cursor:pointer;transition:all .22s var(--ease);
+}
+.app-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(113,75,103,.14);border-color:rgba(113,75,103,.18)}
+.app-card .ic{
+  width:58px;height:58px;border-radius:14px;
+  margin:0 auto 12px;display:flex;align-items:center;justify-content:center;
+  font-size:24px;position:relative;
+}
+.app-card h4{font-size:13px;font-weight:600;color:var(--ink);font-family:'Inter',sans-serif}
+
+/* Icon color themes */
+.ic-orange{background:linear-gradient(135deg,#ff6b35,#f7931e)}
+.ic-purple{background:linear-gradient(135deg,#714B67,#9b6e93)}
+.ic-teal{background:linear-gradient(135deg,#00A09D,#1dc4c0)}
+.ic-blue{background:linear-gradient(135deg,#3b82f6,#60a5fa)}
+.ic-green{background:linear-gradient(135deg,#16a34a,#4ade80)}
+.ic-yellow{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
+.ic-red{background:linear-gradient(135deg,#dc2626,#f87171)}
+.ic-indigo{background:linear-gradient(135deg,#4f46e5,#818cf8)}
+.ic-pink{background:linear-gradient(135deg,#ec4899,#f472b6)}
+.ic-cyan{background:linear-gradient(135deg,#06b6d4,#22d3ee)}
+
+.app-card .ic i{color:#fff;font-size:22px}
+
+.view-all-wrap{text-align:right;margin-top:20px}
+.link-arrow{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:14px;font-weight:600;color:var(--purple);
+  transition:gap .2s;
+}
+.link-arrow:hover{gap:11px}
+
+/* ===================================================================
+   "ENTERPRISE SOFTWARE DONE RIGHT" SECTION
+   =================================================================== */
+.enterprise-section{
+  padding:96px 0;background:#fff;
+}
+.ent-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;
+}
+.ent-heading{
+  font-family:'Playfair Display',Georgia,serif;font-style:italic;
+  font-weight:800;font-size:clamp(2rem,3.5vw,3.2rem);
+  line-height:1.08;letter-spacing:-.03em;color:var(--ink);
+  margin-bottom:32px;
+}
+/* teal circle scribble under "software" */
+.ent-heading .scribble{
+  position:relative;display:inline-block;
+}
+.ent-heading .scribble::after{
+  content:'';position:absolute;
+  left:-6px;right:-6px;top:-4px;bottom:-4px;
+  border:2.5px solid var(--teal);border-radius:50%;
+  transform:rotate(-3deg);
+}
+/* underline on "right" */
+.ent-heading .ul-purple{
+  position:relative;display:inline-block;
+}
+.ent-heading .ul-purple::after{
+  content:'';position:absolute;bottom:-3px;left:0;right:0;
+  height:3px;background:var(--purple);border-radius:3px;
+}
+.ent-cards{display:flex;flex-direction:column;gap:12px}
+.ent-card{
+  background:var(--bg2);border-radius:18px;
+  padding:28px 30px;border:1px solid var(--border);
+  transition:box-shadow .22s;
+}
+.ent-card:hover{box-shadow:var(--shadow-lg)}
+.ent-card h3{
+  font-size:17px;font-weight:700;color:var(--ink);
+  margin-bottom:10px;font-family:'Inter',sans-serif;
+}
+.ent-card p{font-size:14.5px;color:var(--ink2);line-height:1.65}
+.ent-card .ec-btn{
+  margin-top:16px;display:inline-flex;align-items:center;gap:8px;
+  font-size:13.5px;font-weight:600;color:var(--purple);
+  background:rgba(113,75,103,.08);border-radius:9px;padding:8px 16px;
+  transition:background .15s;
+}
+.ent-card .ec-btn:hover{background:rgba(113,75,103,.14)}
+.ent-left{display:flex;flex-direction:column;gap:12px}
+.ent-left .wide-card{
+  background:var(--bg2);border-radius:18px;
+  padding:28px 30px;border:1px solid var(--border);
+  transition:box-shadow .22s;
+}
+.ent-left .wide-card:hover{box-shadow:var(--shadow-lg)}
+.ent-left .wide-card h3{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:10px;font-family:'Inter',sans-serif}
+.ent-left .wide-card p{font-size:14.5px;color:var(--ink2);line-height:1.65}
+.ent-left .wide-card ul{list-style:none;margin-top:10px}
+.ent-left .wide-card ul li{
+  font-size:14px;color:var(--ink2);padding:3px 0;
+  display:flex;align-items:center;gap:8px;
+}
+.ent-left .wide-card ul li::before{content:'•';color:var(--purple);font-weight:700}
+.ai-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(113,75,103,.1);border-radius:6px;
+  padding:3px 10px;font-size:14px;font-weight:700;color:var(--purple);
+}
+@media(max-width:768px){.ent-grid{grid-template-columns:1fr}.ent-left{order:2}.ent-cards{order:1}}
+
+/* ===================================================================
+   "OPTIMIZED FOR PRODUCTIVITY" SECTION
+   =================================================================== */
+.productivity-section{
+  background:var(--bg2);padding:80px 0 100px;
+  position:relative;overflow:hidden;
+}
+.productivity-section .section-head{
+  text-align:center;margin-bottom:64px;position:relative;z-index:1;
+}
+.productivity-section .section-head h2{
+  font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:800;
+  font-size:clamp(2rem,3.5vw,3rem);letter-spacing:-.03em;color:var(--ink);
+}
+/* underline on "productivity" */
+.prod-ul{
+  position:relative;display:inline-block;
+}
+.prod-ul::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;
+  height:3.5px;background:var(--yellow);border-radius:3px;
+}
+/* Yellow accent blocks (like Odoo) */
+.yellow-stripe{
+  position:absolute;height:14px;background:var(--yellow);border-radius:4px;opacity:.55;
+}
+.ys-1{top:80px;left:0;width:120px}
+.ys-2{top:56px;right:0;width:200px;top:140px}
+.ys-3{top:100px;right:0;width:80px}
+
+/* Floating UI cards grid */
+.prod-grid{
+  display:grid;grid-template-columns:1fr 1.4fr 1fr;
+  gap:18px;align-items:start;position:relative;z-index:1;
+}
+@media(max-width:900px){.prod-grid{grid-template-columns:1fr}}
+
+.prod-card{
+  background:#fff;border-radius:18px;
+  border:1px solid var(--border);overflow:hidden;
+  box-shadow:var(--shadow-lg);
+}
+.prod-card-header{
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:10px 14px;display:flex;align-items:center;gap:8px;
+}
+.prod-card-header .dots{display:flex;gap:5px}
+.prod-card-header .dots span{width:10px;height:10px;border-radius:50%}
+.prod-card-header .dots .r{background:#ff5f57}
+.prod-card-header .dots .y{background:#febc2e}
+.prod-card-header .dots .g{background:#28c840}
+.prod-card-body{padding:14px}
+
+/* Activity list */
+.act-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 12px;border-radius:9px;margin-bottom:6px;
+  font-size:12.5px;font-weight:500;color:var(--ink);
+  background:var(--bg2);transition:background .15s;
+}
+.act-item:hover{background:#ede9f5}
+.act-item .ai-icon{
+  width:28px;height:28px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:#fff;margin-right:10px;flex-shrink:0;
+}
+.act-left{display:flex;align-items:center}
+.act-counts{display:flex;gap:6px;font-size:11px;color:var(--ink3)}
+.act-counts .late{color:#dc2626;font-weight:700}
+.act-counts .today{color:#16a34a;font-weight:700}
+
+/* AI Chat card */
+.ai-chat{display:flex;flex-direction:column;gap:10px}
+.chat-bar{
+  background:var(--bg2);border-top:1px solid var(--border);
+  padding:10px 14px;display:flex;align-items:center;gap:8px;
+}
+.chat-bar input{
+  flex:1;border:none;background:transparent;
+  font-size:13px;color:var(--ink);outline:none;
+  font-family:'Inter',sans-serif;
+}
+.chat-bar button{
+  background:var(--purple);color:#fff;border:none;
+  border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;
+}
+.bubble{
+  border-radius:12px;padding:11px 14px;
+  font-size:13px;line-height:1.55;color:var(--ink2);
+  max-width:90%;
+}
+.bubble-user{background:#e8e3f0;margin-left:auto;color:var(--purple-dk);font-weight:500}
+.bubble-ai{background:var(--bg2);border:1px solid var(--border)}
+.bubble-ai .ai-name{font-size:11px;font-weight:700;color:var(--purple);margin-bottom:4px}
+.bubble-ai strong{color:var(--purple)}
+.typing-dots{display:inline-flex;gap:4px;align-items:center}
+.typing-dots span{
+  width:6px;height:6px;border-radius:50%;background:var(--ink3);
+  animation:typingBounce 1.2s infinite;
+}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes typingBounce{0%,80%,100%{transform:none}40%{transform:translateY(-5px)}}
+
+/* Kanban mini */
+.kanban-mini{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+}
+.km-col{background:var(--bg2);border-radius:10px;padding:10px}
+.km-col h6{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.04em;color:var(--ink3);margin-bottom:8px;
+}
+.km-tag{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10.5px;font-weight:600;background:#fff;
+  border:1px solid var(--border);border-radius:6px;
+  padding:3px 8px;margin-bottom:4px;color:var(--ink);
+}
+.km-card{
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  padding:8px 10px;font-size:11.5px;font-weight:600;
+  margin-bottom:5px;color:var(--ink);
+}
+
+/* ===================================================================
+   WORKFLOW TIMELINE
+   =================================================================== */
+.workflow-section{background:#fff;padding:96px 0}
+.workflow-section .sh{text-align:center;margin-bottom:56px}
+.workflow-section .sh h2{
+  font-family:'Playfair Display',Georgia,serif;font-style:italic;
+  font-weight:800;font-size:clamp(1.8rem,3vw,2.8rem);
+  letter-spacing:-.03em;color:var(--ink);margin-bottom:12px;
+}
+.wf-grid{
+  display:grid;grid-template-columns:repeat(8,1fr);
+  gap:0;position:relative;
+}
+.wf-grid::before{
+  content:'';position:absolute;top:34px;left:8%;right:8%;
+  height:2px;background:linear-gradient(90deg,var(--purple),var(--teal));
+  opacity:.2;
+}
+.wf-step{text-align:center;padding:0 6px}
+.wf-icon{
+  width:68px;height:68px;border-radius:18px;
+  margin:0 auto 14px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:#fff;position:relative;z-index:1;
+  background:linear-gradient(135deg,var(--purple),var(--teal));
+  box-shadow:0 8px 20px rgba(113,75,103,.25);
+  transition:transform .25s var(--ease),box-shadow .25s;
+}
+.wf-step:hover .wf-icon{transform:scale(1.1) translateY(-4px);box-shadow:0 14px 30px rgba(113,75,103,.38)}
+.wf-step h5{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.wf-step p{font-size:11.5px;color:var(--ink3);line-height:1.45}
+@media(max-width:900px){
+  .wf-grid{grid-template-columns:repeat(4,1fr);gap:24px 0}
+  .wf-grid::before{display:none}
+}
+@media(max-width:500px){.wf-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ===================================================================
+   STATS BAND
+   =================================================================== */
+.stats-section{background:var(--bg2);padding:64px 0}
+.stats-band{
+  background:linear-gradient(135deg,var(--purple-dk),#00807d);
+  border-radius:22px;padding:56px 48px;
+  display:grid;grid-template-columns:repeat(4,1fr);
+}
+@media(max-width:768px){.stats-band{grid-template-columns:1fr 1fr;gap:28px;padding:36px 24px}}
+.stat-item{
+  text-align:center;
+  border-right:1px solid rgba(255,255,255,.1);padding:0 16px;
+}
+.stat-item:last-child{border:none}
+.stat-v{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-weight:800;font-size:2.8rem;color:#fff;margin-bottom:6px;line-height:1;
+}
+.stat-l{font-size:13px;color:rgba(255,255,255,.6);font-weight:500}
+
+/* ===================================================================
+   TESTIMONIALS
+   =================================================================== */
+.testi-section{background:#fff;padding:96px 0}
+.testi-section .sh{text-align:center;margin-bottom:52px}
+.testi-section .sh h2{
+  font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:800;
+  font-size:clamp(1.8rem,3vw,2.6rem);letter-spacing:-.03em;color:var(--ink);
+}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:768px){.testi-grid{grid-template-columns:1fr}}
+.testi-card{
+  background:var(--bg2);border-radius:20px;padding:28px;
+  border:1px solid var(--border);transition:all .22s var(--ease);
+}
+.testi-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);background:#fff}
+.tc-stars{color:#f7c948;font-size:13px;letter-spacing:2px;margin-bottom:14px}
+.tc-text{font-size:15px;color:var(--ink2);line-height:1.65;margin-bottom:20px}
+.tc-author{display:flex;align-items:center;gap:12px}
+.tc-av{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--purple),var(--teal));
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:16px;
+  font-family:'Playfair Display',serif;font-style:italic;
+}
+.tc-name{font-size:14px;font-weight:700;color:var(--ink)}
+.tc-role{font-size:12px;color:var(--ink3)}
+
+/* ===================================================================
+   PRICING
+   =================================================================== */
+.pricing-section{background:var(--bg2);padding:96px 0}
+.pricing-section .sh{text-align:center;margin-bottom:52px}
+.pricing-section .sh h2{
+  font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:800;
+  font-size:clamp(1.8rem,3vw,2.6rem);letter-spacing:-.03em;color:var(--ink);margin-bottom:12px;
+}
+.pricing-section .sh p{font-size:16px;color:var(--ink2)}
+.ptoggle{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:44px}
+.ptog-lbl{font-size:14.5px;font-weight:600;color:var(--ink3)}
+.ptog-lbl.active{color:var(--purple)}
+.ptog-switch{
+  width:48px;height:26px;background:var(--purple);border-radius:100px;
+  cursor:pointer;position:relative;transition:background .2s;
+}
+.ptog-switch::after{
+  content:'';position:absolute;width:20px;height:20px;background:#fff;
+  border-radius:50%;top:3px;left:3px;transition:left .2s;
+}
+.ptog-switch.yr::after{left:25px}
+.save-pill{
+  background:rgba(22,163,74,.12);color:#16a34a;
+  font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:100px;
+}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:960px;margin:0 auto}
+@media(max-width:768px){.pg{grid-template-columns:1fr;max-width:400px}}
+.pc{
+  background:#fff;border-radius:20px;padding:30px;
+  border:1.5px solid var(--border);transition:all .22s var(--ease);position:relative;
+}
+.pc:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
+.pc.featured{border-color:var(--purple);box-shadow:0 0 0 4px rgba(113,75,103,.08)}
+.pc.featured::after{
+  content:'Most Popular';position:absolute;top:16px;right:16px;
+  background:var(--purple);color:#fff;
+  font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:100px;letter-spacing:.03em;
+}
+.pc-tier{font-size:12.5px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.pc-price{
+  font-family:'Playfair Display',serif;font-style:italic;font-weight:800;
+  font-size:2.4rem;color:var(--ink);margin-bottom:4px;
+}
+.pc-price small{font-size:1rem;font-weight:500;color:var(--ink3);font-style:normal;font-family:'Inter',sans-serif}
+.pc-sub{font-size:13px;color:var(--ink3);margin-bottom:22px}
+.pc-feats{list-style:none;margin-bottom:26px}
+.pc-feats li{
+  display:flex;align-items:center;gap:10px;font-size:14px;
+  color:var(--ink2);padding:7px 0;border-bottom:1px solid var(--border);
+}
+.pc-feats li:last-child{border:none}
+.pc-feats li i{color:var(--teal);font-size:12px;flex-shrink:0}
+
+/* ===================================================================
+   FAQ
+   =================================================================== */
+.faq-section{background:#fff;padding:96px 0}
+.faq-section .sh{text-align:center;margin-bottom:48px}
+.faq-section .sh h2{
+  font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:800;
+  font-size:clamp(1.8rem,3vw,2.5rem);letter-spacing:-.03em;color:var(--ink);
+}
+.faq-wrap{max-width:700px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 0;cursor:pointer;font-size:15.5px;font-weight:600;
+  color:var(--ink);gap:20px;transition:color .15s;
+}
+.faq-q:hover{color:var(--purple)}
+.faq-q .fqi{
+  width:28px;height:28px;border-radius:50%;background:var(--bg2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--purple);font-size:13px;flex-shrink:0;
+  transition:transform .25s,background .2s;
+}
+.faq-item.open .faq-q .fqi{transform:rotate(45deg);background:var(--purple);color:#fff}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s var(--ease)}
+.faq-item.open .faq-a{max-height:200px}
+.faq-a p{font-size:14.5px;color:var(--ink2);line-height:1.65;padding-bottom:20px}
+
+/* ===================================================================
+   FINAL CTA
+   =================================================================== */
+.cta-section{background:var(--bg2);padding:80px 0}
+.cta-band{
+  background:linear-gradient(135deg,var(--purple-dk) 0%,var(--purple) 55%,#00807d 100%);
+  border-radius:24px;padding:72px 64px;
+  text-align:center;position:relative;overflow:hidden;
+}
+.cta-band::before{
+  content:'';position:absolute;
+  width:400px;height:400px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.08);top:-120px;left:-120px;
+}
+.cta-band::after{
+  content:'';position:absolute;
+  width:350px;height:350px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.06);bottom:-80px;right:-80px;
+}
+.cta-band h2{
+  font-family:'Playfair Display',serif;font-style:italic;font-weight:800;
+  font-size:clamp(2rem,3.5vw,3rem);color:#fff;
+  letter-spacing:-.03em;margin-bottom:14px;
+}
+.cta-band p{font-size:17px;color:rgba(255,255,255,.75);margin-bottom:34px}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+
+/* ===================================================================
+   FOOTER
+   =================================================================== */
+footer{background:#fff;border-top:1px solid var(--border);padding:64px 0 32px}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+@media(max-width:900px){.foot-grid{grid-template-columns:1fr 1fr}.foot-brand{grid-column:1/-1}}
+@media(max-width:500px){.foot-grid{grid-template-columns:1fr}}
+.foot-brand h3{
+  font-family:'Playfair Display',serif;font-style:italic;font-weight:800;
+  font-size:1.4rem;color:var(--purple);margin-bottom:12px;letter-spacing:-.02em;
+}
+.foot-brand p{font-size:14px;color:var(--ink3);line-height:1.65;margin-bottom:18px;max-width:280px}
+.foot-social{display:flex;gap:9px}
+.fsoc{
+  width:34px;height:34px;border-radius:9px;background:var(--bg2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink3);font-size:13px;transition:all .2s;
+  border:1px solid var(--border);
+}
+.fsoc:hover{background:var(--purple);color:#fff;border-color:var(--purple)}
+.foot-col h5{
+  font-size:12px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--ink);margin-bottom:14px;
+}
+.foot-col ul{list-style:none}
+.foot-col ul li{margin-bottom:9px}
+.foot-col ul li a{font-size:14px;color:var(--ink3);transition:color .15s}
+.foot-col ul li a:hover{color:var(--purple)}
+.foot-bottom{
+  border-top:1px solid var(--border);padding-top:24px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+}
+.foot-bottom p{font-size:13px;color:var(--ink3)}
+.foot-links{display:flex;gap:18px}
+.foot-links a{font-size:13px;color:var(--ink3);transition:color .15s}
+.foot-links a:hover{color:var(--purple)}
+
+/* section heading util */
+.sh-label{font-size:13px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.sh-p{font-size:16px;color:var(--ink2);margin-top:10px;max-width:540px;margin-inline:auto}
+</style>
+</head>
+<body>
+
+<!-- ===================================================================
+     NAVBAR
+     =================================================================== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-wrap">
+    <a href="index.html" class="nav-logo">Azolve<span class="dot">.</span></a>
+    <ul class="nav-links">
+      <li>
+        <a href="products.html">Products <i class="fas fa-chevron-down"></i></a>
+        <div class="nav-drop">
+          <a class="nd-item" href="product-crm.html"><div class="nd-ico"><i class="fas fa-users"></i></div><div class="nd-txt"><h5>CRM</h5><p>Leads, pipeline, customers</p></div></a>
+          <a class="nd-item" href="product-invoicing.html"><div class="nd-ico"><i class="fas fa-file-invoice-dollar"></i></div><div class="nd-txt"><h5>Invoicing</h5><p>GST, e-Invoice, UPI payments</p></div></a>
+          <a class="nd-item" href="products.html"><div class="nd-ico"><i class="fas fa-boxes-stacked"></i></div><div class="nd-txt"><h5>Inventory</h5><p>Stock, warehouses, PO</p></div></a>
+          <a class="nd-item" href="product-hrm.html"><div class="nd-ico"><i class="fas fa-id-badge"></i></div><div class="nd-txt"><h5>HRM</h5><p>Payroll, leaves, attendance</p></div></a>
+          <a class="nd-item" href="products.html#projects"><div class="nd-ico"><i class="fas fa-diagram-project"></i></div><div class="nd-txt"><h5>Projects</h5><p>Tasks, Kanban, timesheets</p></div></a>
+          <a class="nd-item" href="product-ai.html"><div class="nd-ico"><i class="fas fa-robot"></i></div><div class="nd-txt"><h5>AI Copilot</h5><p>Smart automation &amp; insights</p></div></a>
+          <a class="nd-item" href="products.html"><div class="nd-ico"><i class="fas fa-headset"></i></div><div class="nd-txt"><h5>Support</h5><p>Tickets, SLA, helpdesk</p></div></a>
+          <a class="nd-item" href="products.html"><div class="nd-ico"><i class="fas fa-chart-pie"></i></div><div class="nd-txt"><h5>Analytics</h5><p>Live dashboards, reports</p></div></a>
+        </div>
+      </li>
+      <li>
+        <a href="industries.html">Industries <i class="fas fa-chevron-down"></i></a>
+        <div class="nav-drop">
+          <a class="nd-item" href="industries.html#retail"><div class="nd-ico"><i class="fas fa-store"></i></div><div class="nd-txt"><h5>Retail &amp; Trading</h5><p>POS, inventory, billing</p></div></a>
+          <a class="nd-item" href="industries.html#manufacturing"><div class="nd-ico"><i class="fas fa-industry"></i></div><div class="nd-txt"><h5>Manufacturing</h5><p>BOM, production, QC</p></div></a>
+          <a class="nd-item" href="industries.html#services"><div class="nd-ico"><i class="fas fa-briefcase"></i></div><div class="nd-txt"><h5>Services</h5><p>Projects, time, invoicing</p></div></a>
+          <a class="nd-item" href="industries.html#enterprise"><div class="nd-ico"><i class="fas fa-building"></i></div><div class="nd-txt"><h5>Enterprise</h5><p>Multi-branch, custom, API</p></div></a>
+        </div>
+      </li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="help.html">Help</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="login.html" class="nav-signin">Sign in</a>
+      <a href="register.html" class="btn btn-purple" style="font-size:14px;padding:10px 20px">Try it free</a>
+    </div>
+    <div class="hamburger" id="ham" onclick="document.getElementById('mNav').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+<div class="mobile-nav" id="mNav">
+  <a href="index.html"><i class="fas fa-house" style="width:20px"></i> Home</a>
+  <a href="products.html"><i class="fas fa-grid" style="width:20px"></i> Products</a>
+  <a href="industries.html"><i class="fas fa-industry" style="width:20px"></i> Industries</a>
+  <a href="pricing.html"><i class="fas fa-tag" style="width:20px"></i> Pricing</a>
+  <a href="about.html"><i class="fas fa-info-circle" style="width:20px"></i> About</a>
+  <a href="help.html"><i class="fas fa-circle-question" style="width:20px"></i> Help</a>
+  <a href="contact.html"><i class="fas fa-envelope" style="width:20px"></i> Contact</a>
+  <a href="login.html"><i class="fas fa-sign-in-alt" style="width:20px"></i> Sign In</a>
+  <a href="register.html" class="mstart"><i class="fas fa-rocket"></i> Try it free</a>
+</div>
+
+<!-- ===================================================================
+     HERO SECTION — centered, italic serif, yellow highlight
+     =================================================================== -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1 class="sr">
+      All your business on<br>
+      <span class="hl-yellow">one platform.</span>
+    </h1>
+    <p class="hero-sub sr" style="transition-delay:.08s">
+      Simple, efficient, yet <span class="hl-teal">affordable!</span>
+    </p>
+    <div class="hero-btns sr" style="transition-delay:.14s;position:relative">
+      <a href="register.html" class="btn btn-purple" style="padding:14px 28px;font-size:15.5px">Start now — It's free</a>
+      <a href="contact.html" class="btn btn-gray" style="padding:14px 28px;font-size:15.5px">Meet an advisor</a>
+      <!-- Handwritten price note -->
+      <div class="price-note" style="right:-20px;top:-30px">
+        ₹999 / month<br>for ALL apps
+        <svg class="arrow-svg" width="60" height="40" viewBox="0 0 60 40" fill="none">
+          <path d="M8 8 C20 4, 40 20, 52 36" stroke="#714B67" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M46 30 L52 36 L44 38" stroke="#714B67" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="hero-wave"></div>
+</section>
+
+<!-- ===================================================================
+     APP GRID — gray bg, competitor annotations, icon cards
+     =================================================================== -->
+<section class="apps-section">
+  <div class="wrap">
+
+    <!-- Competitor annotations (desktop) -->
+    <div class="ann ann-quickbooks" style="top:30px;left:-20px">
+      <svg width="32" height="28" viewBox="0 0 32 28" fill="none"><path d="M28 4 C16 2, 4 14, 4 24" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M2 20 L4 24 L8 21" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Quickbooks
+    </div>
+    <div class="ann ann-notion" style="top:-18px;left:180px">
+      Notion
+      <svg width="28" height="32" viewBox="0 0 28 32" fill="none"><path d="M4 4 C8 16, 16 22, 24 28" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M20 28 L24 28 L22 24" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="ann ann-salesforce" style="top:-18px;right:220px">
+      Salesforce
+      <svg width="28" height="32" viewBox="0 0 28 32" fill="none"><path d="M12 4 C16 14, 18 22, 16 28" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M12 28 L16 28 L14 24" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="ann ann-chargebee" style="top:90px;right:-50px">
+      <svg width="30" height="28" viewBox="0 0 30 28" fill="none"><path d="M28 4 C20 6, 8 14, 4 24" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M2 20 L4 24 L8 21" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Chargebee
+    </div>
+    <div class="ann ann-seamless" style="top:200px;left:-90px;max-width:130px;line-height:1.2">
+      Nothing that<br>seamless
+      <svg width="40" height="28" viewBox="0 0 40 28" fill="none" style="margin-left:auto"><path d="M4 4 C18 8, 32 14, 36 24" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M32 24 L36 24 L34 20" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="ann ann-harvest" style="top:220px;right:-60px">
+      <svg width="30" height="26" viewBox="0 0 30 26" fill="none"><path d="M28 4 C20 6, 8 14, 4 22" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M2 18 L4 22 L8 19" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Harvest
+    </div>
+    <div class="ann ann-hubspot" style="top:350px;right:-50px">
+      <svg width="30" height="26" viewBox="0 0 30 26" fill="none"><path d="M28 4 C20 6, 8 14, 4 22" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M2 18 L4 22 L8 19" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Hubspot
+    </div>
+    <div class="ann ann-sap" style="bottom:90px;left:200px">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 4 C10 12, 8 20, 10 24" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M6 22 L10 24 L10 20" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      SAP
+    </div>
+    <div class="ann ann-bamboo" style="bottom:90px;right:140px">
+      BambooHR
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M4 4 C10 10, 18 18, 22 24" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M18 24 L22 24 L20 20" stroke="#4f3347" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <!-- App Grid -->
+    <div class="apps-grid">
+      <div class="app-card sr"><div class="ic ic-orange"><i class="fas fa-landmark"></i></div><h4>Accounting</h4></div>
+      <div class="app-card sr"><div class="ic ic-purple"><i class="fas fa-users"></i></div><h4>CRM</h4></div>
+      <div class="app-card sr"><div class="ic ic-teal"><i class="fas fa-file-signature"></i></div><h4>Sign</h4></div>
+      <div class="app-card sr"><div class="ic ic-blue"><i class="fas fa-robot"></i></div><h4>AI Copilot</h4></div>
+      <div class="app-card sr"><div class="ic ic-green"><i class="fas fa-chart-pie"></i></div><h4>Analytics</h4></div>
+      <div class="app-card sr"><div class="ic ic-yellow"><i class="fas fa-sync-alt"></i></div><h4>Subscriptions</h4></div>
+
+      <div class="app-card sr"><div class="ic ic-red"><i class="fas fa-id-badge"></i></div><h4>HRM</h4></div>
+      <div class="app-card sr"><div class="ic ic-orange"><i class="fas fa-cash-register"></i></div><h4>Point of Sale</h4></div>
+      <div class="app-card sr"><div class="ic ic-indigo"><i class="fas fa-comments"></i></div><h4>Discuss</h4></div>
+      <div class="app-card sr"><div class="ic ic-blue"><i class="fas fa-file-alt"></i></div><h4>Documents</h4></div>
+      <div class="app-card sr"><div class="ic ic-purple"><i class="fas fa-diagram-project"></i></div><h4>Projects</h4></div>
+      <div class="app-card sr"><div class="ic ic-teal"><i class="fas fa-clock"></i></div><h4>Timesheets</h4></div>
+
+      <div class="app-card sr"><div class="ic ic-yellow"><i class="fas fa-bolt"></i></div><h4>Field Service</h4></div>
+      <div class="app-card sr"><div class="ic ic-indigo"><i class="fas fa-calendar-check"></i></div><h4>Planning</h4></div>
+      <div class="app-card sr"><div class="ic ic-green"><i class="fas fa-headset"></i></div><h4>Helpdesk</h4></div>
+      <div class="app-card sr"><div class="ic ic-pink"><i class="fas fa-shopping-bag"></i></div><h4>eCommerce</h4></div>
+      <div class="app-card sr"><div class="ic ic-cyan"><i class="fas fa-globe"></i></div><h4>Website</h4></div>
+      <div class="app-card sr"><div class="ic ic-red"><i class="fas fa-envelope-open-text"></i></div><h4>Email Marketing</h4></div>
+
+      <div class="app-card sr"><div class="ic ic-green"><i class="fas fa-shopping-cart"></i></div><h4>Purchase</h4></div>
+      <div class="app-card sr"><div class="ic ic-orange"><i class="fas fa-boxes-stacked"></i></div><h4>Inventory</h4></div>
+      <div class="app-card sr"><div class="ic ic-blue"><i class="fas fa-industry"></i></div><h4>Manufacturing</h4></div>
+      <div class="app-card sr"><div class="ic ic-purple"><i class="fas fa-chart-bar"></i></div><h4>Sales</h4></div>
+      <div class="app-card sr"><div class="ic ic-teal"><i class="fab fa-whatsapp"></i></div><h4>WhatsApp</h4></div>
+      <div class="app-card sr"><div class="ic ic-indigo"><i class="fas fa-gauge"></i></div><h4>Dashboard</h4></div>
+    </div>
+
+    <div class="view-all-wrap sr">
+      <a href="products.html" class="link-arrow">View all Apps <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     ENTERPRISE SOFTWARE DONE RIGHT
+     =================================================================== -->
+<section class="enterprise-section">
+  <div class="wrap">
+    <div class="ent-grid">
+      <!-- Left: heading + 2 wide cards -->
+      <div class="ent-left">
+        <h2 class="ent-heading sr">
+          Enterprise <span class="scribble">software</span><br>
+          done <span class="ul-purple">right</span>.
+        </h2>
+        <div class="wide-card sr">
+          <h3>Made for Indian business</h3>
+          <p>Azolve is built from the ground up for Indian compliance — GST, e-Invoicing, UPI, TDS, and multi-branch operations. No customisation needed, no costly add-ons.</p>
+          <ul>
+            <li>GST-ready: available to all plans, included</li>
+            <li>IRP e-Invoice integration (IRN + QR code)</li>
+            <li>UPI payment links, auto reconciliation</li>
+          </ul>
+          <a href="pricing.html" class="ec-btn"><i class="fas fa-arrow-right"></i> Compare Plans</a>
+        </div>
+        <div class="wide-card sr" style="transition-delay:.06s">
+          <h3>AI Copilot = <span class="ai-badge"><i class="fas fa-robot"></i> Smart work</span></h3>
+          <p>Ask Azolve anything — "Which customers haven't paid in 30 days?" — and get an instant, actionable answer. Automate follow-ups, draft invoices, predict churn.</p>
+          <a href="product-ai.html" class="ec-btn"><i class="fas fa-robot"></i> See AI Copilot</a>
+        </div>
+      </div>
+
+      <!-- Right: 3 value-prop cards stacked -->
+      <div class="ent-cards">
+        <div class="ent-card sr">
+          <h3>No vendor lock-in</h3>
+          <p>Your data belongs to you — export everything to CSV, PDF or Excel at any time. No proprietary formats. Cancel anytime with zero friction.</p>
+          <a href="help.html" class="ec-btn"><i class="fas fa-lock-open"></i> Learn more</a>
+        </div>
+        <div class="ent-card sr" style="transition-delay:.06s">
+          <h3>Fair pricing</h3>
+          <p>No usage-based pricing. No per-module upsells. No long-term contracts. One flat price per month — all apps, all features, all users.</p>
+          <a href="pricing.html" class="ec-btn"><i class="fas fa-tag"></i> View Pricing</a>
+        </div>
+        <div class="ent-card sr" style="transition-delay:.12s">
+          <h3>A unique value proposition</h3>
+          <p>Replace Quickbooks, Zoho, Freshdesk, Asana, and Slack with one platform that actually talks to itself — because it was built as one from day one.</p>
+          <a href="products.html" class="ec-btn"><i class="fas fa-grid-2"></i> Explore Apps</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     OPTIMIZED FOR PRODUCTIVITY — floating UI section
+     =================================================================== -->
+<section class="productivity-section">
+  <!-- Yellow accent stripes like Odoo -->
+  <div class="yellow-stripe ys-1"></div>
+  <div class="yellow-stripe" style="top:70px;right:0;width:180px;height:14px;border-radius:4px 0 0 4px;opacity:.5"></div>
+  <div class="yellow-stripe" style="top:120px;right:0;width:80px;height:14px;border-radius:4px 0 0 4px;opacity:.35"></div>
+  <div class="yellow-stripe" style="top:160px;left:0;width:60px;height:14px;border-radius:0 4px 4px 0;opacity:.3"></div>
+
+  <div class="wrap">
+    <div class="productivity-section section-head">
+      <h2 class="sr">Optimized for <span class="prod-ul">productivity</span></h2>
+    </div>
+
+    <div class="prod-grid">
+      <!-- Left: Activity feed card -->
+      <div class="prod-card sr">
+        <div class="prod-card-header">
+          <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+          <span style="font-size:11px;color:var(--ink3);margin-left:8px;font-weight:600">My Activities</span>
+        </div>
+        <div class="prod-card-body">
+          <div class="act-item">
+            <div class="act-left">
+              <div class="ai-icon" style="background:#f7c948"><i class="fas fa-calendar" style="color:#92660a"></i></div>
+              <div>
+                <div style="font-size:12.5px;font-weight:600">Lead / Opportunity</div>
+                <div style="font-size:11px;color:var(--ink3)">CRM Pipeline</div>
+              </div>
+            </div>
+            <div class="act-counts"><span class="late">1 Late</span><span class="today">1 Today</span><span>7 Future</span></div>
+          </div>
+          <div class="act-item">
+            <div class="act-left">
+              <div class="ai-icon" style="background:#714B67"><i class="fas fa-headset" style="color:#fff"></i></div>
+              <div>
+                <div style="font-size:12.5px;font-weight:600">Helpdesk Ticket</div>
+                <div style="font-size:11px;color:var(--ink3)">Support</div>
+              </div>
+            </div>
+            <div class="act-counts"><span style="color:var(--ink3)">0 Late</span><span class="today">1 Today</span><span>1 Future</span></div>
+          </div>
+          <div class="act-item">
+            <div class="act-left">
+              <div class="ai-icon" style="background:#00A09D"><i class="fas fa-file-invoice" style="color:#fff"></i></div>
+              <div>
+                <div style="font-size:12.5px;font-weight:600">Invoice Due</div>
+                <div style="font-size:11px;color:var(--ink3)">Accounting</div>
+              </div>
+            </div>
+            <div class="act-counts"><span class="late">2 Late</span><span class="today">2 Today</span><span>4 Future</span></div>
+          </div>
+          <div class="act-item">
+            <div class="act-left">
+              <div class="ai-icon" style="background:#3b82f6"><i class="fas fa-user-plus" style="color:#fff"></i></div>
+              <div>
+                <div style="font-size:12.5px;font-weight:600">Applicant</div>
+                <div style="font-size:11px;color:var(--ink3)">Recruitment</div>
+              </div>
+            </div>
+            <div class="act-counts"><span class="late">6 Late</span><span class="today">1 Today</span><span>0 Future</span></div>
+          </div>
+          <div class="act-item">
+            <div class="act-left">
+              <div class="ai-icon" style="background:#16a34a"><i class="fas fa-time-off" style="color:#fff"><i class="fas fa-umbrella-beach"></i></i></div>
+              <div>
+                <div style="font-size:12.5px;font-weight:600">Time Off</div>
+                <div style="font-size:11px;color:var(--ink3)">HRM</div>
+              </div>
+            </div>
+            <div class="act-counts"><span style="color:var(--ink3)">0 Late</span><span class="today">1 Today</span><span>0 Future</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center: Kanban + AI Chat -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <!-- Kanban card -->
+        <div class="prod-card sr" style="transition-delay:.06s">
+          <div class="prod-card-header">
+            <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+            <span style="font-size:11px;color:var(--ink3);margin-left:8px;font-weight:600">Project Kanban</span>
+          </div>
+          <div class="prod-card-body" style="padding:12px">
+            <div class="kanban-mini">
+              <div class="km-col">
+                <h6>🔵 In Progress</h6>
+                <div class="km-tag"><span style="width:8px;height:8px;border-radius:50%;background:#3b82f6;display:inline-block"></span> Dashboard v2</div>
+                <div class="km-card">API Integration<br><span style="font-size:10px;color:var(--ink3);font-weight:400">Arjun · 2d left</span></div>
+                <div class="km-card">Mobile App<br><span style="font-size:10px;color:var(--ink3);font-weight:400">Karan · 5d left</span></div>
+              </div>
+              <div class="km-col">
+                <h6>✅ Done</h6>
+                <div class="km-tag"><span style="width:8px;height:8px;border-radius:50%;background:#16a34a;display:inline-block"></span> Sprint 12</div>
+                <div class="km-card">e-Invoice Module<br><span style="font-size:10px;color:var(--ink3);font-weight:400">Dev Team</span></div>
+                <div class="km-card">WhatsApp Bot<br><span style="font-size:10px;color:var(--ink3);font-weight:400">Dev Team</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Chat card -->
+        <div class="prod-card sr" style="transition-delay:.1s">
+          <div class="prod-card-header" style="background:linear-gradient(135deg,rgba(113,75,103,.12),rgba(0,160,157,.08))">
+            <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+            <span style="font-size:11px;color:var(--purple);margin-left:8px;font-weight:700"><i class="fas fa-robot"></i> Ask AI</span>
+          </div>
+          <div class="prod-card-body ai-chat">
+            <div class="bubble bubble-user">What's my best-selling product and its margin?</div>
+            <div class="bubble bubble-ai">
+              <div class="ai-name"><i class="fas fa-robot"></i> AI Copilot</div>
+              Your best-selling product is <strong>"USB-C Hub 7-port"</strong> — 410 units sold with an untaxed margin of <strong>₹2,829 per unit (34%)</strong>.
+            </div>
+            <div class="bubble bubble-user">Show revenue per month for this product.</div>
+            <div class="bubble bubble-ai">
+              <div class="ai-name"><i class="fas fa-robot"></i> AI Copilot</div>
+              <div class="typing-dots"><span></span><span></span><span></span></div>
+            </div>
+          </div>
+          <div class="chat-bar">
+            <i class="fas fa-robot" style="color:var(--purple);font-size:13px"></i>
+            <input type="text" placeholder="Message AI Copilot...">
+            <button><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Invoice + stats -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="prod-card sr" style="transition-delay:.08s">
+          <div class="prod-card-header">
+            <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+            <span style="font-size:11px;color:var(--ink3);margin-left:8px;font-weight:600">Invoice · INV-2026-0145</span>
+          </div>
+          <div class="prod-card-body">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+              <div>
+                <div style="font-size:11px;color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:.04em">To</div>
+                <div style="font-size:13px;font-weight:700;color:var(--ink)">Sharma Textiles Pvt. Ltd.</div>
+                <div style="font-size:11.5px;color:var(--ink3)">GST: 27AADCS1234A1Z5</div>
+              </div>
+              <span style="background:rgba(22,163,74,.12);color:#16a34a;font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px">PAID</span>
+            </div>
+            <div style="background:var(--bg2);border-radius:10px;overflow:hidden">
+              <div style="display:grid;grid-template-columns:1.5fr 0.7fr 1fr;padding:7px 10px;font-size:10px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.04em">
+                <span>Item</span><span>Qty</span><span style="text-align:right">Amount</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1.5fr 0.7fr 1fr;padding:7px 10px;font-size:11.5px;color:var(--ink2);border-top:1px solid var(--border)">
+                <span>Cotton Fabric (m)</span><span>500</span><span style="text-align:right">₹50,000</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1.5fr 0.7fr 1fr;padding:7px 10px;font-size:11.5px;color:var(--ink2);border-top:1px solid var(--border)">
+                <span>GST 12%</span><span></span><span style="text-align:right">₹6,000</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1.5fr 0.7fr 1fr;padding:8px 10px;font-size:12px;font-weight:700;color:var(--ink);border-top:1px solid var(--border);background:rgba(113,75,103,.04)">
+                <span>Total</span><span></span><span style="text-align:right;color:var(--purple)">₹56,000</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="prod-card sr" style="transition-delay:.12s">
+          <div class="prod-card-header">
+            <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+            <span style="font-size:11px;color:var(--ink3);margin-left:8px;font-weight:600">Revenue — This Month</span>
+          </div>
+          <div class="prod-card-body">
+            <div style="font-family:'Playfair Display',serif;font-style:italic;font-weight:800;font-size:1.8rem;color:var(--purple);margin-bottom:4px">₹9.2L</div>
+            <div style="font-size:12px;color:var(--ink3);margin-bottom:14px"><span style="color:#16a34a;font-weight:700">↑ 22%</span> vs last month</div>
+            <div style="display:flex;align-items:flex-end;gap:5px;height:60px">
+              ${[42,58,51,68,62,80,75,100].map((h,i)=>`<div style="flex:1;background:${i===7?'linear-gradient(180deg,#714B67,#00A09D)':'#e8e3f0'};border-radius:3px 3px 0 0;height:${h}%"></div>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     WORKFLOW TIMELINE
+     =================================================================== -->
+<section class="workflow-section">
+  <div class="wrap">
+    <div class="sh">
+      <p class="sh-label">End-to-end flow</p>
+      <h2 class="sr">One deal, one record — from first hello to final report.</h2>
+      <p class="sh-p">No re-keying. No exporting. Every step hands off to the next automatically.</p>
+    </div>
+    <div class="wf-grid">
+      <div class="wf-step sr"><div class="wf-icon"><i class="fas fa-user-plus"></i></div><h5>Lead</h5><p>Web, WhatsApp, manual</p></div>
+      <div class="wf-step sr"><div class="wf-icon"><i class="fas fa-id-card"></i></div><h5>Customer</h5><p>Shared customer record</p></div>
+      <div class="wf-step sr"><div class="wf-icon"><i class="fas fa-file-signature"></i></div><h5>Quotation</h5><p>Sent for approval</p></div>
+      <div class="wf-step sr"><div class="wf-icon"><i class="fas fa-file-invoice"></i></div><h5>Invoice</h5><p>GST-ready, one click</p></div>
+      <div class="wf-step sr"><div class="wf-icon"><i class="fas fa-indian-rupee-sign"></i></div><h5>Payment</h5><p>UPI link, auto reconciled</p></div>
+      <div class="wf-step sr"><div class="wf-icon"><i class="fas fa-diagram-project"></i></div><h5>Project</h5><p>Delivery tracked</p></div>
+      <div class="wf-step sr"><div class="wf-icon"><i class="fas fa-headset"></i></div><h5>Support</h5><p>Tickets linked back</p></div>
+      <div class="wf-step sr"><div class="wf-icon"><i class="fas fa-chart-pie"></i></div><h5>Analytics</h5><p>Live dashboards</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     STATS
+     =================================================================== -->
+<section class="stats-section">
+  <div class="wrap">
+    <div class="stats-band">
+      <div class="stat-item sr"><div class="stat-v" data-count="15">0</div><div class="stat-l">Built-in modules</div></div>
+      <div class="stat-item sr"><div class="stat-v" data-count="17">0</div><div class="stat-l">Industries served</div></div>
+      <div class="stat-item sr"><div class="stat-v" data-count="7">0</div><div class="stat-l">Days to onboard</div></div>
+      <div class="stat-item sr"><div class="stat-v">99.9%</div><div class="stat-l">Uptime SLA</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     TESTIMONIALS
+     =================================================================== -->
+<section class="testi-section">
+  <div class="wrap">
+    <div class="sh">
+      <p class="sh-label">Customer stories</p>
+      <h2 class="sr">Businesses that made the switch.</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card sr">
+        <div class="tc-stars">★★★★★</div>
+        <p class="tc-text">"We replaced 4 separate tools with Azolve. Invoicing time dropped from 2 hours to under 15 minutes, and our outstanding dues have never been lower."</p>
+        <div class="tc-author">
+          <div class="tc-av">R</div>
+          <div><div class="tc-name">Rajesh Mehta</div><div class="tc-role">MD, Northstar Textiles</div></div>
+        </div>
+      </div>
+      <div class="testi-card sr" style="transition-delay:.07s">
+        <div class="tc-stars">★★★★★</div>
+        <p class="tc-text">"The AI Copilot paid for itself in the first month — it caught a duplicate payment and automated all our WhatsApp debtor reminders."</p>
+        <div class="tc-author">
+          <div class="tc-av">P</div>
+          <div><div class="tc-name">Priya Nair</div><div class="tc-role">CFO, BuildRight Group</div></div>
+        </div>
+      </div>
+      <div class="testi-card sr" style="transition-delay:.14s">
+        <div class="tc-stars">★★★★★</div>
+        <p class="tc-text">"Lead to paid invoice in under 20 minutes. The entire flow — CRM, quotation, invoice, UPI — is seamless. Our team adopted it in under a week."</p>
+        <div class="tc-author">
+          <div class="tc-av">A</div>
+          <div><div class="tc-name">Arjun Singh</div><div class="tc-role">Founder, SwiftLogis</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     PRICING
+     =================================================================== -->
+<section class="pricing-section">
+  <div class="wrap">
+    <div class="sh">
+      <p class="sh-label">Simple pricing</p>
+      <h2 class="sr" style="font-family:'Playfair Display',serif;font-style:italic;font-weight:800;font-size:clamp(1.8rem,3vw,2.6rem);letter-spacing:-.03em;color:var(--ink);margin-bottom:10px">
+        One price. Every feature. No surprises.
+      </h2>
+      <p class="sh-p">No per-module upsells. No hidden fees. Start free, upgrade when ready.</p>
+    </div>
+    <div class="ptoggle">
+      <span class="ptog-lbl active" id="tlM">Monthly</span>
+      <div class="ptog-switch" id="ptog" onclick="this.classList.toggle('yr');togglePricing()"></div>
+      <span class="ptog-lbl" id="tlY">Yearly</span>
+      <span class="save-pill">Save 20%</span>
+    </div>
+    <div class="pg">
+      <div class="pc sr">
+        <div class="pc-tier">Starter</div>
+        <div class="pc-price" id="pp1">₹999<small>/mo</small></div>
+        <div class="pc-sub">Up to 3 users · 1 branch</div>
+        <ul class="pc-feats">
+          <li><i class="fas fa-check"></i> CRM &amp; Sales Pipeline</li>
+          <li><i class="fas fa-check"></i> GST Invoicing &amp; UPI Payments</li>
+          <li><i class="fas fa-check"></i> Basic Inventory</li>
+          <li><i class="fas fa-check"></i> 500 WhatsApp messages/mo</li>
+          <li><i class="fas fa-check"></i> Email support</li>
+        </ul>
+        <a href="register.html" class="btn btn-outline-purple" style="width:100%;justify-content:center">Get Started</a>
+      </div>
+      <div class="pc featured sr" style="transition-delay:.07s">
+        <div class="pc-tier">Business</div>
+        <div class="pc-price" id="pp2">₹2,499<small>/mo</small></div>
+        <div class="pc-sub">Up to 15 users · 3 branches</div>
+        <ul class="pc-feats">
+          <li><i class="fas fa-check"></i> Everything in Starter</li>
+          <li><i class="fas fa-check"></i> Full HRM &amp; Payroll</li>
+          <li><i class="fas fa-check"></i> Projects &amp; Timesheets</li>
+          <li><i class="fas fa-check"></i> AI Copilot (2,000 queries/mo)</li>
+          <li><i class="fas fa-check"></i> 3,000 WhatsApp messages/mo</li>
+          <li><i class="fas fa-check"></i> Priority support + onboarding</li>
+        </ul>
+        <a href="register.html" class="btn btn-purple" style="width:100%;justify-content:center">Start Free Trial</a>
+      </div>
+      <div class="pc sr" style="transition-delay:.14s">
+        <div class="pc-tier">Enterprise</div>
+        <div class="pc-price">Custom</div>
+        <div class="pc-sub">Unlimited users · Multi-branch</div>
+        <ul class="pc-feats">
+          <li><i class="fas fa-check"></i> Everything in Business</li>
+          <li><i class="fas fa-check"></i> Unlimited AI Copilot</li>
+          <li><i class="fas fa-check"></i> Custom workflows &amp; API</li>
+          <li><i class="fas fa-check"></i> Dedicated account manager</li>
+          <li><i class="fas fa-check"></i> SLA-backed uptime</li>
+          <li><i class="fas fa-check"></i> On-premise option</li>
+        </ul>
+        <a href="contact.html" class="btn btn-outline-purple" style="width:100%;justify-content:center">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     FAQ
+     =================================================================== -->
+<section class="faq-section">
+  <div class="wrap">
+    <div class="sh">
+      <p class="sh-label">FAQ</p>
+      <h2 class="sr" style="font-family:'Playfair Display',serif;font-style:italic;font-weight:800;font-size:clamp(1.8rem,3vw,2.5rem);letter-spacing:-.03em">
+        Questions we hear most.
+      </h2>
+    </div>
+    <div class="faq-wrap">
+      <div class="faq-item">
+        <div class="faq-q">Do I need to migrate all data at once?<div class="fqi"><i class="fas fa-plus"></i></div></div>
+        <div class="faq-a"><p>No — most teams start with one module (usually Invoicing or CRM) and bring the rest over gradually. Azolve supports CSV import, and our team handles migration for Business and Enterprise plans.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Does it handle Indian GST and e-Invoicing?<div class="fqi"><i class="fas fa-plus"></i></div></div>
+        <div class="faq-a"><p>Yes — GSTIN-based tax calculation, HSN/SAC codes, GSTR-1 export, and full NIC IRP integration for e-Invoice (IRN + QR code) are all built in. No third-party GST tool required.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is the AI Copilot included or a paid add-on?<div class="fqi"><i class="fas fa-plus"></i></div></div>
+        <div class="faq-a"><p>Included in Business and Enterprise — no extra charge. Starter plan has limited AI access. Full breakdown on the Pricing page.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I try it before committing?<div class="fqi"><i class="fas fa-plus"></i></div></div>
+        <div class="faq-a"><p>Yes — start free with no credit card. You get 14 days full access to the Business plan. Downgrade, upgrade, or cancel anytime.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What support do you offer?<div class="fqi"><i class="fas fa-plus"></i></div></div>
+        <div class="faq-a"><p>Starter: email support, 48h response. Business: priority chat + email, 4h response + onboarding call. Enterprise: dedicated account manager + phone support.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     FINAL CTA
+     =================================================================== -->
+<section class="cta-section">
+  <div class="wrap">
+    <div class="cta-band sr">
+      <h2>Ready to run your business on Azolve?</h2>
+      <p>Join businesses across India that replaced their tool sprawl with one unified platform.</p>
+      <div class="cta-btns">
+        <a href="register.html" class="btn btn-white" style="background:#fff;color:var(--purple);box-shadow:0 4px 20px rgba(0,0,0,.15);padding:15px 30px;font-size:16px">
+          <i class="fas fa-rocket"></i> Start for Free — No card needed
+        </a>
+        <a href="contact.html" class="btn" style="background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.35);padding:15px 30px;font-size:16px">
+          <i class="fas fa-calendar"></i> Book a Demo
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     FOOTER
+     =================================================================== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <h3>Azolve.</h3>
+        <p>The all-in-one business platform for modern Indian businesses — CRM, Invoicing, HR, Inventory, Projects and AI in one place.</p>
+        <div class="foot-social">
+          <a href="#" class="fsoc"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="fsoc"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="fsoc"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="fsoc"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h5>Products</h5>
+        <ul>
+          <li><a href="product-crm.html">CRM</a></li>
+          <li><a href="product-invoicing.html">Invoicing</a></li>
+          <li><a href="product-hrm.html">HRM</a></li>
+          <li><a href="products.html">Inventory</a></li>
+          <li><a href="products.html">Projects</a></li>
+          <li><a href="product-ai.html">AI Copilot</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Industries</h5>
+        <ul>
+          <li><a href="industries.html#retail">Retail &amp; Trading</a></li>
+          <li><a href="industries.html#manufacturing">Manufacturing</a></li>
+          <li><a href="industries.html#services">Services</a></li>
+          <li><a href="industries.html">Healthcare</a></li>
+          <li><a href="industries.html">Education</a></li>
+          <li><a href="industries.html#enterprise">Enterprise</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="help.html">Help Center</a></li>
+          <li><a href="register.html">See it live</a></li>
+          <li><a href="help.html">Documentation</a></li>
+          <li><a href="help.html">API Reference</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="contact.html">Careers</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="terms.html">Terms of Use</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>© 2026 Azolve. All rights reserved. Made in India 🇮🇳</p>
+      <div class="foot-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="contact.html">Support</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================================================================
+     JAVASCRIPT
+     =================================================================== -->
+<script>
+'use strict';
+
+/* Navbar scroll */
+const nb = document.getElementById('navbar');
+window.addEventListener('scroll', () => nb.classList.toggle('scrolled', scrollY > 20), {passive:true});
+
+/* Scroll reveal */
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('on'); ro.unobserve(e.target); } });
+}, {threshold:0.1, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.sr').forEach((el,i) => {
+  el.style.transitionDelay = (i % 5) * 0.06 + 's';
+  ro.observe(el);
+});
+
+/* Count-up */
+const co = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(!e.isIntersecting) return;
+    co.unobserve(e.target);
+    const t = parseInt(e.target.dataset.count); if(isNaN(t)) return;
+    let start, dur = 1600;
+    const step = ts => {
+      if(!start) start = ts;
+      const p = Math.min((ts-start)/dur,1);
+      e.target.textContent = Math.floor(p*t);
+      if(p<1) requestAnimationFrame(step); else e.target.textContent=t;
+    };
+    requestAnimationFrame(step);
+  });
+},{threshold:0.5});
+document.querySelectorAll('[data-count]').forEach(el => co.observe(el));
+
+/* FAQ */
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const it = q.closest('.faq-item'), wasOpen = it.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if(!wasOpen) it.classList.add('open');
+  });
+});
+
+/* Pricing toggle */
+const prices = {m:['₹999','₹2,499'], y:['₹799','₹1,999']};
+function togglePricing(){
+  const y = document.getElementById('ptog').classList.contains('yr');
+  document.getElementById('pp1').innerHTML=(y?prices.y[0]:prices.m[0])+'<small>/mo</small>';
+  document.getElementById('pp2').innerHTML=(y?prices.y[1]:prices.m[1])+'<small>/mo</small>';
+  document.getElementById('tlM').classList.toggle('active',!y);
+  document.getElementById('tlY').classList.toggle('active',y);
+}
+
+/* Typing animation for AI bubble */
+let dotFrame = 0;
+setInterval(() => {
+  const dots = document.querySelector('.typing-dots');
+  if(dots) { dotFrame = (dotFrame+1)%4; }
+}, 400);
+</script>
+</body>
+</html>

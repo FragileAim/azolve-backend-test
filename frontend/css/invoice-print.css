@@ -1,0 +1,498 @@
+/* Professional Invoice Print Styles - Beautiful & Print-Ready */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f7fa;
+    color: #1a202c;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.invoice-container {
+    max-width: 210mm;
+    margin: 0 auto;
+    background: white;
+    padding: 15mm;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    position: relative;
+    min-height: 297mm;
+}
+
+/* Header Section */
+.invoice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #667eea;
+}
+
+.company-brand {
+    flex: 1;
+}
+
+.company-logo {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 12px;
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.company-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 4px;
+}
+
+.company-tagline {
+    font-size: 12px;
+    color: #718096;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.invoice-meta {
+    text-align: right;
+    min-width: 200px;
+}
+
+.invoice-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #718096;
+    margin-bottom: 2px;
+}
+
+.invoice-number {
+    font-size: 36px;
+    font-weight: 800;
+    color: #667eea;
+    line-height: 1;
+    margin-bottom: 12px;
+}
+
+.invoice-details {
+    font-size: 13px;
+    color: #4a5568;
+}
+
+.invoice-details div {
+    margin-bottom: 4px;
+}
+
+.invoice-details strong {
+    color: #1a202c;
+    font-weight: 600;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 8px;
+}
+
+.status-paid {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.status-pending {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+.status-draft {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+}
+
+/* Client & Company Info */
+.info-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.info-block {
+    background: #f7fafc;
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 4px solid #667eea;
+}
+
+.info-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #718096;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.info-content {
+    font-size: 13px;
+    color: #4a5568;
+}
+
+.info-content h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a202c;
+    margin-bottom: 8px;
+}
+
+.info-content p {
+    margin-bottom: 6px;
+}
+
+.info-content .email {
+    color: #667eea;
+    word-break: break-all;
+}
+
+/* Invoice Items Table */
+.invoice-items {
+    margin-bottom: 30px;
+}
+
+.table-header {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 15px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 8px 8px 0 0;
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 15px;
+    padding: 16px;
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 13px;
+    color: #4a5568;
+    align-items: center;
+}
+
+.table-row:last-child {
+    border-bottom: none;
+    border-radius: 0 0 8px 8px;
+}
+
+.table-row:nth-child(even) {
+    background: #f7fafc;
+}
+
+.item-name {
+    font-weight: 600;
+    color: #1a202c;
+}
+
+.item-desc {
+    font-size: 12px;
+    color: #718096;
+    margin-top: 2px;
+}
+
+.item-qty,
+.item-price,
+.item-tax,
+.item-total {
+    font-weight: 500;
+    text-align: right;
+}
+
+.item-total {
+    font-weight: 700;
+    color: #1a202c;
+}
+
+/* Summary Section */
+.summary-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 30px;
+}
+
+.summary-box {
+    width: 300px;
+    background: #f7fafc;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 13px;
+    color: #4a5568;
+}
+
+.summary-row.total {
+    border-top: 2px solid #e2e8f0;
+    margin-top: 8px;
+    padding-top: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+.summary-label {
+    font-weight: 500;
+}
+
+.summary-value {
+    font-weight: 600;
+    text-align: right;
+}
+
+.summary-row.total .summary-value {
+    font-size: 24px;
+    color: #667eea;
+}
+
+/* Notes & Terms */
+.notes-section {
+    background: #fef3c7;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #f59e0b;
+}
+
+.notes-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #92400e;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.notes-content {
+    font-size: 13px;
+    color: #78350f;
+    line-height: 1.6;
+}
+
+/* Footer */
+.invoice-footer {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    color: #718096;
+    font-size: 12px;
+}
+
+.footer-text {
+    margin-bottom: 8px;
+}
+
+.contact-info {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 12px;
+}
+
+.contact-info span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Payment Methods */
+.payment-methods {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    justify-content: center;
+}
+
+.payment-icon {
+    width: 40px;
+    height: 25px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #718096;
+    font-weight: 600;
+}
+
+/* Print Media Query */
+@media print {
+    body {
+        background: white;
+    }
+    
+    .invoice-container {
+        box-shadow: none;
+        margin: 0;
+        padding: 10mm;
+        max-width: 100%;
+    }
+    
+    @page {
+        size: A4;
+        margin: 10mm;
+    }
+    
+    /* Page Break Handling */
+    .invoice-header,
+    .info-section,
+    .invoice-items,
+    .summary-section {
+        page-break-inside: avoid;
+    }
+    
+    .table-row {
+        page-break-inside: avoid;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .invoice-header {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .invoice-meta {
+        text-align: left;
+        width: 100%;
+    }
+    
+    .info-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .table-header,
+    .table-row {
+        grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+        font-size: 11px;
+    }
+    
+    .item-desc {
+        display: none;
+    }
+    
+    .summary-box {
+        width: 100%;
+    }
+}
+
+/* Watermark for Draft Invoices */
+.draft-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 120px;
+    font-weight: 800;
+    color: rgba(107, 114, 128, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 10px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Barcode / QR Code Placeholder */
+.invoice-barcode {
+    text-align: right;
+    margin-top: 12px;
+}
+
+.barcode {
+    width: 150px;
+    height: 40px;
+    background: linear-gradient(90deg, 
+        #000 2px, transparent 2px,
+        #000 4px, transparent 4px,
+        #000 6px, transparent 6px,
+        #000 10px, transparent 10px,
+        #000 14px, transparent 14px,
+        #000 16px, transparent 16px,
+        #000 20px, transparent 20px,
+        #000 24px, transparent 24px,
+        #000 26px, transparent 26px,
+        #000 30px, transparent 30px,
+        #000 34px, transparent 34px,
+        #000 36px, transparent 36px,
+        #000 40px, transparent 40px,
+        #000 44px, transparent 44px,
+        #000 46px, transparent 46px,
+        #000 50px, transparent 50px,
+        #000 54px, transparent 54px,
+        #000 56px, transparent 56px,
+        #000 60px, transparent 60px,
+        #000 64px, transparent 64px,
+        #000 66px, transparent 66px,
+        #000 70px, transparent 70px,
+        #000 74px, transparent 74px,
+        #000 76px, transparent 76px,
+        #000 80px, transparent 80px,
+        #000 84px, transparent 84px,
+        #000 86px, transparent 86px,
+        #000 90px, transparent 90px,
+        #000 94px, transparent 94px,
+        #000 96px, transparent 96px,
+        #000 100px, transparent 100px,
+        #000 104px, transparent 104px,
+        #000 106px, transparent 106px,
+        #000 110px, transparent 110px,
+        #000 114px, transparent 114px,
+        #000 116px, transparent 116px,
+        #000 120px, transparent 120px,
+        #000 124px, transparent 124px,
+        #000 126px, transparent 126px,
+        #000 130px, transparent 130px,
+        #000 134px, transparent 134px,
+        #000 136px, transparent 136px,
+        #000 140px, transparent 140px,
+        #000 144px, transparent 144px,
+        #000 146px, transparent 146px,
+        #000 150px, transparent 150px,
+        transparent 150px
+    );
+    background-size: 150px 40px;
+    display: inline-block;
+}

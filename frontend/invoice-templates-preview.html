@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Azolve Invoice Templates Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Inter, Arial, sans-serif; background: #0f172a; color: #e2e8f0; min-height:100vh; padding: 32px; }
+.page-header { text-align: center; margin-bottom: 48px; }
+.page-header h1 { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+.page-header p { color: #94a3b8; font-size: 14px; }
+.templates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto; }
+.template-card { border-radius: 16px; overflow: hidden; background: #1e293b; border: 1px solid #334155; cursor: pointer; transition: all 0.3s; }
+.template-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); border-color: #6366f1; }
+.template-preview { height: 140px; display: flex; align-items: center; justify-content: center; font-size: 48px; position: relative; overflow: hidden; }
+.qr-badge { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: #fff; font-size: 9px; padding: 3px 8px; border-radius: 4px; z-index: 1; font-weight: 700; }
+.template-info { padding: 20px; }
+.template-name { font-size: 16px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; }
+.template-desc { font-size: 12px; color: #64748b; line-height: 1.5; margin-bottom: 16px; }
+.template-features { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.tag { background: #0f172a; color: #818cf8; font-size: 10px; padding: 3px 8px; border-radius: 20px; border: 1px solid #334155; }
+.btn-preview { width: 100%; padding: 10px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border: none; border-radius: 8px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-preview:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+<div class="page-header">
+    <h1>✨ Azolve Invoice Templates</h1>
+    <p>12 completely unique professional designs — each with different layout, typography & QR code verification</p>
+</div>
+<div class="templates-grid" id="templatesGrid"></div>
+
+<script>
+window.DB = {
+    getObj: function(k) {
+        if(k==='company') return { name:'Azolve Infotech Pvt Ltd', gst:'27AABCA1234Z1Z5', street:'12, Andheri Industrial Estate', city:'Mumbai', state:'Maharashtra', zip:'400053', phone:'+91 98765 43210', email:'connect@azolve.io', bank:'HDFC Bank', account:'50100123456789', ifsc:'HDFC0001234', branch:'Andheri West' };
+        return {};
+    },
+    get: function(k,def){return def||null;}, set:function(){}, setObj:function(){}
+};
+window.cs = function(){return '₹';};
+window.fmtMoney = function(n){ return parseFloat(n||0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','); };
+window.fmtDate = function(d){ if(!d)return '—'; try{var dt=new Date(d);return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}catch(e){return d;} };
+window.showToast = function(){};
+var sampleInvoice = {
+    number:'INV-2026-001', status:'paid', date:'2026-04-19', due:'2026-05-19',
+    clientName:'Acme Technologies Pvt Ltd', clientGST:'27AADCA0001A1Z1',
+    clientAddress:{street:'456 Business Park, Andheri',city:'Mumbai',state:'Maharashtra',zip:'400053'},
+    paymentTerms:'Net 30', notes:'Thank you for your business! Payment due within 30 days.',
+    items:[
+        {desc:'Web Development Services',qty:1,price:45000,discount:0,taxRate:18,hsn:'998314'},
+        {desc:'UI/UX Design Package',qty:1,price:20000,discount:10,taxRate:18,hsn:'998314'},
+        {desc:'Monthly Maintenance',qty:3,price:5000,discount:0,taxRate:18,hsn:'998315'},
+        {desc:'Domain & Hosting (Annual)',qty:1,price:8000,discount:0,taxRate:18,hsn:'998313'}
+    ]
+};
+</script>
+<script src="js/invoice-template-builder.js"></script>
+<script>
+var CARDS = [
+    {id:'default',    name:'Standard GST',       desc:'Official India GST compliant — blue professional header. Perfect for formal business invoicing.',      icon:'📋', tags:['GST Compliant','Blue Header','Formal'],  preview:'linear-gradient(135deg,#1a3a6b,#3b82f6)'},
+    {id:'minimalist', name:'Minimalist Elegance', desc:'Ultra-clean design, generous whitespace, thin indigo accent lines. Modern and sophisticated.',        icon:'✨', tags:['Clean','Whitespace','Indigo'],           preview:'linear-gradient(135deg,#6366f1,#818cf8)'},
+    {id:'corporate',  name:'Corporate Executive', desc:'Dark navy full-width header + gold accent strip. Commanding authority for enterprise business.',      icon:'🏢', tags:['Dark Navy','Gold Accent','Enterprise'],   preview:'linear-gradient(135deg,#0f172a,#f59e0b)'},
+    {id:'creative',   name:'Creative Studio',    desc:'Bold pink-to-purple gradient split-screen header. Vibrant for creative agencies & studios.',           icon:'🎨', tags:['Gradient','Vibrant','Creative'],          preview:'linear-gradient(135deg,#ec4899,#8b5cf6)'},
+    {id:'luxury',     name:'Luxury Gold',        desc:'Jet black background with elegant gold typography. Premium luxury feel for high-end clients.',         icon:'👑', tags:['Black','Gold','Premium'],                preview:'linear-gradient(135deg,#0d0d0d,#d4af37)'},
+    {id:'tech',       name:'Tech Startup',       desc:'Dark mode with vivid indigo-to-pink gradient. Card-based layout for modern tech companies.',           icon:'🚀', tags:['Dark Mode','Purple','Tech'],              preview:'linear-gradient(135deg,#4f46e5,#db2777)'},
+    {id:'nature',     name:'Nature Green',       desc:'Forest green tones with organic warmth. Perfect for eco-conscious & natural brands.',                  icon:'🌿', tags:['Green','Natural','Organic'],             preview:'linear-gradient(135deg,#14532d,#16a34a)'},
+    {id:'ocean',      name:'Ocean Blue',         desc:'Deep ocean blues with wave-inspired design. Fresh and trustworthy for professional services.',         icon:'🌊', tags:['Ocean Blue','Wave','Fresh'],             preview:'linear-gradient(135deg,#0c4a6e,#0ea5e9)'},
+    {id:'geometric',  name:'Bold Geometric',     desc:'Sharp angles, black & orange contrast, skewed invoice badge. Strong and confident for modern brands.', icon:'🔺', tags:['Bold','Orange','Sharp'],                  preview:'linear-gradient(135deg,#111827,#ff5a1f)'},
+    {id:'pastel',     name:'Soft Pastel',        desc:'Rounded cards, soft pink & peach gradients. Friendly and approachable for lifestyle brands.',            icon:'🌸', tags:['Pastel','Rounded','Friendly'],            preview:'linear-gradient(120deg,#ffe4ec,#fde7d4)'},
+    {id:'monochrome', name:'Monochrome Editorial',desc:'Black & white with serif typography and double rules. Timeless, magazine-style elegance.',              icon:'⚪', tags:['Black & White','Serif','Editorial'],     preview:'linear-gradient(135deg,#111111,#666666)'},
+    {id:'festive',    name:'Festive Indian',     desc:'Red & gold with traditional festive border accents. Warm and celebratory for Indian businesses.',        icon:'🪔', tags:['Red & Gold','Festive','Traditional'],    preview:'linear-gradient(135deg,#7a1023,#d4af37)'}
+];
+var grid = document.getElementById('templatesGrid');
+CARDS.forEach(function(card){
+    var el = document.createElement('div');
+    el.className = 'template-card';
+    el.innerHTML = '<div class="template-preview" style="background:'+card.preview+'">'+
+        '<div class="qr-badge">QR ✓</div><span>'+card.icon+'</span></div>'+
+        '<div class="template-info">'+
+        '<div class="template-name">'+card.name+'</div>'+
+        '<div class="template-desc">'+card.desc+'</div>'+
+        '<div class="template-features">'+card.tags.map(function(t){return '<span class="tag">'+t+'</span>';}).join('')+'<span class="tag" style="color:#22c55e;border-color:#22c55e">QR Code ✓</span></div>'+
+        '<button class="btn-preview" onclick="previewTpl(\''+card.id+'\')">👁 Preview This Template</button>'+
+        '</div>';
+    grid.appendChild(el);
+});
+function previewTpl(id){
+    var inv=JSON.parse(JSON.stringify(sampleInvoice));
+    inv.templateId=id;
+    var html=generateInvoiceHTML(inv,id);
+    var win=window.open('','_blank','width=960,height=840,scrollbars=yes');
+    if(win){win.document.write(html);win.document.close();}
+}
+</script>
+</body>
+</html>

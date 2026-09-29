@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRM & Payroll — Attendance, Leave & Payroll in One Place | Azolve</title>
+<meta name="description" content="Azolve HRM handles attendance, leave requests, payroll runs and employee records — one system for HR, without the spreadsheet juggling.">
+<link rel="canonical" href="https://azolve.io/product-hrm.html">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<meta name="theme-color" content="#714B67">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="css/marketing.css">
+<script>window.AZOLVE_PAGE = 'products';</script>
+
+<style>
+  .phero{padding:150px 5% 60px;background:var(--grad-mesh),var(--paper);position:relative}
+  .phero-grid{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;position:relative;z-index:1}
+  .phero-icon{width:58px;height:58px;border-radius:15px;background:linear-gradient(135deg,#714B67,#4f3447);display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;margin-bottom:22px;box-shadow:var(--shadow-glow-plum)}
+  .phero h1{font-size:clamp(2rem,3.6vw,2.8rem);margin-bottom:18px}
+  .phero p{font-size:17px;color:var(--ink-soft);max-width:460px;margin-bottom:30px}
+
+  .roster-vis{background:var(--paper-raised);border-radius:16px;border:1px solid var(--line);box-shadow:var(--shadow-lg);padding:20px}
+  .roster-row{display:flex;align-items:center;gap:12px;padding:11px 6px;border-bottom:1px solid var(--line)}
+  .roster-row:last-child{border-bottom:none}
+  .av{width:34px;height:34px;border-radius:50%;background:var(--grad-brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+  .roster-row .nm{font-size:13.5px;font-weight:700;flex:1}
+  .roster-row .dept{font-size:11.5px;color:var(--ink-soft);width:90px}
+  .stat-tag{font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:6px}
+  .stat-tag.present{background:rgba(22,163,74,.12);color:var(--green)}
+  .stat-tag.leave{background:rgba(244,201,93,.2);color:#92660a}
+  .stat-tag.wfh{background:rgba(0,160,157,.12);color:var(--teal-dark)}
+
+  .feat3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:var(--maxw);margin:0 auto}
+  .feat3 .f{background:var(--paper-raised);border:1px solid var(--line);border-radius:16px;padding:26px}
+  .feat3 .f .ic{width:42px;height:42px;border-radius:10px;background:rgba(113,75,103,0.08);color:var(--plum);display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:16px}
+  .feat3 .f h3{font-size:16px;margin-bottom:8px}
+  .feat3 .f p{font-size:13.5px;color:var(--ink-soft);line-height:1.6}
+
+  .leave-types{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;max-width:var(--maxw);margin:0 auto}
+  .lt{background:var(--paper-raised);border:1px solid var(--line);border-radius:11px;padding:14px 20px;font-size:13.5px;font-weight:600;color:var(--ink-soft)}
+
+  @media(max-width:980px){.phero-grid,.feat3{grid-template-columns:1fr;gap:30px}}
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<header class="phero">
+  <div class="phero-grid">
+    <div>
+      <div class="phero-icon"><i class="fas fa-id-badge"></i></div>
+      <div class="eyebrow">HRM & Payroll</div>
+      <h1>Attendance, leave and payroll — without the spreadsheets.</h1>
+      <p>One system for the whole employee lifecycle: clock-ins, leave requests, approvals and payroll runs, all connected to one employee record.</p>
+      <div class="hero-actions">
+        <a href="register.html" class="btn btn-primary btn-lg"><span>Start free <i class="fas fa-arrow-right"></i></span></a>
+        <a href="pricing.html" class="btn btn-ghost btn-lg">View pricing</a>
+      </div>
+    </div>
+    <div class="roster-vis card-tilt reveal">
+      <div class="roster-row"><div class="av">PN</div><div class="nm">Priya Nair</div><div class="dept">Sales</div><span class="stat-tag present">Present</span></div>
+      <div class="roster-row"><div class="av">KM</div><div class="nm">Karan Mehta</div><div class="dept">Support</div><span class="stat-tag leave">On leave</span></div>
+      <div class="roster-row"><div class="av">DR</div><div class="nm">Divya Rao</div><div class="dept">Finance</div><span class="stat-tag present">Present</span></div>
+      <div class="roster-row"><div class="av">AS</div><div class="nm">Amit Shah</div><div class="dept">Engineering</div><span class="stat-tag wfh">WFH</span></div>
+      <div class="roster-row"><div class="av">RJ</div><div class="nm">Riya Joshi</div><div class="dept">Marketing</div><span class="stat-tag present">Present</span></div>
+    </div>
+  </div>
+</header>
+
+<section class="section section-alt">
+  <div class="section-head">
+    <div class="eyebrow" style="justify-content:center">What's inside</div>
+    <h2>From daily attendance to monthly payroll.</h2>
+  </div>
+  <div class="feat3">
+    <div class="f card-tilt reveal">
+      <div class="ic"><i class="fas fa-calendar-check"></i></div>
+      <h3>Attendance tracking</h3>
+      <p>Present, absent, half-day, late, work-from-home or on leave — logged daily per employee, no manual registers.</p>
+    </div>
+    <div class="f card-tilt reveal">
+      <div class="ic"><i class="fas fa-clipboard-check"></i></div>
+      <h3>Leave requests & approvals</h3>
+      <p>Sick, casual, earned, maternity, paternity and compensatory leave — requested and approved in one flow.</p>
+    </div>
+    <div class="f card-tilt reveal">
+      <div class="ic"><i class="fas fa-money-check-dollar"></i></div>
+      <h3>Payroll runs</h3>
+      <p>Run payroll against attendance and leave automatically — no separate spreadsheet to reconcile.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow" style="justify-content:center">Every leave type covered</div>
+    <h2>Built for how Indian HR teams actually manage leave.</h2>
+  </div>
+  <div class="leave-types">
+    <span class="lt reveal">Sick leave</span>
+    <span class="lt reveal">Casual leave</span>
+    <span class="lt reveal">Earned leave</span>
+    <span class="lt reveal">Maternity leave</span>
+    <span class="lt reveal">Paternity leave</span>
+    <span class="lt reveal">Compensatory off</span>
+    <span class="lt reveal">Unpaid leave</span>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="ctaband">
+    <h2>Bring your whole HR process into one place.</h2>
+    <p>Free to start. No credit card required.</p>
+    <div class="hero-actions">
+      <a href="register.html" class="btn btn-primary btn-lg"><span>Start free <i class="fas fa-arrow-right"></i></span></a>
+      <a href="products.html" class="btn btn-ghost btn-lg" style="border-color:rgba(255,255,255,0.3);color:#fff">See all products</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="js/site-chrome.js"></script>
+<script src="js/motion.js"></script>
+</body>
+</html>

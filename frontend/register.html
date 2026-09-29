@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account — Azolve | Free Business Management Platform</title>
+    <meta name="description" content="Sign up for Azolve free. Get access to CRM, HRM, Finance, Invoicing, Project Management, Support Tickets, Video Meetings, and Team Chat — all in one platform. No credit card required.">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <meta name="theme-color" content="#714B67">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:linear-gradient(135deg,#1a0a2e 0%,#2d1458 50%,#1a2a4a 100%); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+        .auth-container { width:100%; max-width:680px; }
+        .auth-logo { text-align:center; margin-bottom:32px; }
+        .auth-logo-icon { width:56px; height:56px; background:linear-gradient(135deg,#714B67,#00A09D); border-radius:16px; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:24px; font-weight:900; margin-bottom:12px; }
+        .auth-logo-text { font-size:28px; font-weight:900; color:#fff; letter-spacing:1px; }
+        .auth-logo-sub { font-size:14px; color:rgba(255,255,255,.5); margin-top:4px; }
+        .auth-card { background:#fff; border-radius:24px; padding:40px; box-shadow:0 30px 80px rgba(0,0,0,.4); }
+        .step-indicator { display:flex; align-items:center; justify-content:center; margin-bottom:32px; gap:0; }
+        .step { display:flex; align-items:center; gap:8px; }
+        .step-circle { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; transition:all .3s; }
+        .step.active .step-circle { background:linear-gradient(135deg,#714B67,#9B6B8F); color:#fff; }
+        .step.done .step-circle { background:#28a745; color:#fff; }
+        .step.inactive .step-circle { background:#f0f0f0; color:#888; }
+        .step-label { font-size:12px; font-weight:600; color:#888; }
+        .step.active .step-label { color:#714B67; }
+        .step.done .step-label { color:#28a745; }
+        .step-line { width:40px; height:2px; background:#f0f0f0; margin:0 4px; }
+        .step-line.done { background:#28a745; }
+        .auth-title { font-size:24px; font-weight:800; color:#2c3e50; margin-bottom:6px; text-align:center; }
+        .auth-subtitle { font-size:14px; color:#888; text-align:center; margin-bottom:28px; }
+        .form-group { margin-bottom:18px; }
+        .form-label { display:block; font-size:13px; font-weight:600; color:#444; margin-bottom:7px; }
+        .input-wrap { position:relative; }
+        .input-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#aaa; font-size:15px; pointer-events:none; }
+        .form-control { width:100%; padding:12px 14px 12px 42px; border:1.5px solid #e5e5e5; border-radius:10px; font-size:14px; color:#2c3e50; outline:none; transition:all .2s; }
+        .form-control:focus { border-color:#714B67; box-shadow:0 0 0 3px rgba(113,75,103,.1); }
+        .form-control.no-icon { padding-left:14px; }
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+        .btn-auth { width:100%; padding:14px; background:linear-gradient(135deg,#714B67,#9B6B8F); color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:10px; }
+        .btn-auth:hover { opacity:.9; transform:translateY(-1px); }
+        .btn-auth:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+        .btn-secondary { background:#f0f0f0; color:#555; }
+        .btn-secondary:hover { background:#e5e5e5; opacity:1; }
+        .auth-footer { text-align:center; margin-top:20px; font-size:14px; color:#888; }
+        .auth-footer a { color:#714B67; font-weight:600; text-decoration:none; }
+        .error-msg { background:#fde8e8; color:#dc3545; padding:12px 16px; border-radius:10px; font-size:13px; margin-bottom:16px; display:none; align-items:center; gap:8px; }
+        .error-msg.show { display:flex; }
+        .success-msg { background:#d4edda; color:#155724; padding:12px 16px; border-radius:10px; font-size:13px; margin-bottom:16px; display:none; align-items:center; gap:8px; }
+        .success-msg.show { display:flex; }
+
+        /* Industry grid */
+        .industry-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px; }
+        @media(max-width:500px){ .industry-grid{grid-template-columns:repeat(2,1fr);} }
+        .industry-card { border:2px solid #f0f0f0; border-radius:12px; padding:14px 10px; text-align:center; cursor:pointer; transition:all .2s; background:#fafafa; }
+        .industry-card:hover { border-color:#e0d0e8; background:#fff; }
+        .industry-card.selected { border-color:#714B67; background:linear-gradient(135deg,#fdf7fc,#f0ecfa); }
+        .industry-card.selected .industry-icon { color:#714B67; }
+        .industry-card.selected .industry-name { color:#714B67; font-weight:700; }
+        .industry-icon { font-size:24px; margin-bottom:8px; color:#888; transition:color .2s; display:block; }
+        .industry-name { font-size:12px; font-weight:600; color:#555; transition:color .2s; }
+        .step-panel { display:none; }
+        .step-panel.active { display:block; }
+        .btn-row { display:flex; gap:12px; }
+        .btn-row .btn-auth { flex:1; }
+
+        @media(max-width:600px){ .form-row{grid-template-columns:1fr;} .auth-card{padding:28px 20px;} }
+    </style>
+</head>
+<body>
+<div class="auth-container">
+    <div class="auth-logo">
+        <img src="assets/logo-medium.png" alt="Azolve" style="height:60px;width:auto;margin-bottom:8px;">
+        <div class="auth-logo-sub">Business Management Platform</div>
+    </div>
+    <div class="auth-card">
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <div class="step active" id="stepInd1">
+                <div class="step-circle">1</div>
+                <div class="step-label">Account</div>
+            </div>
+            <div class="step-line" id="stepLine1"></div>
+            <div class="step inactive" id="stepInd2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Industry</div>
+            </div>
+            <div class="step-line" id="stepLine2"></div>
+            <div class="step inactive" id="stepInd3">
+                <div class="step-circle"><i class="fas fa-check"></i></div>
+                <div class="step-label">Secure</div>
+            </div>
+        </div>
+
+        <div class="error-msg" id="errorMsg"><i class="fas fa-exclamation-circle"></i><span id="errorText"></span></div>
+        <div class="success-msg" id="successMsg"><i class="fas fa-check-circle"></i><span id="successText"></span></div>
+
+        <!-- Step 1: Account Details -->
+        <div class="step-panel active" id="panel1">
+            <div class="auth-title">Create your account</div>
+            <div class="auth-subtitle">Start your free AZOLVE journey today</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">First Name</label>
+                    <div class="input-wrap"><i class="fas fa-user input-icon"></i><input type="text" class="form-control" id="regFirstName" placeholder="First name" required></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Last Name</label>
+                    <div class="input-wrap"><i class="fas fa-user input-icon"></i><input type="text" class="form-control" id="regLastName" placeholder="Last name" required></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Company Name</label>
+                <div class="input-wrap"><i class="fas fa-building input-icon"></i><input type="text" class="form-control" id="regCompany" placeholder="Your company name" required></div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Work Email</label>
+                <div class="input-wrap"><i class="fas fa-envelope input-icon"></i><input type="email" class="form-control" id="regEmail" placeholder="you@company.com" required></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="input-wrap"><i class="fas fa-lock input-icon"></i><input type="password" class="form-control" id="regPassword" placeholder="Min 6 characters" required></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <div class="input-wrap"><i class="fas fa-lock input-icon"></i><input type="password" class="form-control" id="regConfirmPassword" placeholder="Repeat password" required></div>
+                </div>
+            </div>
+            <button class="btn-auth" onclick="goToStep2()"><i class="fas fa-arrow-right"></i> Continue</button>
+        </div>
+
+        <!-- Step 2: Industry Selection -->
+        <div class="step-panel" id="panel2">
+            <div class="auth-title">Select your industry</div>
+            <div class="auth-subtitle">We'll customize your app store based on your business type</div>
+            <div class="industry-grid" id="industryGrid"></div>
+            <div class="btn-row">
+                <button class="btn-auth btn-secondary" onclick="goToStep1()"><i class="fas fa-arrow-left"></i> Back</button>
+                <button class="btn-auth" id="registerBtn" onclick="completeRegistration()"><i class="fas fa-check"></i> Create Account</button>
+            </div>
+        </div>
+
+        <div class="auth-footer">Already have an account? <a href="login.html">Sign in</a></div>
+    </div>
+</div>
+
+<script>
+const API_BASE_URL = (location.hostname==='localhost'||location.hostname==='127.0.0.1') ? 'http://localhost:3000/api' : 'https://azolve-api.onrender.com/api';
+console.log('[Register] API Base URL:', API_BASE_URL);
+
+const INDUSTRIES = [
+    { id: 'technology',    name: 'Technology',      icon: 'fas fa-microchip' },
+    { id: 'healthcare',    name: 'Healthcare',      icon: 'fas fa-heartbeat' },
+    { id: 'education',     name: 'Education',       icon: 'fas fa-graduation-cap' },
+    { id: 'finance',       name: 'Finance',         icon: 'fas fa-chart-line' },
+    { id: 'retail',        name: 'Retail',          icon: 'fas fa-store' },
+    { id: 'manufacturing', name: 'Manufacturing',   icon: 'fas fa-industry' },
+    { id: 'hospitality',   name: 'Hospitality',     icon: 'fas fa-hotel' },
+    { id: 'legal',         name: 'Legal',           icon: 'fas fa-gavel' },
+    { id: 'realestate',    name: 'Real Estate',     icon: 'fas fa-home' },
+    { id: 'nonprofit',     name: 'Non-Profit',      icon: 'fas fa-hand-holding-heart' },
+    { id: 'media',         name: 'Media & Content', icon: 'fas fa-photo-video' },
+    { id: 'agriculture',   name: 'Agriculture',     icon: 'fas fa-seedling' },
+    { id: 'logistics',     name: 'Logistics',       icon: 'fas fa-truck' },
+    { id: 'construction',  name: 'Construction',    icon: 'fas fa-hard-hat' },
+    { id: 'beauty',        name: 'Beauty & Spa',    icon: 'fas fa-spa' },
+    { id: 'sports',        name: 'Sports & Fitness',icon: 'fas fa-dumbbell' },
+    { id: 'automotive',    name: 'Automotive',      icon: 'fas fa-car' },
+    { id: 'other',         name: 'Other',           icon: 'fas fa-ellipsis-h' }
+];
+
+let selectedIndustry = null;
+
+function renderIndustries() {
+    const grid = document.getElementById('industryGrid');
+    grid.innerHTML = INDUSTRIES.map(ind => `
+    <div class="industry-card ${selectedIndustry === ind.id ? 'selected' : ''}" onclick="selectIndustry('${ind.id}')">
+        <i class="${ind.icon} industry-icon"></i>
+        <div class="industry-name">${ind.name}</div>
+    </div>`).join('');
+}
+
+function selectIndustry(id) {
+    selectedIndustry = id;
+    renderIndustries();
+}
+
+function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    document.getElementById('errorText').textContent = msg;
+    el.classList.add('show');
+    document.getElementById('successMsg').classList.remove('show');
+    setTimeout(() => el.classList.remove('show'), 5000);
+}
+
+function goToStep1() {
+    document.getElementById('panel1').classList.add('active');
+    document.getElementById('panel2').classList.remove('active');
+    document.getElementById('stepInd1').className = 'step active';
+    document.getElementById('stepInd2').className = 'step inactive';
+    document.getElementById('stepLine1').className = 'step-line';
+    document.getElementById('errorMsg').classList.remove('show');
+}
+
+function goToStep2() {
+    const first = document.getElementById('regFirstName').value.trim();
+    const last = document.getElementById('regLastName').value.trim();
+    const company = document.getElementById('regCompany').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const pass = document.getElementById('regPassword').value;
+    const confirm = document.getElementById('regConfirmPassword').value;
+
+    if (!first || !last) return showError('Please enter your full name.');
+    if (!company) return showError('Company name is required.');
+    if (!email || !email.includes('@')) return showError('Please enter a valid email address.');
+    if (pass.length < 6) return showError('Password must be at least 6 characters.');
+    if (pass !== confirm) return showError('Passwords do not match.');
+
+    document.getElementById('panel1').classList.remove('active');
+    document.getElementById('panel2').classList.add('active');
+    document.getElementById('stepInd1').className = 'step done';
+    document.getElementById('stepInd2').className = 'step active';
+    document.getElementById('stepLine1').className = 'step-line done';
+    document.getElementById('errorMsg').classList.remove('show');
+    renderIndustries();
+}
+
+async function completeRegistration() {
+    if (!selectedIndustry) return showError('Please select your industry to continue.');
+
+    const first = document.getElementById('regFirstName').value.trim();
+    const last = document.getElementById('regLastName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const pass = document.getElementById('regPassword').value;
+    const company = document.getElementById('regCompany').value.trim();
+    const name = first + ' ' + last;
+
+    // Disable the button and show loading
+    const btn = document.getElementById('registerBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+
+    try {
+        console.log('[Register] Attempting registration for:', email, 'Company:', company);
+        
+        // Generate a unique pseudo-domain to force the backend to create a NEW company 
+        // instead of grouping by public email domains (like @gmail.com)
+        const uniqueDomain = company.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() + '-' + Date.now() + '.azolve.local';
+        
+        const response = await fetch(`${API_BASE_URL}/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                password: pass,
+                companyName: company,
+                companyDomain: uniqueDomain,
+                industry: selectedIndustry,
+                role: 'admin'
+            })
+        });
+
+        const data = await response.json();
+        console.log('[Register] Response status:', response.status, 'ok:', response.ok);
+        console.log('[Register] Response data:', JSON.stringify(data, null, 2));
+
+        if (response.ok && data.success) {
+            // Clear old cached data to prevent data leakage between accounts
+            Object.keys(localStorage).forEach(key => {
+                if (key !== 'theme' && key !== 'darkMode') localStorage.removeItem(key);
+            });
+
+            // Store real token and user data from API
+            localStorage.setItem('authToken', data.data.token);
+            localStorage.setItem('azolve_token', data.data.token);
+            localStorage.setItem('token', data.data.token);
+            localStorage.setItem('refreshToken', data.data.refreshToken || '');
+            localStorage.setItem('user', JSON.stringify(data.data.user));
+            // Store companyId from company object
+            const companyId = (data.data.company && (data.data.company._id || data.data.company.id)) || 
+                              (data.data.user && data.data.user.company) || '';
+            localStorage.setItem('companyId', companyId);
+            // Also cache company details for dashboard
+            if (data.data.company) {
+                const co = data.data.company;
+                const companyCache = {
+                    name: co.name || '',
+                    email: co.email || '',
+                    industry: co.industry || selectedIndustry || '',
+                    currency: (co.settings && co.settings.currency) || 'INR',
+                    taxRate: (co.settings && co.settings.taxRate) || 18,
+                    dateFormat: (co.settings && co.settings.dateFormat) || 'DD/MM/YYYY',
+                    invPrefix: (co.settings && co.settings.invoicePrefix) || 'INV',
+                    domain: co.domain || '',
+                    _id: co._id || co.id || ''
+                };
+                localStorage.setItem('azolve_company', JSON.stringify(companyCache));
+            }
+
+            // Set default installed apps based on industry
+            const industryApps = getIndustryDefaultApps(selectedIndustry);
+            localStorage.setItem('installedApps', JSON.stringify(industryApps));
+            localStorage.setItem('azolve_fresh_start', 'true');
+            localStorage.setItem('purchased_modules', JSON.stringify([]));
+
+            // Update step indicator
+            document.getElementById('stepInd2').className = 'step done';
+            document.getElementById('stepInd3').className = 'step active';
+            document.getElementById('stepLine2').className = 'step-line done';
+
+            const successEl = document.getElementById('successMsg');
+            document.getElementById('successText').textContent = 'Account created successfully! Redirecting to your dashboard...';
+            successEl.classList.add('show');
+
+            console.log('[Register] Registration successful! Redirecting to dashboard...');
+            setTimeout(() => { window.location.href = 'app-dashboard.html'; }, 1000);
+
+        } else {
+            const msg = data.message || 'Registration failed. Please try again.';
+            console.error('[Register] Registration failed:', msg);
+            showError(msg);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check"></i> Create Account';
+        }
+
+    } catch (error) {
+        console.error('[Register] Network/JS error:', error);
+        showError('Cannot connect to server. Make sure the backend is running on port 3000. Error: ' + error.message);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check"></i> Create Account';
+    }
+}
+
+function getIndustryDefaultApps(industry) {
+    const defaults = {
+        technology:    ['crm', 'hrm', 'project', 'cms'],
+        healthcare:    ['crm', 'hrm', 'hospital_management', 'pharmacy_management'],
+        education:     ['crm', 'hrm', 'lms', 'school_management'],
+        finance:       ['crm', 'hrm', 'finance', 'accounting'],
+        retail:        ['crm', 'hrm', 'inventory'],
+        manufacturing: ['crm', 'hrm', 'project', 'cmms'],
+        hospitality:   ['crm', 'hrm', 'hotel_room_management'],
+        legal:         ['crm', 'hrm', 'legal_case_management', 'contract'],
+        realestate:    ['crm', 'hrm', 'property_management', 'finance'],
+        nonprofit:     ['crm', 'hrm', 'ngo_management', 'project'],
+        media:         ['crm', 'hrm', 'cms', 'social_media_analytics'],
+        agriculture:   ['crm', 'hrm', 'agriculture_management', 'finance'],
+        logistics:     ['crm', 'hrm', 'fleet', 'freight_management'],
+        construction:  ['crm', 'hrm', 'construction_management', 'project'],
+        beauty:        ['crm', 'hrm', 'beauty_spa_management'],
+        sports:        ['crm', 'hrm', 'sports_club_management', 'gym_management'],
+        automotive:    ['crm', 'hrm', 'car_dealership', 'garage_workshop'],
+        other:         ['crm', 'hrm', 'project', 'finance']
+    };
+    return defaults[industry] || ['crm', 'hrm', 'project', 'finance'];
+}
+
+renderIndustries();
+</script>
+</body>
+</html>

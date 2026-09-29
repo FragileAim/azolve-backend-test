@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help Center — Azolve Support & FAQs</title>
+<meta name="description" content="Answers to common Azolve questions — billing, setup, modules and account help. Can't find it here? Contact our team directly.">
+<link rel="canonical" href="https://azolve.io/help.html">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<meta name="theme-color" content="#714B67">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="css/marketing.css">
+<script>window.AZOLVE_PAGE = 'help';</script>
+
+<style>
+  .pagehero{padding:150px 5% 50px;text-align:center;background:var(--grad-mesh),var(--paper)}
+  .pagehero h1{font-size:clamp(2rem,4vw,3rem);margin-bottom:16px;max-width:640px;margin-inline:auto}
+  .pagehero p{font-size:17px;color:var(--ink-soft);max-width:560px;margin:0 auto}
+
+  .help-cats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:var(--maxw);margin:0 auto}
+  .help-cat{background:var(--paper-raised);border:1px solid var(--line);border-radius:16px;padding:22px;text-align:center;text-decoration:none;transition:.15s}
+  .help-cat:hover{border-color:var(--plum);transform:translateY(-2px)}
+  .help-cat i{font-size:20px;color:var(--plum);margin-bottom:10px}
+  .help-cat h4{font-size:14px;color:var(--ink)}
+
+  .faq-wrap{max-width:720px;margin:0 auto}
+  .faq-item{border-bottom:1px solid var(--line);padding:20px 0}
+  .faq-q{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:600;font-size:15px;color:var(--ink)}
+  .faq-q i{color:var(--ink-faint);transition:.2s;font-size:13px}
+  .faq-item.open .faq-q i{transform:rotate(180deg)}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease}
+  .faq-item.open .faq-a{max-height:240px}
+  .faq-a p{padding-top:12px;font-size:14px;color:var(--ink-soft);line-height:1.7}
+
+  @media(max-width:860px){.help-cats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<header class="pagehero">
+  <div class="eyebrow" style="justify-content:center">Help Center</div>
+  <h1>Answers, or a fast way to a human.</h1>
+  <p>Browse the common questions below, or reach the team directly if you're stuck.</p>
+</header>
+
+<section class="section" style="padding-top:0">
+  <div class="help-cats reveal">
+    <a href="products.html" class="help-cat"><i class="fas fa-grid-2"></i><h4>Products &amp; modules</h4></a>
+    <a href="pricing.html" class="help-cat"><i class="fas fa-tag"></i><h4>Billing &amp; plans</h4></a>
+    <a href="register.html" class="help-cat"><i class="fas fa-rocket"></i><h4>Getting started</h4></a>
+    <a href="contact.html" class="help-cat"><i class="fas fa-headset"></i><h4>Contact support</h4></a>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="section-head">
+    <div class="eyebrow" style="justify-content:center">FAQs</div>
+    <h2 style="font-size:1.8rem">Common questions</h2>
+  </div>
+  <div class="faq-wrap reveal">
+    <div class="faq-item open">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does the free trial work? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-a"><p>Every plan starts with a free trial — no card required. You get full access to the modules on your chosen plan, and can upgrade or add modules any time from inside the app.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can I add modules later without re-signing up? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-a"><p>Yes. Every plan shares the same underlying account, so adding CRM, HRM, or any other module later doesn't mean starting over — your existing data stays connected.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is Azolve GST-compliant for Indian invoicing? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-a"><p>Yes — Invoicing includes GST-compliant invoices, e-invoicing with IRN and QR codes, and UPI payment links out of the box.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can I import my existing customer and invoice data? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-a"><p>Yes, our team can help migrate customers, invoices and product catalogs from spreadsheets or most common accounting tools during onboarding.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What happens to my data if I cancel? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-a"><p>You can export your data at any time. If you cancel, your data remains available for export for 30 days before removal.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="ctaband reveal">
+    <h2>Still stuck?</h2>
+    <p>The team typically replies within a few hours on business days.</p>
+    <div class="hero-actions">
+      <a href="contact.html" class="btn btn-primary btn-lg"><span>Contact support <i class="fas fa-arrow-right"></i></span></a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="js/site-chrome.js"></script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — Simple, Honest Plans | Azolve</title>
+<meta name="description" content="Azolve pricing: Starter ₹999/mo, Professional ₹2,499/mo, Enterprise ₹4,999/mo. No per-feature upsells, no hidden fees. Start free.">
+<link rel="canonical" href="https://azolve.io/pricing.html">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<meta name="theme-color" content="#714B67">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="css/marketing.css">
+<script>window.AZOLVE_PAGE = 'pricing';</script>
+
+<style>
+  .pagehero{padding:150px 5% 50px;text-align:center;background:var(--grad-mesh),var(--paper)}
+  .pagehero h1{font-size:clamp(2rem,4vw,3rem);margin-bottom:16px}
+  .pagehero p{font-size:17px;color:var(--ink-soft);max-width:540px;margin:0 auto 30px}
+
+  .toggle-wrap{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:50px}
+  .toggle-wrap span{font-size:14px;font-weight:600;color:var(--ink-soft)}
+  .toggle-wrap span.active{color:var(--ink)}
+  .toggle{position:relative;width:52px;height:28px;background:var(--ink);border-radius:20px;cursor:pointer;border:none;padding:0}
+  .toggle .knob{position:absolute;top:3px;left:3px;width:22px;height:22px;background:#fff;border-radius:50%;transition:transform .25s var(--ease)}
+  .toggle.on .knob{transform:translateX(24px)}
+  .save-badge{font-size:11px;font-weight:700;background:rgba(22,163,74,.12);color:var(--green);padding:3px 9px;border-radius:6px}
+
+  .plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:var(--maxw);margin:0 auto;align-items:start}
+  .plan{background:var(--paper-raised);border:1.5px solid var(--line);border-radius:18px;padding:32px 28px;position:relative;transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+  .plan.popular{border-color:var(--plum);box-shadow:var(--shadow-lg);transform:translateY(-10px)}
+  .plan-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--grad-brand);color:#fff;font-size:11.5px;font-weight:700;padding:5px 16px;border-radius:20px;white-space:nowrap}
+  .plan h3{font-size:18px;margin-bottom:6px}
+  .plan .desc{font-size:13px;color:var(--ink-soft);margin-bottom:22px}
+  .plan .price{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
+  .plan .price .amt{font-family:'Sora',sans-serif;font-size:2.5rem;font-weight:700}
+  .plan .price .per{font-size:13.5px;color:var(--ink-soft)}
+  .plan .yearly-note{font-size:12px;color:var(--ink-faint);margin-bottom:24px;min-height:16px}
+  .plan .btn{width:100%;margin-bottom:26px}
+  .plan-feats{display:flex;flex-direction:column;gap:12px}
+  .plan-feats li{display:flex;gap:10px;align-items:flex-start;list-style:none;font-size:13.5px;color:var(--ink)}
+  .plan-feats li i{color:var(--teal);margin-top:3px;font-size:12px;flex-shrink:0}
+  .plan-feats li.no i{color:var(--ink-faint)}
+  .plan-feats li.no{color:var(--ink-faint)}
+
+  .addon-row{max-width:var(--maxw);margin:50px auto 0;background:var(--paper-raised);border:1px solid var(--line);border-radius:16px;padding:24px 28px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  .addon-row .left{display:flex;gap:16px;align-items:center}
+  .addon-row .ic{width:44px;height:44px;border-radius:11px;background:rgba(113,75,103,0.08);color:var(--plum);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .addon-row h4{font-size:15px;margin-bottom:3px}
+  .addon-row p{font-size:13px;color:var(--ink-soft)}
+  .addon-row .price{font-family:'Sora',sans-serif;font-weight:700;font-size:1.3rem;flex-shrink:0}
+
+  .compare-note{text-align:center;max-width:600px;margin:60px auto 0;font-size:13.5px;color:var(--ink-faint)}
+
+  .faq{max-width:760px;margin:0 auto}
+  .faq-item{border-bottom:1px solid var(--line);padding:20px 0}
+  .faq-q{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:700;font-size:15px}
+  .faq-q i{transition:transform .25s;color:var(--plum);font-size:13px}
+  .faq-item.open .faq-q i{transform:rotate(45deg)}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .3s var(--ease)}
+  .faq-item.open .faq-a{max-height:200px}
+  .faq-a p{font-size:14px;color:var(--ink-soft);padding-top:12px;line-height:1.65}
+
+  @media(max-width:980px){.plans-grid{grid-template-columns:1fr;max-width:420px}.plan.popular{transform:none}}
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<header class="pagehero">
+  <div class="eyebrow" style="justify-content:center">Simple, honest pricing</div>
+  <h1>One price. No per-feature upsells.</h1>
+  <p>Every plan includes the core suite — CRM, invoicing, HRM and the AI Copilot. Upgrade only for more users, storage, or advanced features.</p>
+</header>
+
+<section class="section" style="padding-top:0">
+  <div class="toggle-wrap">
+    <span class="active" id="lblMonthly">Monthly</span>
+    <button class="toggle" id="billToggle" aria-label="Toggle yearly billing"><div class="knob"></div></button>
+    <span id="lblYearly">Yearly</span>
+    <span class="save-badge">Save ~17%</span>
+  </div>
+
+  <div class="plans-grid" id="plansGrid">
+    <!-- Plans rendered by JS from live API data, falling back to static figures below -->
+  </div>
+
+  <div class="addon-row reveal">
+    <div class="left">
+      <div class="ic"><i class="fas fa-cash-register"></i></div>
+      <div>
+        <h4>POS Add-on</h4>
+        <p>In-person billing for retail counters — add to any plan.</p>
+      </div>
+    </div>
+    <div class="price mono" id="addonPrice">+₹799<span style="font-size:13px;font-weight:600;color:var(--ink-soft)">/mo</span></div>
+  </div>
+
+  <p class="compare-note">All prices in INR, exclusive of applicable taxes. Cancel anytime — no long-term lock-in.</p>
+</section>
+
+<section class="section section-alt">
+  <div class="section-head">
+    <div class="eyebrow" style="justify-content:center">Questions</div>
+    <h2>Pricing FAQ</h2>
+  </div>
+  <div class="faq">
+    <div class="faq-item">
+      <div class="faq-q">Can I switch plans later? <i class="fas fa-plus"></i></div>
+      <div class="faq-a"><p>Yes — upgrade or downgrade anytime from your account settings. Changes apply to your next billing cycle.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is there a free trial? <i class="fas fa-plus"></i></div>
+      <div class="faq-a"><p>Yes, you can start free and explore the suite before adding a paid plan — no credit card required to begin.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What happens if I go over my user limit? <i class="fas fa-plus"></i></div>
+      <div class="faq-a"><p>We'll let you know before you hit your plan's limit so you can upgrade smoothly — no surprise lockouts.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do you offer refunds? <i class="fas fa-plus"></i></div>
+      <div class="faq-a"><p>Yes — see our <a href="refund.html" style="color:var(--plum);font-weight:700">Refund Policy</a> for full details.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="ctaband">
+    <h2>Still deciding? Start free.</h2>
+    <p>No credit card required. Upgrade only when you're ready.</p>
+    <div class="hero-actions">
+      <a href="register.html" class="btn btn-primary btn-lg"><span>Start free <i class="fas fa-arrow-right"></i></span></a>
+      <a href="contact.html" class="btn btn-ghost btn-lg" style="border-color:rgba(255,255,255,0.3);color:#fff">Talk to us</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="js/site-chrome.js"></script>
+<script src="js/motion.js"></script>
+<script>
+// Static fallback — mirrors backend/routes/payments.js PLANS object exactly.
+// Used if the live API call fails (e.g. backend not reachable, viewing file directly).
+const FALLBACK_PLANS = {
+  starter: { name: 'Starter', monthly: 999, yearly: 9990, features: { maxUsers: 10, hasPOS: false, hasAdvancedReports: false, hasWhatsApp: false, maxStorage: 1024 } },
+  professional: { name: 'Professional', monthly: 2499, yearly: 24990, features: { maxUsers: 25, hasPOS: false, hasAdvancedReports: true, hasWhatsApp: true, maxStorage: 5120 } },
+  enterprise: { name: 'Enterprise', monthly: 4999, yearly: 49990, features: { maxUsers: 100, hasPOS: true, hasAdvancedReports: true, hasWhatsApp: true, maxStorage: 20480 } },
+  pos_addon: { name: 'POS Add-on', monthly: 799, yearly: 7990, features: { hasPOS: true } },
+};
+
+const PLAN_DESC = {
+  starter: 'For solo operators and small teams getting started.',
+  professional: 'For growing teams that need WhatsApp and deeper reports.',
+  enterprise: 'For larger teams that need POS, scale and headroom.',
+};
+
+function fmtINR(n){ return '₹' + n.toLocaleString('en-IN'); }
+function fmtStorage(mb){ return mb >= 1024 ? (mb/1024) + ' GB' : mb + ' MB'; }
+
+function planFeatureList(key, f){
+  const items = [
+    { ok: true, text: `Up to ${f.maxUsers} users` },
+    { ok: true, text: `${fmtStorage(f.maxStorage)} storage` },
+    { ok: true, text: 'CRM, Invoicing, HRM & AI Copilot' },
+    { ok: f.hasWhatsApp, text: 'WhatsApp Business integration' },
+    { ok: f.hasAdvancedReports, text: 'Advanced reports & analytics' },
+    { ok: f.hasPOS, text: 'POS terminal included' },
+  ];
+  return items.map(it => `<li class="${it.ok ? '' : 'no'}"><i class="fas ${it.ok ? 'fa-check' : 'fa-xmark'}"></i> ${it.text}</li>`).join('');
+}
+
+let yearly = false;
+let plans = FALLBACK_PLANS;
+
+function render(){
+  const grid = document.getElementById('plansGrid');
+  const order = ['starter', 'professional', 'enterprise'];
+  grid.innerHTML = order.map((key, i) => {
+    const p = plans[key];
+    const price = yearly ? p.yearly : p.monthly;
+    const per = yearly ? '/year' : '/month';
+    const isPopular = key === 'professional';
+    return `
+    <div class="plan card-tilt reveal ${isPopular ? 'popular' : ''}">
+      ${isPopular ? '<div class="plan-badge">Most popular</div>' : ''}
+      <h3>${p.name}</h3>
+      <div class="desc">${PLAN_DESC[key]}</div>
+      <div class="price"><span class="amt">${fmtINR(price)}</span><span class="per">${per}</span></div>
+      <div class="yearly-note">${yearly ? `≈ ${fmtINR(Math.round(p.yearly/12))}/mo billed yearly` : ''}</div>
+      <a href="register.html" class="btn ${isPopular ? 'btn-primary' : 'btn-ghost'} btn-block"><span>Start free</span></a>
+      <ul class="plan-feats">${planFeatureList(key, p.features)}</ul>
+    </div>`;
+  }).join('');
+
+  document.getElementById('addonPrice').innerHTML = `+${fmtINR(yearly ? plans.pos_addon.yearly : plans.pos_addon.monthly)}<span style="font-size:13px;font-weight:600;color:var(--ink-soft)">${yearly ? '/yr' : '/mo'}</span>`;
+
+  // Re-mark new cards for reveal + tilt since they were just injected
+  document.querySelectorAll('.plan').forEach(el => { el.classList.add('in'); });
+  document.querySelectorAll('.card-tilt').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = (card.classList.contains('popular') ? 'translateY(-10px) ' : '') + `perspective(700px) rotateY(${x*5}deg) rotateX(${-y*5}deg)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = card.classList.contains('popular') ? 'translateY(-10px)' : ''; });
+  });
+}
+
+document.getElementById('billToggle').addEventListener('click', () => {
+  yearly = !yearly;
+  document.getElementById('billToggle').classList.toggle('on', yearly);
+  document.getElementById('lblMonthly').classList.toggle('active', !yearly);
+  document.getElementById('lblYearly').classList.toggle('active', yearly);
+  render();
+});
+
+// Try live data first; fall back to the static mirror above on any failure.
+(async () => {
+  try {
+    const res = await fetch('/api/payments/plans');
+    if (!res.ok) throw new Error('bad status');
+    const data = await res.json();
+    if (data && data.success && data.data) plans = data.data;
+  } catch (e) {
+    // silent fallback — FALLBACK_PLANS already in use
+  }
+  render();
+})();
+
+// FAQ accordion
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => q.closest('.faq-item').classList.toggle('open'));
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+╔══════════════════════════════════════════════════════════════╗
+║           AZOLVE - QUICK MONGODB SETUP (5 MINUTES)           ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║  MongoDB is NOT SQL — it's a NoSQL document database.        ║
+║  No .sql file needed. Just run the seed script!              ║
+║                                                              ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║  STEP 1: Start MongoDB                                       ║
+║  ─────────────────────                                       ║
+║  Windows:  Open CMD as Admin → net start MongoDB             ║
+║  Mac:      brew services start mongodb-community              ║
+║  Linux:    sudo systemctl start mongodb                       ║
+║                                                              ║
+║  Verify:   mongosh   (should show "test>" prompt)            ║
+║                                                              ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║  STEP 2: Install Dependencies                                ║
+║  ────────────────────────────                                ║
+║  cd backend                                                  ║
+║  npm install                                                 ║
+║                                                              ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║  STEP 3: Seed the Database                                   ║
+║  ─────────────────────────                                   ║
+║  npm run seed                                                ║
+║                                                              ║
+║  This creates:                                               ║
+║  • 1 company (Azolve Technologies)                           ║
+║  • 6 users (1 admin + 5 team members)                        ║
+║  • 10 clients, 15 products, 8 invoices                      ║
+║  • 12 leads, 6 deals, 4 projects, 20 tasks                  ║
+║  • 8 employees, attendance, leaves, tickets                  ║
+║  • Meetings, events, bank accounts, notifications            ║
+║  • Office documents, API key, webhooks, workflows            ║
+║                                                              ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║  STEP 4: Start the Server                                    ║
+║  ────────────────────────                                    ║
+║  npm start                                                   ║
+║                                                              ║
+║  Open: http://localhost:3000                                 ║
+║                                                              ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║  LOGIN CREDENTIALS:                                          ║
+║  ──────────────────                                          ║
+║                                                              ║
+║  Admin:    admin@azolve.com  /  admin123                     ║
+║  Manager:  priya@azolve.com  /  team123                      ║
+║  Sales:    rahul@azolve.com  /  team123                      ║
+║  HR:       anita@azolve.com  /  team123                      ║
+║  Finance:  vikram@azolve.com /  team123                      ║
+║  Support:  meera@azolve.com  /  team123                      ║
+║                                                              ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║  RE-SEED (reset all data):                                   ║
+║  npm run seed                                                ║
+║  (automatically clears old data before inserting new)        ║
+║                                                              ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║  MONGODB URI (in .env):                                      ║
+║  MONGODB_URI=mongodb://localhost:27017/azolve_db             ║
+║                                                              ║
+║  TROUBLESHOOTING:                                            ║
+║  • "ECONNREFUSED" → MongoDB not running (start it first)     ║
+║  • "cannot find module" → Run: npm install                   ║
+║  • Port 3000 in use → Kill: lsof -ti:3000 | xargs kill -9   ║
+║  • mongosh not found → Use "mongo" (older versions)          ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝

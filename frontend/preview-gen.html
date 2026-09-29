@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8">
+<script>
+window.DB = {
+    getObj: function(k) {
+        if(k==='company') return { name:'Azolve Infotech Pvt Ltd', gst:'27AABCA1234Z1Z5', street:'12 Andheri Industrial Estate', city:'Mumbai', state:'Maharashtra', zip:'400053', phone:'+91 98765 43210', email:'connect@azolve.io', bank:'HDFC Bank', account:'50100123456789', ifsc:'HDFC0001234', branch:'Andheri West' };
+        return {};
+    },
+    get: function(k,def){return def||null;}, set:function(){}, setObj:function(){}
+};
+window.cs = function(){return '₹';};
+window.fmtMoney = function(n){ return parseFloat(n||0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','); };
+window.fmtDate = function(d){ if(!d)return '—'; try{var dt=new Date(d);return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}catch(e){return d;} };
+window.showToast = function(){};
+</script>
+<script src="js/invoice-template-builder.js"></script>
+</head>
+<body>
+<script>
+var inv = {
+    number:'INV-2026-001', status:'paid', date:'2026-04-19', due:'2026-05-19',
+    clientName:'Acme Technologies Pvt Ltd', clientGST:'27AADCA0001A1Z1',
+    clientAddress:{street:'456 Business Park, Andheri',city:'Mumbai',state:'Maharashtra',zip:'400053'},
+    paymentTerms:'Net 30', notes:'Thank you for your business!',
+    items:[
+        {desc:'Web Development Services',qty:1,price:45000,discount:0,taxRate:18,hsn:'998314'},
+        {desc:'UI/UX Design Package',qty:1,price:20000,discount:10,taxRate:18,hsn:'998314'},
+        {desc:'Monthly Maintenance',qty:3,price:5000,discount:0,taxRate:18,hsn:'998315'}
+    ]
+};
+// Use URL param ?t=template_id
+var tid = new URLSearchParams(window.location.search).get('t') || 'default';
+document.open();
+document.write(generateInvoiceHTML(inv, tid));
+document.close();
+</script>
+</body>
+</html>

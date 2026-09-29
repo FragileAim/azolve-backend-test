@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bank Import · Azolve</title>
+  <link rel="stylesheet" href="../css/azolve-v2.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    .drop-zone{border:2px dashed var(--az-border);border-radius:var(--az-radius-lg);padding:50px 28px;text-align:center;background:var(--az-bg-soft);transition:var(--az-transition);cursor:pointer}
+    .drop-zone:hover,.drop-zone.dragover{border-color:var(--az-primary);background:var(--az-primary-light)}
+    .drop-icon{font-size:54px;color:var(--az-primary);margin-bottom:14px}
+    .bank-logo{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;font-weight:700}
+    .match-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600}
+    .amt-in{color:var(--az-success);font-weight:600}
+    .amt-out{color:var(--az-danger);font-weight:600}
+  </style>
+</head>
+<body class="az-app az-embedded">
+  <div class="az-page">
+
+    <!-- Hero -->
+    <div class="az-hero az-hero-teal">
+      <div class="az-hero-inner">
+        <div class="az-hero-icon"><i class="fa-solid fa-building-columns"></i></div>
+        <div class="az-hero-text">
+          <h1>Bank Import & Reconciliation</h1>
+          <p>Upload your bank statement (CSV/XLSX/OFX). Azolve auto-matches transactions to invoices and flags exceptions.</p>
+        </div>
+        <div class="az-hero-actions">
+          <button class="az-btn"><i class="fa-solid fa-clock-rotate-left"></i> Import History</button>
+          <button class="az-btn az-btn-primary" id="connectBtn"><i class="fa-solid fa-link"></i> Connect Bank</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="az-grid az-grid-4" style="margin-bottom:20px">
+      <div class="az-stat az-stat-info">
+        <div class="az-stat-row"><div><div class="az-stat-label">Imported</div><div class="az-stat-value">2,418</div><div class="az-stat-trend up">Total transactions</div></div><div class="az-stat-icon"><i class="fa-solid fa-file-import"></i></div></div>
+      </div>
+      <div class="az-stat az-stat-success">
+        <div class="az-stat-row"><div><div class="az-stat-label">Auto-Matched</div><div class="az-stat-value">2,184</div><div class="az-stat-trend up">90% match rate</div></div><div class="az-stat-icon"><i class="fa-solid fa-check-double"></i></div></div>
+      </div>
+      <div class="az-stat az-stat-warning">
+        <div class="az-stat-row"><div><div class="az-stat-label">Needs Review</div><div class="az-stat-value">187</div><div class="az-stat-trend flat">Manual match</div></div><div class="az-stat-icon"><i class="fa-solid fa-question-circle"></i></div></div>
+      </div>
+      <div class="az-stat az-stat-danger">
+        <div class="az-stat-row"><div><div class="az-stat-label">Unmatched</div><div class="az-stat-value">47</div><div class="az-stat-trend down">No invoice found</div></div><div class="az-stat-icon"><i class="fa-solid fa-circle-exclamation"></i></div></div>
+      </div>
+    </div>
+
+    <!-- Upload + Connected Banks -->
+    <div class="az-grid" style="grid-template-columns:1.4fr 1fr;gap:20px;margin-bottom:20px">
+      <div class="az-card">
+        <div class="az-card-title" style="margin-bottom:14px"><i class="fa-solid fa-upload" style="color:var(--az-primary);margin-right:8px"></i>Upload Statement</div>
+        <div class="drop-zone" onclick="document.getElementById('fileInput').click()">
+          <div class="drop-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+          <div style="font-weight:600;color:var(--az-text);font-size:15px">Drop your bank statement here</div>
+          <div style="color:var(--az-text-3);font-size:13px;margin-top:6px">CSV, XLSX, OFX or PDF · Max 10 MB</div>
+          <button class="az-btn az-btn-primary" style="margin-top:14px"><i class="fa-solid fa-folder-open"></i> Browse Files</button>
+          <input id="fileInput" type="file" accept=".csv,.xlsx,.ofx,.pdf" hidden />
+        </div>
+        <div style="margin-top:14px;font-size:12px;color:var(--az-text-3);text-align:center">
+          <i class="fa-solid fa-shield-halved"></i> 256-bit encrypted · Files deleted after processing
+        </div>
+      </div>
+
+      <div class="az-card">
+        <div class="az-card-title" style="margin-bottom:14px"><i class="fa-solid fa-link" style="color:var(--az-success);margin-right:8px"></i>Connected Banks</div>
+        <div class="az-flex-col" style="gap:10px">
+          <div class="az-list-item" style="border:1px solid var(--az-border-2);border-radius:10px;padding:12px">
+            <div class="bank-logo" style="background:linear-gradient(135deg,#0070ba,#003087)">HD</div>
+            <div class="az-list-item-main">
+              <div class="az-list-item-title">HDFC Current · ****4521</div>
+              <div class="az-list-item-desc">Last sync 2 hours ago · Auto-import enabled</div>
+            </div>
+            <span class="az-badge az-badge-success">Live</span>
+          </div>
+          <div class="az-list-item" style="border:1px solid var(--az-border-2);border-radius:10px;padding:12px">
+            <div class="bank-logo" style="background:linear-gradient(135deg,#ef4444,#b91c1c)">IC</div>
+            <div class="az-list-item-main">
+              <div class="az-list-item-title">ICICI Savings · ****8842</div>
+              <div class="az-list-item-desc">Last sync 1 day ago</div>
+            </div>
+            <span class="az-badge az-badge-success">Live</span>
+          </div>
+          <div class="az-list-item" style="border:1px solid var(--az-border-2);border-radius:10px;padding:12px">
+            <div class="bank-logo" style="background:linear-gradient(135deg,#10b981,#047857)">SB</div>
+            <div class="az-list-item-main">
+              <div class="az-list-item-title">SBI Current · ****1107</div>
+              <div class="az-list-item-desc">Manual upload only</div>
+            </div>
+            <span class="az-badge">Manual</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="az-card" style="padding:0">
+      <div style="padding:18px 24px;border-bottom:1px solid var(--az-border-2);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <div>
+          <div class="az-card-title"><i class="fa-solid fa-arrow-right-arrow-left" style="color:var(--az-info);margin-right:8px"></i>Recent Transactions</div>
+          <div class="az-card-subtitle">From last imported statement · sorted newest first</div>
+        </div>
+        <div class="az-flex">
+          <select class="az-select" style="max-width:160px">
+            <option>All transactions</option>
+            <option>Auto-matched</option>
+            <option>Needs review</option>
+            <option>Unmatched</option>
+          </select>
+          <button class="az-btn az-btn-sm"><i class="fa-solid fa-magic-wand-sparkles"></i> Auto-match</button>
+        </div>
+      </div>
+      <table class="az-table">
+        <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Match</th><th>Status</th><th></th></tr></thead>
+        <tbody id="txBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const TX = [
+      { date:'02 Jun 2026', desc:'NEFT/N123456/ACME INDUSTRIES PVT LTD', amount:125000,  type:'in',  match:'INV-2026-0142', status:'matched' },
+      { date:'02 Jun 2026', desc:'IMPS/2602789/Globex Trading',           amount:48200,   type:'in',  match:'INV-2026-0141', status:'matched' },
+      { date:'01 Jun 2026', desc:'UPI/sara@okhdfc/Sara Patel',            amount:5500,    type:'in',  match:'?',             status:'review'  },
+      { date:'01 Jun 2026', desc:'NEFT/N123459/INITECH SOLUTIONS',        amount:32540,   type:'in',  match:'INV-2026-0140', status:'matched' },
+      { date:'01 Jun 2026', desc:'AWS Cloud Services',                    amount:18420,   type:'out', match:'EXP-2026-0091', status:'matched' },
+      { date:'31 May 2026', desc:'Stripe Payout · USD 4,200',             amount:348700,  type:'in',  match:'BATCH-0044',    status:'matched' },
+      { date:'31 May 2026', desc:'UPI/random/Unknown payer',              amount:1250,    type:'in',  match:'—',             status:'unmatch' },
+      { date:'30 May 2026', desc:'Office Rent — Prestige Estates',        amount:85000,   type:'out', match:'EXP-2026-0089', status:'matched' }
+    ];
+    function badge(s){
+      if(s==='matched')  return '<span class="match-pill" style="background:var(--az-success-light);color:#065f46"><i class="fa-solid fa-check"></i> Matched</span>';
+      if(s==='review')   return '<span class="match-pill" style="background:var(--az-warning-light);color:#92400e"><i class="fa-solid fa-question"></i> Review</span>';
+      return '<span class="match-pill" style="background:var(--az-danger-light);color:#991b1b"><i class="fa-solid fa-xmark"></i> No match</span>';
+    }
+    document.getElementById('txBody').innerHTML = TX.map(t => `
+      <tr>
+        <td style="white-space:nowrap;font-size:12.5px">${t.date}</td>
+        <td><div style="font-weight:500">${t.desc}</div></td>
+        <td class="${t.type==='in'?'amt-in':'amt-out'}">${t.type==='in'?'+':'−'} ₹${t.amount.toLocaleString('en-IN')}</td>
+        <td><span class="az-mono">${t.match}</span></td>
+        <td>${badge(t.status)}</td>
+        <td>${t.status==='matched' ? '<button class="az-btn az-btn-sm az-btn-ghost"><i class="fa-regular fa-eye"></i></button>' : '<button class="az-btn az-btn-sm az-btn-primary"><i class="fa-solid fa-link"></i> Match</button>'}</td>
+      </tr>
+    `).join('');
+
+    // Drop zone interactions
+    const dz = document.querySelector('.drop-zone');
+    ['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('dragover'); }));
+    ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('dragover'); }));
+  </script>
+</body>
+</html>

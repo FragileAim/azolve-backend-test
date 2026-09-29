@@ -1,0 +1,272 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║               AZOLVE — LOCALHOST SETUP GUIDE                 ║
+# ║     Complete step-by-step instructions to run locally         ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────┐
+│  FOLDER STRUCTURE                                           │
+├─────────────────────────────────────────────────────────────┤
+│  azolve-localhost/                                          │
+│  ├── backend/          ← Node.js API server (Express)       │
+│  │   ├── .env          ← YOUR config (DB, JWT, email, etc) │
+│  │   ├── server.js     ← Entry point (node server.js)      │
+│  │   ├── app.js        ← Express app + routes              │
+│  │   ├── package.json  ← npm dependencies                  │
+│  │   ├── models/       ← MongoDB schemas (25+ models)      │
+│  │   ├── routes/       ← API routes (30+ endpoints)        │
+│  │   ├── middleware/   ← Auth, validation, upload          │
+│  │   ├── config/       ← Database connection               │
+│  │   ├── services/     ← Business logic helpers            │
+│  │   ├── utils/        ← Seed data, helpers                │
+│  │   └── uploads/      ← File upload destination           │
+│  │                                                          │
+│  ├── frontend/         ← HTML/CSS/JS static files          │
+│  │   ├── app-dashboard.html  ← Main dashboard             │
+│  │   ├── login.html          ← Login page                  │
+│  │   ├── register.html       ← Register page               │
+│  │   ├── index.html          ← Landing page                │
+│  │   ├── css/                ← All stylesheets              │
+│  │   ├── js/                 ← All JavaScript              │
+│  │   │   ├── api-config.js   ← API connection config       │
+│  │   │   ├── env-detect.js   ← Auto localhost detection    │
+│  │   │   └── ...             ← 20+ feature scripts         │
+│  │   ├── pages/              ← Feature pages               │
+│  │   │   ├── office-document.html     ← Word editor        │
+│  │   │   ├── office-spreadsheet.html  ← Excel editor       │
+│  │   │   ├── office-presentation.html ← PowerPoint editor  │
+│  │   │   └── ...               ← 20+ pages                │
+│  │   └── assets/             ← Images, icons, etc.         │
+│  │                                                          │
+│  └── LOCALHOST_SETUP_GUIDE.txt  ← This file                │
+└─────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════
+  STEP 1: PREREQUISITES (Install these first)
+═══════════════════════════════════════════════════════════════
+
+  ✦ Node.js 18+    → https://nodejs.org (download LTS version)
+  ✦ MongoDB        → ONE of these options:
+    
+    OPTION A: MongoDB Local (recommended for offline dev)
+      → Download Community Server: https://www.mongodb.com/try/download/community
+      → Install and run as service (starts automatically)
+      → Default connection: mongodb://localhost:27017
+    
+    OPTION B: MongoDB Atlas FREE (no local install needed, needs internet)
+      → Go to https://cloud.mongodb.com → Create free cluster
+      → Database Access → Add user (remember password)
+      → Network Access → Add IP → Allow 0.0.0.0/0 (allow all)
+      → Connect → Drivers → Copy connection string
+      → Looks like: mongodb+srv://user:pass@cluster0.xxxxx.mongodb.net/
+    
+    OPTION C: MongoDB via Docker (if you have Docker)
+      → docker run -d -p 27017:27017 --name mongo mongo:7
+
+
+═══════════════════════════════════════════════════════════════
+  STEP 2: CONFIGURE THE BACKEND
+═══════════════════════════════════════════════════════════════
+
+  1. Open file:  backend/.env
+
+  2. UPDATE THESE 2 FIELDS (minimum required):
+
+     ┌──────────────────────────────────────────────────────┐
+     │  MONGODB_URI=mongodb://localhost:27017/azolve_db    │  ← If using local MongoDB
+     │  OR                                                 │
+     │  MONGODB_URI=mongodb+srv://USER:PASS@CLUSTER/azolve│  ← If using Atlas
+     │                                                      │
+     │  JWT_SECRET=any-random-string-min-32-chars          │  ← Change this!
+     └──────────────────────────────────────────────────────┘
+
+  3. OPTIONAL FIELDS (only needed if you want email/password reset):
+     - EMAIL_HOST / EMAIL_USER / EMAIL_PASS (Brevo or Gmail App Password)
+     - BREVO_API_KEY (alternative to SMTP, works on any network)
+
+  4. Cashfree is set to SANDBOX mode by default for localhost
+     (no real charges — safe to test). To test with your live
+     credentials, change: CASHFREE_ENV=production
+
+
+═══════════════════════════════════════════════════════════════
+  STEP 3: INSTALL DEPENDENCIES & START
+═══════════════════════════════════════════════════════════════
+
+  Open terminal / command prompt:
+
+  ┌──────────────────────────────────────────────────────┐
+  │  # Navigate to backend folder                        │
+  │  cd azolve-localhost/backend                         │
+  │                                                      │
+  │  # Install Node.js dependencies                      │
+  │  npm install                                         │
+  │                                                      │
+  │  # Start the server                                  │
+  │  npm start                                           │
+  │                                                      │
+  │  # Or for auto-restart on file changes (dev mode):   │
+  │  npm run dev                                         │
+  └──────────────────────────────────────────────────────┘
+
+  You should see:
+
+  ╔════════════════════════════════════════════════════════╗
+  ║       🚀 AZOLVE API SERVER                            ║
+  ╠════════════════════════════════════════════════════════╣
+  ║  Environment : development                            ║
+  ║  Port        : 3000                                   ║
+  ║  Frontend    : http://localhost:3000                  ║
+  ║  Socket.IO   : Enabled                                ║
+  ╠════════════════════════════════════════════════════════╣
+  ║  API Health  : http://localhost:3000/api/health       ║
+  ╚════════════════════════════════════════════════════════╝
+
+  ✅ Default admin is created automatically on first run:
+     Email:    admin@azolve.io
+     Password: Admin@123456
+
+
+═══════════════════════════════════════════════════════════════
+  STEP 4: OPEN IN BROWSER
+═══════════════════════════════════════════════════════════════
+
+  ┌────────────────────────────────────────────────────────────┐
+  │  Main App (Dashboard):  http://localhost:3000             │
+  │  Login Page:            http://localhost:3000/login.html   │
+  │  Landing Page:          http://localhost:3000/index.html   │
+  │  API Health Check:      http://localhost:3000/api/health   │
+  └────────────────────────────────────────────────────────────┘
+
+  Login with:
+    Email:    admin@azolve.io
+    Password: Admin@123456
+
+
+═══════════════════════════════════════════════════════════════
+  STEP 5: TEST THE OFFICE SUITE
+═══════════════════════════════════════════════════════════════
+
+  From the dashboard sidebar, click "📁 Office Suite" → "Office Hub"
+  Or go directly:
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │  Word Editor:       http://localhost:3000/pages/office-document.html
+  │  Excel Editor:      http://localhost:3000/pages/office-spreadsheet.html
+  │  PowerPoint Editor:  http://localhost:3000/pages/office-presentation.html
+  │  Office Hub:        http://localhost:3000/pages/office.html
+  └─────────────────────────────────────────────────────────────┘
+
+  • Documents auto-save to MongoDB every 800ms after changes
+  • Click "Share" to generate a public link (view or edit)
+  • Use the ribbon toolbar for formatting (B/I/U/fonts/colors/etc)
+  • Excel supports formulas: =SUM(A1:A10) =AVERAGE() =MAX() =IF()
+
+
+═══════════════════════════════════════════════════════════════
+  STEP 6: TEST PAYMENTS (Cashfree Sandbox)
+═══════════════════════════════════════════════════════════════
+
+  The .env is set to CASHFREE_ENV=sandbox by default.
+  Sandbox mode = no real money charged.
+
+  To get sandbox API keys:
+    → https://merchant.cashfree.com/merchants/developer/apikeys
+    → Switch to "Sandbox" tab
+    → Copy App ID and Secret Key
+    → Update in backend/.env
+
+  Or test with production keys (your real keys are already in .env):
+    Change: CASHFREE_ENV=production
+    ⚠️  This will create REAL payment orders!
+
+
+═══════════════════════════════════════════════════════════════
+  QUICK REFERENCE — ALL API ENDPOINTS
+═══════════════════════════════════════════════════════════════
+
+  Auth:           POST /api/auth/register
+                  POST /api/auth/login
+                  GET  /api/auth/me
+                  POST /api/auth/forgot-password
+
+  Clients:        GET/POST /api/clients
+  Products:       GET/POST /api/products
+  Invoices:       GET/POST /api/invoices
+  Leads:          GET/POST /api/leads
+  Deals:          GET/POST /api/deals
+  Projects:       GET/POST /api/projects
+  Tasks:          GET/POST /api/tasks
+  Employees:      GET/POST /api/employees
+  Attendance:     GET/POST /api/attendance
+  Leaves:         GET/POST /api/leaves
+  Tickets:        GET/POST /api/tickets
+  Meetings:       GET/POST /api/meetings
+  Chats:          GET/POST /api/chats
+  Calendar:       GET/POST /api/calendar
+  Dashboard:      GET /api/dashboard
+
+  Payments:       POST /api/payments/create-order
+                  POST /api/payments/verify
+                  GET  /api/payments/plans
+
+  Office Suite:   GET/POST /api/office
+                  GET  /api/office/:id
+                  POST /api/office/:id/share
+
+  V2 Features:    GET /api/search?q=...
+                  GET /api/audit-logs
+                  GET /api/copilot/suggestions
+                  POST /api/workflows
+                  GET /api/einvoice
+                  GET /api/churn
+
+
+═══════════════════════════════════════════════════════════════
+  TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════
+
+  ❌ "MongooseError: connect ECONNREFUSED"
+     → MongoDB is not running. Start it first:
+       Windows:  Open "MongoDB Compass" or start service
+       Mac:      brew services start mongodb-community
+       Linux:    sudo systemctl start mongod
+     → Or switch to MongoDB Atlas (cloud) in .env
+
+  ❌ "Port 3000 already in use"
+     → Kill the process:  lsof -i :3000  then kill PID
+     → Or change PORT=3001 in .env
+
+  ❌ "Cashfree credentials not configured"
+     → Make sure CASHFREE_APP_ID and CASHFREE_SECRET are set in .env
+     → Restart the server after changing .env
+
+  ❌ "401 Unauthorized" on API calls
+     → Login first at /login.html to get a token
+     → Token is stored in localStorage as 'azolve_token' or 'authToken'
+
+  ❌ Office editors show "Sign in to save"
+     → You need to login first for auto-save to work
+     → Without login, you can still edit locally (won't persist)
+
+  ❌ Images/assets not loading
+     → Make sure you're accessing via http://localhost:3000
+       (NOT opening HTML files directly from file system)
+
+  ❌ npm install fails
+     → Delete node_modules and package-lock.json, then:
+       npm cache clean --force && npm install
+
+
+═══════════════════════════════════════════════════════════════
+  DEVELOPMENT TIPS
+═══════════════════════════════════════════════════════════════
+
+  • Use "npm run dev" for auto-restart on backend code changes
+  • Frontend files (HTML/CSS/JS) update on browser refresh —
+    no restart needed since Express serves them as static files
+  • MongoDB data persists in the database between restarts
+  • To reset all data: delete the database or change DB name in
+    MONGODB_URI (e.g., azolve_db → azolve_dev)
+  • To seed sample data:  npm run seed
+  • Socket.IO works on localhost for real-time chat & meetings

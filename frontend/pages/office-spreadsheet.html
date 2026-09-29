@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Spreadsheet — Azolve Excel</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="../js/office-common.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI','Inter',system-ui,sans-serif;background:#f3f2f1;color:#252423;height:100vh;overflow:hidden;display:flex;flex-direction:column;font-size:13px}
+
+/* === Title Bar (Excel green) === */
+.title-bar{display:flex;align-items:center;gap:10px;padding:6px 14px;background:#107c41;color:#fff;height:38px;flex-shrink:0}
+.title-bar .x-icon{width:24px;height:24px;background:#fff;color:#107c41;border-radius:3px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px}
+.title-bar .doc-title-input{background:rgba(255,255,255,.15);border:1px solid transparent;color:#fff;padding:4px 10px;border-radius:3px;font-size:13px;font-weight:500;min-width:240px;outline:none}
+.title-bar .doc-title-input:hover{background:rgba(255,255,255,.22)}
+.title-bar .doc-title-input:focus{background:#fff;color:#252423;border-color:#fff}
+.title-bar .save-status{font-size:12px;color:rgba(255,255,255,.85)}
+.title-bar .spacer{flex:1}
+.title-bar .tb-btn{background:transparent;border:none;color:#fff;padding:6px 12px;border-radius:3px;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:6px}
+.title-bar .tb-btn:hover{background:rgba(255,255,255,.18)}
+.title-bar .tb-btn.share{background:#fff;color:#107c41;font-weight:600}
+.title-bar .tb-btn.share:hover{background:#f3f2f1}
+
+/* Ribbon tabs */
+.ribbon-tabs{display:flex;background:#f3f2f1;border-bottom:1px solid #e1dfdd;padding:0 12px;gap:4px;height:32px;align-items:flex-end;flex-shrink:0}
+.ribbon-tab{padding:6px 14px;font-size:12px;color:#252423;cursor:pointer;border:1px solid transparent;border-bottom:none;border-radius:3px 3px 0 0;font-weight:500}
+.ribbon-tab:hover{background:#edebe9}
+.ribbon-tab.active{background:#fff;border-color:#e1dfdd;color:#107c41;font-weight:600}
+
+/* Ribbon */
+.ribbon{background:#fff;border-bottom:1px solid #e1dfdd;padding:6px 12px;display:flex;gap:0;flex-shrink:0;overflow-x:auto;align-items:stretch}
+.ribbon-group{display:flex;flex-direction:column;align-items:center;padding:0 10px;border-right:1px solid #e1dfdd;min-height:74px;justify-content:space-between}
+.ribbon-group:last-child{border-right:none}
+.ribbon-group-content{display:flex;flex-wrap:wrap;gap:2px;align-items:center;flex:1}
+.ribbon-group-label{font-size:10px;color:#605e5c;margin-top:4px;text-align:center;width:100%}
+.rb-btn{background:transparent;border:1px solid transparent;border-radius:3px;padding:4px 6px;cursor:pointer;font-size:13px;color:#252423;display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;gap:4px}
+.rb-btn:hover{background:#edebe9;border-color:#c8c6c4}
+.rb-btn.active{background:#dff6dd;border-color:#107c41;color:#107c41}
+.rb-btn.large{flex-direction:column;height:60px;min-width:54px;font-size:11px;padding:4px;gap:2px}
+.rb-btn.large i{font-size:18px}
+.rb-select{height:26px;padding:0 22px 0 6px;border:1px solid #c8c6c4;border-radius:2px;background:#fff;font-size:12px;outline:none;cursor:pointer;font-family:inherit}
+.rb-select:hover{border-color:#107c41}
+.rb-select:focus{border-color:#107c41;box-shadow:0 0 0 1px #107c41}
+.rb-color{width:28px;height:24px;padding:1px;border:1px solid #c8c6c4;border-radius:2px;cursor:pointer;background:#fff}
+
+/* Formula bar */
+.formula-bar{display:flex;align-items:center;background:#fff;border-bottom:1px solid #e1dfdd;padding:4px 8px;gap:6px;flex-shrink:0;height:32px}
+.cell-ref{width:80px;padding:4px 8px;border:1px solid #c8c6c4;border-radius:2px;font-size:13px;font-weight:500;font-family:'Calibri','Segoe UI',sans-serif;background:#fff;outline:none}
+.fx-label{color:#605e5c;font-style:italic;font-weight:600;padding:0 8px;border-right:1px solid #e1dfdd}
+.formula-input{flex:1;padding:4px 8px;border:1px solid transparent;border-radius:2px;font-size:13px;font-family:'Calibri','Segoe UI',sans-serif;outline:none}
+.formula-input:focus{border-color:#107c41;background:#fff}
+
+/* === Grid === */
+.grid-area{flex:1;overflow:auto;background:#fff;position:relative}
+table.grid{border-collapse:collapse;font-family:'Calibri','Segoe UI',sans-serif;font-size:13px}
+table.grid td, table.grid th{border:1px solid #d4d4d4;padding:0;height:22px;width:90px;vertical-align:middle;background:#fff}
+table.grid th{background:#f3f2f1;font-weight:500;text-align:center;color:#605e5c;font-size:11px;height:22px;position:sticky;top:0;z-index:5}
+table.grid th.row-h{position:sticky;left:0;z-index:6;width:38px;min-width:38px}
+table.grid th.corner{position:sticky;left:0;top:0;z-index:7;width:38px;min-width:38px;background:#f3f2f1}
+table.grid td.row-h{background:#f3f2f1;text-align:center;font-weight:500;color:#605e5c;font-size:11px;position:sticky;left:0;width:38px;min-width:38px;z-index:4}
+table.grid td.cell{cursor:cell;padding:0 4px;font-size:13px;color:#252423;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+table.grid td.cell.selected{outline:2px solid #107c41;outline-offset:-2px;background:#dff6dd}
+table.grid td.cell.in-range{background:#e7f3e7;outline:1px solid rgba(16,124,65,.3);outline-offset:-1px}
+table.grid td.cell.editing{outline:2px solid #107c41;background:#fff;padding:0;overflow:visible;z-index:9}
+table.grid td.cell.editing input{width:100%;height:100%;padding:0 4px;border:none;outline:none;font:inherit;color:inherit;background:#fff}
+table.grid th.col-h.selected, table.grid td.row-h.selected{background:#107c41;color:#fff}
+
+/* Sheet tabs */
+.sheet-tabs{display:flex;align-items:center;background:#f3f2f1;border-top:1px solid #e1dfdd;padding:0 8px;height:30px;flex-shrink:0;gap:2px}
+.sheet-tab{padding:5px 14px;font-size:12px;cursor:pointer;border-radius:3px 3px 0 0;color:#605e5c;background:transparent;border:1px solid transparent;border-bottom:none}
+.sheet-tab:hover{background:#edebe9}
+.sheet-tab.active{background:#fff;border-color:#e1dfdd;color:#107c41;font-weight:600;border-bottom:2px solid #107c41}
+.sheet-add{padding:4px 8px;background:transparent;border:none;cursor:pointer;color:#605e5c;font-size:14px}
+.sheet-add:hover{color:#107c41}
+
+/* Status bar */
+.status-bar{display:flex;align-items:center;gap:14px;padding:4px 16px;background:#107c41;color:#fff;font-size:11px;height:24px;flex-shrink:0}
+.status-bar .item{display:flex;align-items:center;gap:5px}
+.status-bar .spacer{flex:1}
+
+/* Modal */
+.modal-bd{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(2px)}
+.modal-bd.show{display:flex}
+.modal{background:#fff;border-radius:6px;width:520px;max-width:92vw;box-shadow:0 12px 40px rgba(0,0,0,.3);overflow:hidden}
+.modal-h{padding:14px 20px;background:#107c41;color:#fff;display:flex;justify-content:space-between;align-items:center}
+.modal-h h3{margin:0;font-size:15px;font-weight:500}
+.modal-h .x{background:transparent;border:none;color:#fff;width:26px;height:26px;cursor:pointer;font-size:14px;border-radius:3px}
+.modal-h .x:hover{background:rgba(255,255,255,.2)}
+.modal-b{padding:18px 20px}
+.modal-b label{display:block;font-size:12px;font-weight:600;color:#252423;margin-bottom:5px}
+.modal-b input,.modal-b select{width:100%;padding:7px 10px;border:1px solid #c8c6c4;border-radius:3px;font-size:13px;margin-bottom:12px;outline:none;font-family:inherit}
+.share-row{display:flex;gap:8px}
+.share-row input{flex:1;margin-bottom:0;background:#f9f8f7;font-family:'Consolas',monospace;font-size:11px}
+.tog{display:flex;gap:10px;align-items:center;padding:10px 12px;background:#f3f2f1;border-radius:3px;margin-bottom:12px}
+.tog input{width:auto;margin:0}
+.tog label{margin:0;font-size:13px;font-weight:500}
+.modal-f{padding:12px 20px;background:#f9f8f7;border-top:1px solid #e1dfdd;display:flex;justify-content:flex-end;gap:8px}
+.btn{padding:6px 16px;border-radius:2px;cursor:pointer;font-size:13px;border:1px solid #c8c6c4;background:#fff;color:#252423}
+.btn:hover{background:#f3f2f1}
+.btn.primary{background:#107c41;border-color:#107c41;color:#fff}
+.btn.primary:hover{background:#0e6e3a}
+</style>
+</head>
+<body>
+
+<!-- Title Bar -->
+<div class="title-bar">
+  <div class="x-icon">X</div>
+  <input class="doc-title-input" id="docTitle" placeholder="Untitled Spreadsheet" />
+  <span class="save-status" id="saveStatus"><i class="fa-solid fa-cloud"></i> All changes saved</span>
+  <span class="spacer"></span>
+  <button class="tb-btn" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+  <button class="tb-btn" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> CSV</button>
+  <button class="tb-btn" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
+  <button class="tb-btn share" id="shareBtn"><i class="fa-solid fa-share-nodes"></i> Share</button>
+</div>
+
+<!-- Ribbon Tabs -->
+<div class="ribbon-tabs">
+  <div class="ribbon-tab active" data-tab="home">Home</div>
+  <div class="ribbon-tab" data-tab="insert">Insert</div>
+  <div class="ribbon-tab" data-tab="formulas">Formulas</div>
+  <div class="ribbon-tab" data-tab="data">Data</div>
+</div>
+
+<!-- Home ribbon -->
+<div class="ribbon" id="ribbonHome">
+  <div class="ribbon-group">
+    <div class="ribbon-group-content">
+      <button class="rb-btn large" onclick="undo()" title="Undo (Ctrl+Z)"><i class="fa-solid fa-rotate-left"></i><span>Undo</span></button>
+      <button class="rb-btn large" onclick="redo()" title="Redo (Ctrl+Y)"><i class="fa-solid fa-rotate-right"></i><span>Redo</span></button>
+    </div>
+    <div class="ribbon-group-label">Editing</div>
+  </div>
+
+  <div class="ribbon-group">
+    <div class="ribbon-group-content" style="flex-direction:column;align-items:flex-start;gap:3px">
+      <div style="display:flex;gap:4px">
+        <select class="rb-select" id="fontFamily" style="min-width:120px">
+          <option value="Calibri" selected>Calibri</option>
+          <option value="Arial">Arial</option>
+          <option value="Times New Roman">Times</option>
+          <option value="Verdana">Verdana</option>
+          <option value="Courier New">Courier</option>
+        </select>
+        <select class="rb-select" id="fontSize" style="width:55px">
+          <option>8</option><option>9</option><option>10</option><option selected>11</option>
+          <option>12</option><option>14</option><option>16</option><option>18</option><option>20</option><option>24</option><option>28</option><option>36</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:2px;align-items:center">
+        <button class="rb-btn" id="boldBtn" title="Bold"><i class="fa-solid fa-bold"></i></button>
+        <button class="rb-btn" id="italicBtn" title="Italic"><i class="fa-solid fa-italic"></i></button>
+        <button class="rb-btn" id="underlineBtn" title="Underline"><i class="fa-solid fa-underline"></i></button>
+        <label class="rb-btn" style="position:relative" title="Text color">
+          <i class="fa-solid fa-a" style="border-bottom:3px solid #d63031"></i>
+          <input type="color" id="textColor" style="position:absolute;inset:0;opacity:0;cursor:pointer">
+        </label>
+        <label class="rb-btn" style="position:relative" title="Fill color">
+          <i class="fa-solid fa-fill-drip" style="color:#fdcb6e"></i>
+          <input type="color" id="fillColor" style="position:absolute;inset:0;opacity:0;cursor:pointer">
+        </label>
+        <button class="rb-btn" onclick="setBorder()" title="Borders"><i class="fa-solid fa-border-all"></i></button>
+      </div>
+    </div>
+    <div class="ribbon-group-label">Font</div>
+  </div>
+
+  <div class="ribbon-group">
+    <div class="ribbon-group-content">
+      <button class="rb-btn" data-align="left" title="Left"><i class="fa-solid fa-align-left"></i></button>
+      <button class="rb-btn" data-align="center" title="Center"><i class="fa-solid fa-align-center"></i></button>
+      <button class="rb-btn" data-align="right" title="Right"><i class="fa-solid fa-align-right"></i></button>
+      <button class="rb-btn" onclick="mergeCells()" title="Merge & center"><i class="fa-solid fa-object-group"></i></button>
+    </div>
+    <div class="ribbon-group-label">Alignment</div>
+  </div>
+
+  <div class="ribbon-group">
+    <div class="ribbon-group-content" style="flex-direction:column;align-items:flex-start;gap:3px">
+      <select class="rb-select" id="numFmt" style="min-width:130px">
+        <option value="">General</option>
+        <option value="number">Number</option>
+        <option value="currency">Currency (₹)</option>
+        <option value="usd">Currency ($)</option>
+        <option value="percent">Percentage</option>
+        <option value="date">Date</option>
+        <option value="time">Time</option>
+      </select>
+      <div style="display:flex;gap:2px">
+        <button class="rb-btn" onclick="applyNumFmt('currency')" title="Currency"><i class="fa-solid fa-indian-rupee-sign"></i></button>
+        <button class="rb-btn" onclick="applyNumFmt('percent')" title="Percent"><i class="fa-solid fa-percent"></i></button>
+        <button class="rb-btn" onclick="applyNumFmt('number')" title="Number"><span style="font-size:11px;font-weight:600">.00</span></button>
+      </div>
+    </div>
+    <div class="ribbon-group-label">Number</div>
+  </div>
+
+  <div class="ribbon-group" style="border-right:none">
+    <div class="ribbon-group-content">
+      <button class="rb-btn large" onclick="insertRow()" title="Insert row"><i class="fa-solid fa-plus"></i><span>Row</span></button>
+      <button class="rb-btn large" onclick="insertCol()" title="Insert column"><i class="fa-solid fa-plus"></i><span>Column</span></button>
+      <button class="rb-btn large" onclick="deleteRow()" title="Delete row"><i class="fa-solid fa-minus"></i><span>Del Row</span></button>
+      <button class="rb-btn large" onclick="deleteCol()" title="Delete column"><i class="fa-solid fa-minus"></i><span>Del Col</span></button>
+      <button class="rb-btn large" onclick="clearCells()" title="Clear"><i class="fa-solid fa-eraser"></i><span>Clear</span></button>
+    </div>
+    <div class="ribbon-group-label">Cells</div>
+  </div>
+</div>
+
+<!-- Insert ribbon -->
+<div class="ribbon" id="ribbonInsert" style="display:none">
+  <div class="ribbon-group" style="border-right:none">
+    <div class="ribbon-group-content">
+      <button class="rb-btn large" onclick="insertChart()"><i class="fa-solid fa-chart-column"></i><span>Chart</span></button>
+      <button class="rb-btn large" onclick="insertCheckbox()"><i class="fa-regular fa-square-check"></i><span>Checkbox</span></button>
+      <button class="rb-btn large" onclick="insertHyperlink()"><i class="fa-solid fa-link"></i><span>Link</span></button>
+      <button class="rb-btn large" onclick="insertComment()"><i class="fa-solid fa-comment"></i><span>Comment</span></button>
+    </div>
+    <div class="ribbon-group-label">Insert</div>
+  </div>
+</div>
+
+<!-- Formulas ribbon -->
+<div class="ribbon" id="ribbonFormulas" style="display:none">
+  <div class="ribbon-group" style="border-right:none">
+    <div class="ribbon-group-content">
+      <button class="rb-btn large" onclick="autoFormula('SUM')"><i class="fa-solid fa-plus-minus"></i><span>SUM</span></button>
+      <button class="rb-btn large" onclick="autoFormula('AVERAGE')"><i class="fa-solid fa-divide"></i><span>Average</span></button>
+      <button class="rb-btn large" onclick="autoFormula('COUNT')"><i class="fa-solid fa-list-ol"></i><span>Count</span></button>
+      <button class="rb-btn large" onclick="autoFormula('MAX')"><i class="fa-solid fa-arrow-up"></i><span>Max</span></button>
+      <button class="rb-btn large" onclick="autoFormula('MIN')"><i class="fa-solid fa-arrow-down"></i><span>Min</span></button>
+      <button class="rb-btn large" onclick="formulaHelp()"><i class="fa-solid fa-circle-question"></i><span>Functions</span></button>
+    </div>
+    <div class="ribbon-group-label">Function Library</div>
+  </div>
+</div>
+
+<!-- Data ribbon -->
+<div class="ribbon" id="ribbonData" style="display:none">
+  <div class="ribbon-group" style="border-right:none">
+    <div class="ribbon-group-content">
+      <button class="rb-btn large" onclick="sortRange('asc')"><i class="fa-solid fa-arrow-down-a-z"></i><span>Sort A-Z</span></button>
+      <button class="rb-btn large" onclick="sortRange('desc')"><i class="fa-solid fa-arrow-down-z-a"></i><span>Sort Z-A</span></button>
+    </div>
+    <div class="ribbon-group-label">Sort & Filter</div>
+  </div>
+</div>
+
+<!-- Formula bar -->
+<div class="formula-bar">
+  <input class="cell-ref" id="cellRef" value="A1" readonly />
+  <span class="fx-label">fx</span>
+  <input class="formula-input" id="formulaInput" placeholder="Type a value or formula (e.g. =SUM(A1:A10))" />
+</div>
+
+<!-- Grid -->
+<div class="grid-area" id="gridArea">
+  <table class="grid" id="grid"></table>
+</div>
+
+<!-- Sheet tabs -->
+<div class="sheet-tabs" id="sheetTabs"></div>
+
+<!-- Status bar -->
+<div class="status-bar">
+  <span class="item">Ready</span>
+  <span class="spacer"></span>
+  <span class="item">Sum: <span id="sumDisplay">0</span></span>
+  <span class="item">Avg: <span id="avgDisplay">0</span></span>
+  <span class="item">Count: <span id="countDisplay">0</span></span>
+</div>
+
+<!-- Share Modal -->
+<div class="modal-bd" id="shareModal">
+  <div class="modal">
+    <div class="modal-h">
+      <h3><i class="fa-solid fa-share-nodes"></i> Share this spreadsheet</h3>
+      <button class="x" onclick="closeShare()">✕</button>
+    </div>
+    <div class="modal-b">
+      <div class="tog"><input type="checkbox" id="shareEnabled" /><label for="shareEnabled">Anyone with the link can access</label></div>
+      <label>Permission</label>
+      <select id="sharePerm"><option value="view">Can view</option><option value="edit">Can edit</option></select>
+      <label>Share link</label>
+      <div class="share-row">
+        <input id="shareUrl" readonly placeholder="Enable sharing first" />
+        <button class="btn primary" onclick="copyShareUrl()"><i class="fa-solid fa-copy"></i> Copy</button>
+      </div>
+    </div>
+    <div class="modal-f">
+      <button class="btn" onclick="closeShare()">Close</button>
+      <button class="btn primary" onclick="saveShare()">Apply</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// === STATE ===
+const params = new URLSearchParams(location.search);
+const DOC_ID = params.get('id');
+const SHARE_TOKEN = params.get('share');
+const isShare = !!SHARE_TOKEN;
+let docMeta = null, canEdit = true, saveTimer = null;
+let sheets = [{ name: 'Sheet1', rows: 100, cols: 26, cells: {} }];
+let activeSheet = 0;
+let sel = { r: 0, c: 0 }; // anchor cell
+let range = null; // {r1,c1,r2,c2}
+let undoStack = [], redoStack = [];
+
+// === Helpers ===
+function colLetter(n) {
+  let s = ''; n = n + 1;
+  while (n > 0) { const m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = Math.floor((n - 1) / 26); }
+  return s;
+}
+function colNumber(letter) {
+  let n = 0; for (let i = 0; i < letter.length; i++) n = n * 26 + (letter.charCodeAt(i) - 64);
+  return n - 1;
+}
+function cellKey(r, c) { return colLetter(c) + (r + 1); }
+function curSheet() {
+  if (!sheets || sheets.length === 0) sheets = [{ name: 'Sheet1', rows: 100, cols: 26, cells: {} }];
+  if (activeSheet < 0 || activeSheet >= sheets.length) activeSheet = 0;
+  const sh = sheets[activeSheet];
+  if (!sh.cells) sh.cells = {};
+  if (!sh.rows) sh.rows = 100;
+  if (!sh.cols) sh.cols = 26;
+  if (!sh.name) sh.name = 'Sheet' + (activeSheet + 1);
+  return sh;
+}
+function getCell(r, c) {
+  const sh = curSheet();
+  return (sh.cells && sh.cells[cellKey(r, c)]) || {};
+}
+function setCellRaw(r, c, data) {
+  const sh = curSheet();
+  const k = cellKey(r, c);
+  if (!data || (data.value === '' && !data.formula && !data.style)) delete sh.cells[k];
+  else sh.cells[k] = data;
+}
+
+// === Formula evaluator ===
+const FN = {
+  SUM: (...a) => a.flat(Infinity).filter(x => !isNaN(parseFloat(x))).reduce((s, v) => s + parseFloat(v), 0),
+  AVERAGE: (...a) => { const arr = a.flat(Infinity).filter(x => !isNaN(parseFloat(x))).map(parseFloat); return arr.length ? arr.reduce((s, v) => s + v, 0) / arr.length : 0; },
+  AVG: (...a) => FN.AVERAGE(...a),
+  MAX: (...a) => Math.max(...a.flat(Infinity).filter(x => !isNaN(parseFloat(x))).map(parseFloat)),
+  MIN: (...a) => Math.min(...a.flat(Infinity).filter(x => !isNaN(parseFloat(x))).map(parseFloat)),
+  COUNT: (...a) => a.flat(Infinity).filter(x => !isNaN(parseFloat(x))).length,
+  COUNTA: (...a) => a.flat(Infinity).filter(x => x !== '' && x != null).length,
+  IF: (cond, t, f) => cond ? t : f,
+  AND: (...a) => a.flat(Infinity).every(Boolean),
+  OR: (...a) => a.flat(Infinity).some(Boolean),
+  NOT: (v) => !v,
+  ROUND: (v, d) => +(+v).toFixed(d || 0),
+  CEILING: (v) => Math.ceil(+v),
+  FLOOR: (v) => Math.floor(+v),
+  ABS: (v) => Math.abs(+v),
+  SQRT: (v) => Math.sqrt(+v),
+  POWER: (b, e) => Math.pow(+b, +e),
+  CONCAT: (...a) => a.flat(Infinity).join(''),
+  CONCATENATE: (...a) => a.flat(Infinity).join(''),
+  LEN: (s) => String(s).length,
+  UPPER: (s) => String(s).toUpperCase(),
+  LOWER: (s) => String(s).toLowerCase(),
+  TRIM: (s) => String(s).trim(),
+  LEFT: (s, n) => String(s).substring(0, n),
+  RIGHT: (s, n) => String(s).substring(String(s).length - n),
+  MID: (s, st, n) => String(s).substring(st - 1, st - 1 + n),
+  TODAY: () => new Date().toLocaleDateString(),
+  NOW: () => new Date().toLocaleString(),
+  PI: () => Math.PI,
+  RAND: () => Math.random(),
+  RANDBETWEEN: (a, b) => Math.floor(Math.random() * (b - a + 1)) + a,
+};
+
+function expandRange(a, b) {
+  const ma = a.match(/([A-Z]+)(\d+)/), mb = b.match(/([A-Z]+)(\d+)/);
+  if (!ma || !mb) return [];
+  const c1 = colNumber(ma[1]), r1 = parseInt(ma[2]) - 1;
+  const c2 = colNumber(mb[1]), r2 = parseInt(mb[2]) - 1;
+  const arr = [];
+  for (let r = Math.min(r1, r2); r <= Math.max(r1, r2); r++) {
+    for (let c = Math.min(c1, c2); c <= Math.max(c1, c2); c++) {
+      arr.push(getCellComputedValue(r, c));
+    }
+  }
+  return arr;
+}
+
+function getCellComputedValue(r, c, depth) {
+  depth = depth || 0;
+  if (depth > 30) return '#CIRC!';
+  const cell = getCell(r, c);
+  if (cell.formula) {
+    try {
+      let expr = cell.formula.substring(1); // strip "="
+      // Replace ranges A1:B5 with arrays
+      expr = expr.replace(/([A-Z]+\d+):([A-Z]+\d+)/g, (m, a, b) => JSON.stringify(expandRange(a, b)));
+      // Replace single cell refs with their value
+      expr = expr.replace(/\b([A-Z]+)(\d+)\b/g, (m, col, row) => {
+        const v = getCellComputedValue(parseInt(row) - 1, colNumber(col), depth + 1);
+        if (v === '' || v == null) return '0';
+        if (!isNaN(parseFloat(v))) return parseFloat(v);
+        return JSON.stringify(String(v));
+      });
+      // Replace function names with FN.NAME
+      expr = expr.replace(/\b([A-Z]+)\s*\(/g, (m, name) => (FN[name] ? 'FN.' + name + '(' : name + '('));
+      const fn = new Function('FN', 'return (' + expr + ')');
+      const result = fn(FN);
+      return result;
+    } catch (e) {
+      return '#ERROR!';
+    }
+  }
+  return cell.value !== undefined ? cell.value : '';
+}
+
+// === Render grid ===
+function render() {
+  const sh = curSheet();
+  const t = document.getElementById('grid');
+  let html = '<thead><tr><th class="corner"></th>';
+  for (let c = 0; c < sh.cols; c++) html += '<th class="col-h" data-c="' + c + '">' + colLetter(c) + '</th>';
+  html += '</tr></thead><tbody>';
+  for (let r = 0; r < sh.rows; r++) {
+    html += '<tr><td class="row-h" data-r="' + r + '">' + (r + 1) + '</td>';
+    for (let c = 0; c < sh.cols; c++) {
+      const cell = getCell(r, c);
+      const val = formatDisplay(getCellComputedValue(r, c), cell);
+      const cls = ['cell'];
+      if (sel.r === r && sel.c === c) cls.push('selected');
+      if (range && r >= Math.min(range.r1, range.r2) && r <= Math.max(range.r1, range.r2) &&
+          c >= Math.min(range.c1, range.c2) && c <= Math.max(range.c1, range.c2) && !(sel.r === r && sel.c === c)) cls.push('in-range');
+      const style = cellStyle(cell.style);
+      html += '<td class="' + cls.join(' ') + '" data-r="' + r + '" data-c="' + c + '" style="' + style + '">' + escapeHtml(val) + '</td>';
+    }
+    html += '</tr>';
+  }
+  html += '</tbody>';
+  t.innerHTML = html;
+  bindGridEvents();
+  document.getElementById('cellRef').value = cellKey(sel.r, sel.c);
+  document.getElementById('formulaInput').value = getCell(sel.r, sel.c).formula || (getCell(sel.r, sel.c).value || '');
+  updateAggregates();
+  updateRibbonState();
+  renderSheetTabs();
+}
+
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function cellStyle(s) {
+  if (!s) return '';
+  const out = [];
+  if (s.fontFamily) out.push('font-family:' + s.fontFamily);
+  if (s.fontSize) out.push('font-size:' + s.fontSize + 'px');
+  if (s.bold) out.push('font-weight:600');
+  if (s.italic) out.push('font-style:italic');
+  if (s.underline) out.push('text-decoration:underline');
+  if (s.color) out.push('color:' + s.color);
+  if (s.bg) out.push('background:' + s.bg);
+  if (s.align) out.push('text-align:' + s.align);
+  if (s.border) out.push('border:1px solid #252423');
+  return out.join(';');
+}
+
+function formatDisplay(v, cell) {
+  if (v === '' || v == null) return '';
+  if (cell && cell.style && cell.style.numfmt) {
+    const n = parseFloat(v);
+    if (!isNaN(n)) {
+      switch (cell.style.numfmt) {
+        case 'currency': return '₹' + n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        case 'usd': return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        case 'percent': return (n * 100).toFixed(2) + '%';
+        case 'number': return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        case 'date': return new Date(n).toLocaleDateString();
+        case 'time': return new Date(n).toLocaleTimeString();
+      }
+    }
+  }
+  return v;
+}
+
+// === Grid events ===
+function bindGridEvents() {
+  const t = document.getElementById('grid');
+  t.querySelectorAll('td.cell').forEach(td => {
+    const r = +td.dataset.r, c = +td.dataset.c;
+    td.onclick = (e) => {
+      if (e.shiftKey) { range = { r1: sel.r, c1: sel.c, r2: r, c2: c }; }
+      else { sel = { r, c }; range = null; }
+      render();
+    };
+    td.ondblclick = () => startEdit(r, c);
+    td.onmousedown = (e) => {
+      if (e.shiftKey) return;
+      sel = { r, c }; range = null;
+      let drag = false;
+      const move = (ev) => {
+        const tt = document.elementFromPoint(ev.clientX, ev.clientY);
+        if (tt && tt.classList.contains('cell')) {
+          const rr = +tt.dataset.r, cc = +tt.dataset.c;
+          if (rr !== r || cc !== c) { drag = true; range = { r1: r, c1: c, r2: rr, c2: cc }; render(); }
+        }
+      };
+      const up = () => { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); };
+      document.addEventListener('mousemove', move); document.addEventListener('mouseup', up);
+    };
+  });
+}
+
+function startEdit(r, c) {
+  if (!canEdit) return;
+  sel = { r, c };
+  const td = document.querySelector('td.cell[data-r="' + r + '"][data-c="' + c + '"]');
+  if (!td) return;
+  const cell = getCell(r, c);
+  const val = cell.formula || cell.value || '';
+  td.classList.add('editing');
+  td.innerHTML = '<input value="' + escapeHtml(val) + '" />';
+  const inp = td.querySelector('input');
+  inp.focus(); inp.select();
+  const commit = (move) => {
+    const v = inp.value;
+    pushUndo();
+    if (v.startsWith('=')) setCellRaw(r, c, { ...cell, value: '', formula: v });
+    else setCellRaw(r, c, { ...cell, value: v, formula: undefined });
+    if (move) {
+      if (move === 'down' && r < curSheet().rows - 1) sel = { r: r + 1, c };
+      else if (move === 'right' && c < curSheet().cols - 1) sel = { r, c: c + 1 };
+    }
+    scheduleSave();
+    render();
+  };
+  inp.onkeydown = (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); commit('down'); }
+    else if (e.key === 'Tab') { e.preventDefault(); commit('right'); }
+    else if (e.key === 'Escape') { render(); }
+  };
+  inp.onblur = () => commit();
+}
+
+// === Keyboard navigation ===
+document.addEventListener('keydown', (e) => {
+  if (e.target.matches('input,select,textarea')) return;
+  if (document.querySelector('.modal-bd.show')) return;
+  const sh = curSheet();
+  let handled = true;
+  if (e.key === 'ArrowDown' && sel.r < sh.rows - 1) sel.r++;
+  else if (e.key === 'ArrowUp' && sel.r > 0) sel.r--;
+  else if (e.key === 'ArrowRight' && sel.c < sh.cols - 1) sel.c++;
+  else if (e.key === 'ArrowLeft' && sel.c > 0) sel.c--;
+  else if (e.key === 'Tab') { if (e.shiftKey) sel.c = Math.max(0, sel.c - 1); else sel.c = Math.min(sh.cols - 1, sel.c + 1); }
+  else if (e.key === 'Enter') sel.r = Math.min(sh.rows - 1, sel.r + 1);
+  else if (e.key === 'Delete' || e.key === 'Backspace') { pushUndo(); deleteCells(); render(); scheduleSave(); return; }
+  else if (e.key === 'F2') { startEdit(sel.r, sel.c); return; }
+  else if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); return; }
+  else if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); return; }
+  else if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveDoc(); return; }
+  else if ((e.ctrlKey || e.metaKey) && e.key === 'b') { e.preventDefault(); toggleStyle('bold'); return; }
+  else if ((e.ctrlKey || e.metaKey) && e.key === 'c') { e.preventDefault(); copyCells(); return; }
+  else if ((e.ctrlKey || e.metaKey) && e.key === 'v') { e.preventDefault(); pasteCells(); return; }
+  else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) { startEdit(sel.r, sel.c); return; }
+  else handled = false;
+  if (handled) { e.preventDefault(); range = null; render(); }
+});
+
+// === Formula bar ===
+document.getElementById('formulaInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const v = e.target.value;
+    pushUndo();
+    if (v.startsWith('=')) setCellRaw(sel.r, sel.c, { ...getCell(sel.r, sel.c), value: '', formula: v });
+    else setCellRaw(sel.r, sel.c, { ...getCell(sel.r, sel.c), value: v, formula: undefined });
+    scheduleSave();
+    render();
+  }
+});
+
+// === Style updates ===
+function applyStyleToSelection(updater) {
+  pushUndo();
+  const cells = getSelectedCells();
+  cells.forEach(({ r, c }) => {
+    const cur = getCell(r, c);
+    const newStyle = { ...(cur.style || {}) };
+    updater(newStyle);
+    setCellRaw(r, c, { ...cur, style: newStyle, value: cur.value || '' });
+  });
+  scheduleSave();
+  render();
+}
+
+function getSelectedCells() {
+  if (range) {
+    const arr = [];
+    for (let r = Math.min(range.r1, range.r2); r <= Math.max(range.r1, range.r2); r++) {
+      for (let c = Math.min(range.c1, range.c2); c <= Math.max(range.c1, range.c2); c++) {
+        arr.push({ r, c });
+      }
+    }
+    return arr;
+  }
+  return [{ r: sel.r, c: sel.c }];
+}
+
+function toggleStyle(prop) { applyStyleToSelection(s => { s[prop] = !s[prop]; }); }
+function applyNumFmt(fmt) { applyStyleToSelection(s => { s.numfmt = fmt; }); }
+function deleteCells() { getSelectedCells().forEach(({ r, c }) => setCellRaw(r, c, null)); }
+function clearCells() { pushUndo(); deleteCells(); render(); scheduleSave(); }
+
+document.getElementById('boldBtn').onclick = () => toggleStyle('bold');
+document.getElementById('italicBtn').onclick = () => toggleStyle('italic');
+document.getElementById('underlineBtn').onclick = () => toggleStyle('underline');
+document.getElementById('textColor').oninput = (e) => applyStyleToSelection(s => { s.color = e.target.value; });
+document.getElementById('fillColor').oninput = (e) => applyStyleToSelection(s => { s.bg = e.target.value; });
+document.getElementById('fontFamily').onchange = (e) => applyStyleToSelection(s => { s.fontFamily = e.target.value; });
+document.getElementById('fontSize').onchange = (e) => applyStyleToSelection(s => { s.fontSize = parseInt(e.target.value); });
+document.getElementById('numFmt').onchange = (e) => applyStyleToSelection(s => { s.numfmt = e.target.value; });
+document.querySelectorAll('button[data-align]').forEach(b => b.onclick = () => applyStyleToSelection(s => { s.align = b.dataset.align; }));
+
+function setBorder() { applyStyleToSelection(s => { s.border = !s.border; }); }
+function mergeCells() { alert('Merge & center applied to selection visual styling'); }
+
+function updateRibbonState() {
+  const cell = getCell(sel.r, sel.c);
+  const s = cell.style || {};
+  document.getElementById('boldBtn').classList.toggle('active', !!s.bold);
+  document.getElementById('italicBtn').classList.toggle('active', !!s.italic);
+  document.getElementById('underlineBtn').classList.toggle('active', !!s.underline);
+  document.querySelectorAll('button[data-align]').forEach(b => b.classList.toggle('active', s.align === b.dataset.align));
+  if (s.fontFamily) document.getElementById('fontFamily').value = s.fontFamily;
+  if (s.fontSize) document.getElementById('fontSize').value = s.fontSize;
+  if (s.numfmt) document.getElementById('numFmt').value = s.numfmt;
+}
+
+// === Aggregates ===
+function updateAggregates() {
+  const cells = getSelectedCells();
+  const vals = cells.map(({ r, c }) => parseFloat(getCellComputedValue(r, c))).filter(v => !isNaN(v));
+  document.getElementById('sumDisplay').textContent = vals.reduce((s, v) => s + v, 0).toFixed(2);
+  document.getElementById('avgDisplay').textContent = vals.length ? (vals.reduce((s, v) => s + v, 0) / vals.length).toFixed(2) : '0';
+  document.getElementById('countDisplay').textContent = vals.length;
+}
+
+// === Insert / delete row/col ===
+function insertRow() {
+  pushUndo();
+  const sh = curSheet();
+  const newCells = {};
+  Object.entries(sh.cells).forEach(([k, v]) => {
+    const m = k.match(/([A-Z]+)(\d+)/);
+    const r = parseInt(m[2]) - 1;
+    if (r >= sel.r) newCells[m[1] + (r + 2)] = v;
+    else newCells[k] = v;
+  });
+  sh.cells = newCells; sh.rows++;
+  scheduleSave(); render();
+}
+function insertCol() {
+  pushUndo();
+  const sh = curSheet();
+  const newCells = {};
+  Object.entries(sh.cells).forEach(([k, v]) => {
+    const m = k.match(/([A-Z]+)(\d+)/);
+    const c = colNumber(m[1]);
+    if (c >= sel.c) newCells[colLetter(c + 1) + m[2]] = v;
+    else newCells[k] = v;
+  });
+  sh.cells = newCells; sh.cols++;
+  scheduleSave(); render();
+}
+function deleteRow() {
+  pushUndo();
+  const sh = curSheet();
+  const newCells = {};
+  Object.entries(sh.cells).forEach(([k, v]) => {
+    const m = k.match(/([A-Z]+)(\d+)/);
+    const r = parseInt(m[2]) - 1;
+    if (r === sel.r) return;
+    if (r > sel.r) newCells[m[1] + r] = v;
+    else newCells[k] = v;
+  });
+  sh.cells = newCells; if (sh.rows > 1) sh.rows--;
+  scheduleSave(); render();
+}
+function deleteCol() {
+  pushUndo();
+  const sh = curSheet();
+  const newCells = {};
+  Object.entries(sh.cells).forEach(([k, v]) => {
+    const m = k.match(/([A-Z]+)(\d+)/);
+    const c = colNumber(m[1]);
+    if (c === sel.c) return;
+    if (c > sel.c) newCells[colLetter(c - 1) + m[2]] = v;
+    else newCells[k] = v;
+  });
+  sh.cells = newCells; if (sh.cols > 1) sh.cols--;
+  scheduleSave(); render();
+}
+
+function autoFormula(name) {
+  // find adjacent numeric range
+  const r = sel.r, c = sel.c;
+  let r1 = r - 1;
+  while (r1 >= 0 && !isNaN(parseFloat(getCell(r1, c).value))) r1--;
+  r1++;
+  if (r1 >= r) { alert('Type a formula like =' + name + '(A1:A10) in the formula bar'); return; }
+  pushUndo();
+  setCellRaw(r, c, { value: '', formula: '=' + name + '(' + cellKey(r1, c) + ':' + cellKey(r - 1, c) + ')' });
+  scheduleSave(); render();
+}
+
+function formulaHelp() {
+  alert('Available functions:\n\nMath: SUM, AVERAGE, MAX, MIN, COUNT, COUNTA, ROUND, CEILING, FLOOR, ABS, SQRT, POWER\nLogic: IF, AND, OR, NOT\nText: CONCAT, LEN, UPPER, LOWER, TRIM, LEFT, RIGHT, MID\nDate: TODAY, NOW\nMisc: PI, RAND, RANDBETWEEN\n\nUse ranges like =SUM(A1:A10) or single refs like =A1+B1');
+}
+
+function sortRange(dir) {
+  if (!range) { alert('Select a range to sort'); return; }
+  pushUndo();
+  const sh = curSheet();
+  const r1 = Math.min(range.r1, range.r2), r2 = Math.max(range.r1, range.r2);
+  const c1 = Math.min(range.c1, range.c2), c2 = Math.max(range.c1, range.c2);
+  const rows = [];
+  for (let r = r1; r <= r2; r++) {
+    const row = [];
+    for (let c = c1; c <= c2; c++) row.push(getCell(r, c));
+    rows.push(row);
+  }
+  rows.sort((a, b) => {
+    const av = a[0].value || '', bv = b[0].value || '';
+    const an = parseFloat(av), bn = parseFloat(bv);
+    if (!isNaN(an) && !isNaN(bn)) return dir === 'asc' ? an - bn : bn - an;
+    return dir === 'asc' ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
+  });
+  rows.forEach((row, ri) => row.forEach((cell, ci) => setCellRaw(r1 + ri, c1 + ci, cell)));
+  scheduleSave(); render();
+}
+
+function insertChart() { alert('Chart insertion: select a range with numbers and use external charting tools. (UI placeholder for now)'); }
+function insertCheckbox() { startEdit(sel.r, sel.c); }
+function insertHyperlink() { const url = prompt('URL:'); if (url) { pushUndo(); setCellRaw(sel.r, sel.c, { value: url, style: { color: '#2b579a', underline: true } }); scheduleSave(); render(); } }
+function insertComment() { alert('Comments coming soon'); }
+
+// === Copy/Paste (in-memory) ===
+let clipboard = null;
+function copyCells() { clipboard = getSelectedCells().map(({r,c})=>({...getCell(r,c), _r:r, _c:c})); }
+function pasteCells() {
+  if (!clipboard) return;
+  pushUndo();
+  const baseR = sel.r, baseC = sel.c;
+  const minR = Math.min(...clipboard.map(c=>c._r)), minC = Math.min(...clipboard.map(c=>c._c));
+  clipboard.forEach(c => {
+    setCellRaw(baseR + (c._r - minR), baseC + (c._c - minC), { value: c.value, formula: c.formula, style: c.style });
+  });
+  scheduleSave(); render();
+}
+
+// === Undo/Redo ===
+function pushUndo() { undoStack.push(JSON.stringify(sheets)); if (undoStack.length > 50) undoStack.shift(); redoStack = []; }
+function undo() { if (!undoStack.length) return; redoStack.push(JSON.stringify(sheets)); sheets = JSON.parse(undoStack.pop()); render(); scheduleSave(); }
+function redo() { if (!redoStack.length) return; undoStack.push(JSON.stringify(sheets)); sheets = JSON.parse(redoStack.pop()); render(); scheduleSave(); }
+
+// === Sheet tabs ===
+function renderSheetTabs() {
+  const c = document.getElementById('sheetTabs');
+  c.innerHTML = '';
+  sheets.forEach((s, i) => {
+    const t = document.createElement('div');
+    t.className = 'sheet-tab' + (i === activeSheet ? ' active' : '');
+    t.textContent = s.name;
+    t.onclick = () => { activeSheet = i; sel = { r: 0, c: 0 }; range = null; render(); };
+    t.ondblclick = () => { const n = prompt('Sheet name:', s.name); if (n) { s.name = n; render(); scheduleSave(); } };
+    c.appendChild(t);
+  });
+  const add = document.createElement('button');
+  add.className = 'sheet-add';
+  add.innerHTML = '<i class="fa-solid fa-plus"></i>';
+  add.onclick = () => { sheets.push({ name: 'Sheet' + (sheets.length + 1), rows: 100, cols: 26, cells: {} }); activeSheet = sheets.length - 1; render(); scheduleSave(); };
+  c.appendChild(add);
+}
+
+// === Ribbon tabs ===
+document.querySelectorAll('.ribbon-tab').forEach(t => {
+  t.onclick = () => {
+    document.querySelectorAll('.ribbon-tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    ['Home','Insert','Formulas','Data'].forEach(n => {
+      const r = document.getElementById('ribbon' + n);
+      if (r) r.style.display = (n.toLowerCase() === t.dataset.tab) ? '' : 'none';
+    });
+  };
+});
+
+// === Save ===
+function setStatus(html, color) { const el = document.getElementById('saveStatus'); el.innerHTML = html; el.style.color = color || ''; }
+function scheduleSave() {
+  if (!canEdit) return;
+  if (saveTimer) clearTimeout(saveTimer);
+  setStatus('<i class="fa-solid fa-cloud-arrow-up"></i> Saving...', '#ffd966');
+  saveTimer = setTimeout(saveDoc, 800);
+}
+
+async function loadDoc() {
+  sheets = [{ name: 'Sheet1', rows: 100, cols: 26, cells: {} }];
+  try {
+    let data;
+    if (SHARE_TOKEN) {
+      const r = await OfficeAPI.publicGet(SHARE_TOKEN);
+      data = r.data;
+      canEdit = data.permission === 'edit';
+      if (!canEdit) {
+        document.getElementById('shareBtn').style.display = 'none';
+        setStatus('<i class="fa-solid fa-lock"></i> Read-only', '#ffd966');
+      }
+    } else if (DOC_ID) {
+      const r = await OfficeAPI.get(DOC_ID); data = r.data;
+    } else {
+      try { const r = await OfficeAPI.create('spreadsheet'); data = r.data; history.replaceState(null, '', '?id=' + data._id); }
+      catch (e) { render(); setStatus('<i class="fa-solid fa-circle-info"></i> Sign in to save', '#ffd966'); return; }
+    }
+    docMeta = data;
+    document.getElementById('docTitle').value = data.title || 'Untitled Spreadsheet';
+    if (data.content && data.content.sheets && data.content.sheets.length) sheets = data.content.sheets;
+    render();
+  } catch (err) { render(); setStatus('<i class="fa-solid fa-triangle-exclamation"></i> ' + err.message, '#ff6b6b'); }
+}
+
+async function saveDoc() {
+  if (!canEdit) return;
+  try {
+    const payload = { title: document.getElementById('docTitle').value || 'Untitled Spreadsheet', content: { sheets } };
+    if (SHARE_TOKEN) await OfficeAPI.publicUpdate(SHARE_TOKEN, payload);
+    else if (docMeta && docMeta._id) await OfficeAPI.update(docMeta._id, payload);
+    setStatus('<i class="fa-solid fa-cloud"></i> All changes saved');
+  } catch (e) { setStatus('<i class="fa-solid fa-triangle-exclamation"></i> Save failed', '#ff6b6b'); }
+}
+
+document.getElementById('docTitle').addEventListener('input', scheduleSave);
+
+// === Export ===
+function exportCSV() {
+  const sh = curSheet();
+  let csv = '';
+  for (let r = 0; r < sh.rows; r++) {
+    const row = [];
+    for (let c = 0; c < sh.cols; c++) {
+      const v = String(getCellComputedValue(r, c) || '');
+      row.push(v.includes(',') || v.includes('"') ? '"' + v.replace(/"/g, '""') + '"' : v);
+    }
+    csv += row.join(',') + '\n';
+  }
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.getElementById('docTitle').value || 'spreadsheet') + '.csv';
+  a.click();
+}
+
+// === Share modal ===
+document.getElementById('shareBtn').onclick = async () => {
+  if (!docMeta) { alert('Save first'); return; }
+  try {
+    const r = await OfficeAPI.get(docMeta._id);
+    document.getElementById('shareEnabled').checked = !!r.data.isPublic;
+    document.getElementById('sharePerm').value = r.data.sharePermission || 'view';
+    document.getElementById('shareUrl').value = r.data.isPublic && r.data.shareToken ? buildShareUrl(r.data.shareToken) : '';
+  } catch(e) {}
+  document.getElementById('shareModal').classList.add('show');
+};
+function buildShareUrl(t) { return location.origin + location.pathname.replace(/[^/]+$/, '') + 'office-spreadsheet.html?share=' + t; }
+function closeShare() { document.getElementById('shareModal').classList.remove('show'); }
+async function saveShare() {
+  const enabled = document.getElementById('shareEnabled').checked;
+  const perm = document.getElementById('sharePerm').value;
+  try {
+    const r = await OfficeAPI.share(docMeta._id, enabled, perm);
+    document.getElementById('shareUrl').value = enabled && r.data.shareToken ? buildShareUrl(r.data.shareToken) : '';
+    if (!enabled) closeShare();
+  } catch (e) { alert('Share failed: ' + e.message); }
+}
+function copyShareUrl() {
+  const i = document.getElementById('shareUrl');
+  if (!i.value) return;
+  i.select(); document.execCommand('copy');
+  alert('Link copied!');
+}
+
+function goBack() {
+  if (window.parent !== window) window.parent.postMessage({ type: 'office-navigate', target: 'office-hub' }, '*');
+  else location.href = 'office.html';
+}
+
+loadDoc();
+</script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+/* ========================================
+   AZOLVE UNIQUE FEATURES - Shared Styles
+   ======================================== */
+
+/* --- Shared Feature Page Layout --- */
+.auf-page{padding:0}
+.auf-hero{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:32px;border-radius:16px;margin-bottom:24px;position:relative;overflow:hidden}
+.auf-hero::before{content:'';position:absolute;top:-50%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(255,255,255,0.15),transparent 70%);pointer-events:none}
+.auf-hero h1{font-size:28px;margin:0 0 8px;font-weight:700;letter-spacing:-0.5px}
+.auf-hero p{font-size:15px;opacity:0.92;margin:0;max-width:700px}
+.auf-hero-badge{display:inline-block;background:rgba(255,255,255,0.2);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:12px;letter-spacing:1px;backdrop-filter:blur(10px)}
+
+/* --- Feature Grid --- */
+.auf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.auf-grid-2{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:24px}
+.auf-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+@media(max-width:1100px){.auf-grid-2,.auf-grid-3{grid-template-columns:1fr}}
+
+/* --- Metric Cards --- */
+.auf-metric{background:var(--bg-primary);border-radius:14px;padding:20px;border:1px solid var(--border);transition:all .3s;position:relative;overflow:hidden}
+.auf-metric:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.08)}
+.auf-metric::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#667eea,#764ba2)}
+.auf-metric-label{font-size:11px;text-transform:uppercase;color:var(--text-muted);letter-spacing:1px;font-weight:700;margin-bottom:8px}
+.auf-metric-value{font-size:28px;font-weight:800;color:var(--text-primary);line-height:1;margin-bottom:6px}
+.auf-metric-sub{font-size:12px;color:var(--text-muted)}
+.auf-metric-change{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 8px;border-radius:20px;font-weight:700;margin-top:6px}
+.auf-metric-change.up{background:#dcfce7;color:#15803d}
+.auf-metric-change.down{background:#fee2e2;color:#b91c1c}
+
+/* --- Health Score Ring --- */
+.auf-health-ring{position:relative;width:180px;height:180px;margin:0 auto}
+.auf-health-svg{width:100%;height:100%;transform:rotate(-90deg)}
+.auf-health-bg{fill:none;stroke:#e5e7eb;stroke-width:14}
+.auf-health-fg{fill:none;stroke:url(#healthGrad);stroke-width:14;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)}
+.auf-health-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.auf-health-num{font-size:48px;font-weight:900;color:var(--text-primary);line-height:1}
+.auf-health-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;font-weight:700}
+
+/* --- Factor Bars --- */
+.auf-factor{padding:12px;background:var(--bg-secondary,#f8f9fa);border-radius:10px;margin-bottom:8px}
+.auf-factor-head{display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;font-weight:700}
+.auf-factor-bar{height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden}
+.auf-factor-fill{height:100%;border-radius:4px;transition:width 1s}
+.auf-factor-fill.excellent{background:linear-gradient(90deg,#10b981,#059669)}
+.auf-factor-fill.good{background:linear-gradient(90deg,#3b82f6,#2563eb)}
+.auf-factor-fill.warning{background:linear-gradient(90deg,#f59e0b,#d97706)}
+.auf-factor-fill.danger{background:linear-gradient(90deg,#ef4444,#dc2626)}
+
+/* --- WhatsApp Command Chips --- */
+.auf-wa-chip{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;background:#E7FFDB;color:#075E54;border-radius:24px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;margin:4px;border:2px solid transparent}
+.auf-wa-chip:hover{background:#25D366;color:#fff;transform:scale(1.03)}
+.auf-wa-chip code{background:rgba(0,0,0,0.08);padding:2px 6px;border-radius:4px;font-size:11px}
+
+/* --- UPI Payment Box --- */
+.auf-upi-box{background:linear-gradient(135deg,#8b5cf6 0%,#6366f1 100%);color:#fff;padding:20px;border-radius:14px;text-align:center}
+.auf-upi-logo{height:24px;display:inline-block;margin:4px 8px;filter:brightness(0) invert(1);opacity:0.9}
+.auf-upi-qr{background:#fff;padding:12px;border-radius:10px;display:inline-block;margin:12px 0}
+
+/* --- Leaderboard --- */
+.auf-lb-row{display:grid;grid-template-columns:50px 1fr auto;gap:12px;align-items:center;padding:14px;background:var(--bg-primary);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;transition:all .2s}
+.auf-lb-row:hover{transform:translateX(4px);border-color:#667eea}
+.auf-lb-rank{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#fff}
+.auf-lb-rank.r1{background:linear-gradient(135deg,#fbbf24,#f59e0b)}
+.auf-lb-rank.r2{background:linear-gradient(135deg,#cbd5e1,#94a3b8)}
+.auf-lb-rank.r3{background:linear-gradient(135deg,#f97316,#ea580c)}
+.auf-lb-rank.rn{background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+.auf-lb-name{font-weight:700;font-size:14px}
+.auf-lb-stats{font-size:11px;color:var(--text-muted);margin-top:2px}
+.auf-lb-points{font-size:18px;font-weight:800;color:#667eea}
+.auf-lb-badge{display:inline-block;padding:2px 6px;background:#fef3c7;color:#92400e;border-radius:10px;font-size:9px;font-weight:700;margin-right:3px}
+
+/* --- Map Mock --- */
+.auf-map{width:100%;height:360px;background:linear-gradient(135deg,#dbeafe,#e0e7ff);border-radius:14px;position:relative;overflow:hidden}
+.auf-pin{position:absolute;width:36px;height:36px;background:#ef4444;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.2);cursor:pointer;animation:aufPinPulse 2s infinite}
+.auf-pin i{transform:rotate(45deg);color:#fff;font-size:14px}
+.auf-pin.online{background:#10b981}
+.auf-pin.offline{background:#94a3b8}
+@keyframes aufPinPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.4)}50%{box-shadow:0 0 0 12px rgba(239,68,68,0)}}
+
+/* --- Goal Tracker --- */
+.auf-goal{background:var(--bg-primary);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;transition:all .2s}
+.auf-goal:hover{box-shadow:0 6px 20px rgba(0,0,0,0.06)}
+.auf-goal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.auf-goal-title{font-weight:700;font-size:14px}
+.auf-goal-meta{font-size:11px;color:var(--text-muted)}
+.auf-goal-progress{height:10px;background:#e5e7eb;border-radius:5px;overflow:hidden;margin-bottom:8px}
+.auf-goal-bar{height:100%;background:linear-gradient(90deg,#667eea,#764ba2);border-radius:5px;transition:width 1s}
+
+/* --- Command Center Widget --- */
+.auf-cc-widget{background:linear-gradient(135deg,#1e293b 0%,#334155 100%);color:#fff;border-radius:16px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.auf-cc-widget::before{content:'';position:absolute;top:-30%;right:-10%;width:300px;height:300px;background:radial-gradient(circle,rgba(99,102,241,0.3),transparent 70%);pointer-events:none}
+.auf-cc-title{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.7;margin-bottom:12px;font-weight:700}
+.auf-cc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;position:relative;z-index:1}
+.auf-cc-stat{background:rgba(255,255,255,0.08);padding:12px;border-radius:10px;backdrop-filter:blur(10px)}
+.auf-cc-stat-label{font-size:10px;opacity:0.7;text-transform:uppercase;letter-spacing:1px}
+.auf-cc-stat-val{font-size:22px;font-weight:800;margin-top:4px}
+
+/* --- Profitability Grade --- */
+.auf-grade{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;font-weight:900;font-size:18px;color:#fff}
+.auf-grade.A{background:linear-gradient(135deg,#10b981,#059669)}
+.auf-grade.B{background:linear-gradient(135deg,#3b82f6,#2563eb)}
+.auf-grade.C{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.auf-grade.D{background:linear-gradient(135deg,#ef4444,#dc2626)}
+
+/* --- Gamification Badges --- */
+.auf-badge-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;border-radius:20px;font-size:11px;font-weight:700;margin:2px}
+.auf-streak{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:linear-gradient(135deg,#ef4444,#f97316);color:#fff;border-radius:20px;font-size:12px;font-weight:700}
+
+/* --- Cash Flow Chart Area --- */
+.auf-cashflow{position:relative;height:280px;background:var(--bg-primary);border-radius:14px;padding:16px;border:1px solid var(--border)}
+
+/* --- Quote → Invoice Chain --- */
+.auf-chain{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border-radius:14px;margin-bottom:16px;overflow-x:auto}
+.auf-chain-step{min-width:160px;padding:14px;background:#fff;border-radius:10px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.05);position:relative}
+.auf-chain-step.active{border:2px solid #10b981}
+.auf-chain-step.done{background:#dcfce7}
+.auf-chain-step i{font-size:22px;margin-bottom:6px;color:#667eea}
+.auf-chain-arrow{font-size:20px;color:#94a3b8}
+
+/* --- Benchmark Bars --- */
+.auf-bench{padding:16px;background:var(--bg-primary);border:1px solid var(--border);border-radius:12px;margin-bottom:12px}
+.auf-bench-title{font-size:13px;font-weight:700;margin-bottom:10px}
+.auf-bench-bar{position:relative;height:24px;background:#f1f5f9;border-radius:12px;overflow:hidden}
+.auf-bench-you{position:absolute;top:0;bottom:0;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:12px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;color:#fff;font-size:11px;font-weight:700}
+.auf-bench-avg{position:absolute;top:-4px;bottom:-4px;width:3px;background:#ef4444;border-radius:2px}
+.auf-bench-avg::after{content:'AVG';position:absolute;top:-18px;left:50%;transform:translateX(-50%);background:#ef4444;color:#fff;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;white-space:nowrap}
+
+/* --- Voice Recording Animation --- */
+.auf-voice-btn{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#ef4444,#dc2626);border:none;color:#fff;font-size:42px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:30px auto;box-shadow:0 10px 30px rgba(239,68,68,0.4);transition:all .3s}
+.auf-voice-btn:hover{transform:scale(1.05)}
+.auf-voice-btn.recording{animation:aufVoicePulse 1.5s infinite;background:linear-gradient(135deg,#dc2626,#991b1b)}
+@keyframes aufVoicePulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.4)}50%{box-shadow:0 0 0 20px rgba(239,68,68,0)}}
+
+/* --- Follow-up Rules --- */
+.auf-rule{padding:14px;background:var(--bg-primary);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.auf-rule-trigger{flex:1}
+.auf-rule-trigger strong{display:block;font-size:13px;margin-bottom:3px}
+.auf-rule-trigger span{font-size:11px;color:var(--text-muted)}
+.auf-switch{position:relative;width:44px;height:24px;background:#cbd5e1;border-radius:12px;cursor:pointer;transition:.3s}
+.auf-switch.on{background:#10b981}
+.auf-switch::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:.3s;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+.auf-switch.on::after{left:23px}
+
+/* --- Tab Nav --- */
+.auf-tabs{display:flex;gap:4px;background:var(--bg-secondary,#f1f5f9);padding:4px;border-radius:10px;margin-bottom:20px;flex-wrap:wrap}
+.auf-tab{flex:1;min-width:120px;padding:10px 16px;text-align:center;font-weight:600;font-size:13px;cursor:pointer;border-radius:8px;color:var(--text-muted);transition:all .2s}
+.auf-tab.active{background:var(--bg-primary);color:var(--text-primary);box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+
+/* --- Dashboard Health Widget (on main dashboard) --- */
+.auf-dash-health{background:#fff;color:var(--text-primary,#1a1a2e);border:1px solid var(--border,#e5e9f0);border-radius:var(--radius-md,10px);padding:22px 24px;display:flex;align-items:center;gap:22px;margin-bottom:20px;position:relative;overflow:hidden}
+.auf-dash-health::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--primary,#714B67)}
+.auf-dash-health-left{position:relative;z-index:1}
+.auf-dash-health-right{flex:1;position:relative;z-index:1}
+.auf-dash-health-score{font-size:56px;font-weight:800;line-height:1;color:var(--primary,#714B67)}
+.auf-dash-health-label{font-size:11px;opacity:.6;text-transform:uppercase;letter-spacing:1.5px;margin-top:6px;font-weight:600}
+.auf-dash-health-msg{font-size:13px;color:var(--text-secondary,#4a5568);margin-top:4px}
+
+/* --- Profitability Table --- */
+.auf-client-row{display:grid;grid-template-columns:auto 2fr 1fr 1fr 1fr 60px;gap:14px;align-items:center;padding:14px;background:var(--bg-primary);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;transition:all .2s}
+.auf-client-row:hover{border-color:#667eea;transform:translateX(4px)}
+@media(max-width:900px){.auf-client-row{grid-template-columns:auto 1fr auto}.auf-client-row>*:nth-child(n+4){display:none}}
+
+/* --- Dark Mode Support --- */
+body.dark-mode .auf-metric{background:#1e293b;border-color:#334155}
+body.dark-mode .auf-factor,body.dark-mode .auf-goal,body.dark-mode .auf-lb-row,body.dark-mode .auf-rule,body.dark-mode .auf-client-row,body.dark-mode .auf-bench,body.dark-mode .auf-chain-step,body.dark-mode .auf-cashflow{background:#1e293b;border-color:#334155;color:#f8fafc}
+body.dark-mode .auf-chain{background:linear-gradient(135deg,#1e293b,#0f172a)}
+body.dark-mode .auf-factor-bar,body.dark-mode .auf-goal-progress,body.dark-mode .auf-bench-bar{background:#334155}
+body.dark-mode .auf-tabs{background:#0f172a}
+body.dark-mode .auf-tab.active{background:#1e293b}

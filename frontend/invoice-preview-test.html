@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Invoice Preview Test</title>
+</head>
+<body>
+<script>
+// Simulate DB object
+const DB = {
+    data: {
+        company: {
+            name: 'Azolve Technologies Pvt. Ltd.',
+            email: 'billing@azolve.io',
+            phone: '+91 98765 43210',
+            address: '4th Floor, Tech Park, Sector 16',
+            city: 'Bengaluru, KA 560001',
+            website: 'www.azolve.io',
+            taxId: '29AABCA1234H1ZK',
+            currency: 'USD'
+        },
+        invoices: [{
+            id: 'inv001',
+            number: 'INV-2025-001',
+            clientId: 'c1',
+            clientName: 'TechCorp Solutions Inc.',
+            clientEmail: 'accounts@techcorp.com',
+            clientPhone: '+1 (415) 555-0102',
+            clientAddress: '500 Market Street, Suite 300',
+            clientCity: 'San Francisco, CA 94105',
+            date: '2025-03-01',
+            due: '2025-03-31',
+            status: 'pending',
+            paymentTerms: 'Net 30',
+            notes: 'Please include invoice number in payment reference. Wire transfers accepted. Thank you for your continued business.',
+            paid: 0,
+            items: [
+                { product: 'Web Application Development', desc: 'Full-stack React + Node.js development', qty: 1, price: 8500, taxRate: 18, discount: 0 },
+                { product: 'UI/UX Design Services',        desc: 'Figma wireframes + prototyping',          qty: 1, price: 3200, taxRate: 18, discount: 5  },
+                { product: 'API Integration',               desc: 'Third-party payment gateway setup',       qty: 3, price: 650,  taxRate: 18, discount: 0  },
+                { product: 'Monthly Maintenance',           desc: 'Server monitoring & bug fixes',           qty: 2, price: 900,  taxRate: 18, discount: 10 }
+            ]
+        }]
+    },
+    getObj(k){ return this.data[k] || {}; },
+    get(k){ return this.data[k] || []; }
+};
+
+function showToast(msg){ alert(msg); }
+</script>
+<script src="js/invoice-print.js"></script>
+<script>
+window.onload = function() {
+    const inv = DB.get('invoices')[0];
+    inv.clientEmail   = 'accounts@techcorp.com';
+    inv.clientPhone   = '+1 (415) 555-0102';
+    inv.clientAddress = '500 Market Street, Suite 300';
+    inv.clientCity    = 'San Francisco, CA 94105';
+    const html = generateProfessionalInvoiceHTML(inv);
+    document.open();
+    document.write(html);
+    document.close();
+};
+</script>
+</body>
+</html>

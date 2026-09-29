@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azolve — All-in-One Cloud Business Management Platform | CRM, HRM, Finance, Projects</title>
+    <meta name="description" content="Azolve is a complete cloud-based business management suite. CRM, HRM, Finance, Invoicing, Project Management, Support Tickets, Video Meetings, and Real-time Chat — all in one platform. Start free.">
+    <meta name="keywords" content="business management software, CRM, HRM, project management, invoice software, cloud ERP, SaaS platform, team collaboration, azolve">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://azolve.io/landing.html">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <meta name="theme-color" content="#714B67">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://azolve.io/landing.html">
+    <meta property="og:title" content="Azolve — All-in-One Cloud Business Management Platform">
+    <meta property="og:description" content="Manage CRM, HRM, Finance, Projects, Support, Meetings and Chat in one platform. Start free.">
+    <meta property="og:image" content="https://azolve.io/assets/og-image.png">
+    <meta property="og:site_name" content="Azolve">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Azolve — All-in-One Business Platform">
+    <meta name="twitter:description" content="Complete business management suite: CRM, HRM, Finance, Projects, Support, Meetings, Chat.">
+    <meta name="twitter:image" content="https://azolve.io/assets/og-image.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #714B67;
+            --primary-dark: #5a3a52;
+            --accent: #00A09D;
+            --accent-dark: #008a87;
+            --text-dark: #1a1a2e;
+            --text-mid: #4a4a6a;
+            --text-light: #8888aa;
+            --white: #ffffff;
+            --bg-light: #f8f6ff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* NAVBAR */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 16px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(113,75,103,0.1);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .nav-logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .nav-logo-text {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-mid);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-login {
+            padding: 10px 24px;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-login:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-signup {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(113,75,103,0.3);
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8f0ff 0%, #e8f8f8 50%, #f0f8ff 100%);
+            display: flex;
+            align-items: center;
+            padding: 100px 5% 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -200px; right: -200px;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(113,75,103,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -200px; left: -200px;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(0,160,157,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            max-width: 600px;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(113,75,103,0.1);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.1;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            letter-spacing: -1.5px;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            color: var(--text-mid);
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-hero-primary {
+            padding: 16px 36px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(113,75,103,0.4);
+        }
+
+        .btn-hero-secondary {
+            padding: 16px 36px;
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-hero-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            padding-left: 60px;
+        }
+
+        .hero-dashboard-preview {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 580px;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .preview-topbar {
+            background: var(--primary);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .preview-dot.red { background: #ff5f57; }
+        .preview-dot.yellow { background: #ffbd2e; }
+        .preview-dot.green { background: #28ca41; }
+
+        .preview-title {
+            color: rgba(255,255,255,0.8);
+            font-size: 13px;
+            margin-left: 8px;
+        }
+
+        .preview-body {
+            display: flex;
+            height: 300px;
+        }
+
+        .preview-sidebar {
+            width: 100px;
+            background: #5a3a52;
+            padding: 16px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .preview-app-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: rgba(255,255,255,0.7);
+            background: rgba(255,255,255,0.1);
+            margin: 0 auto;
+        }
+
+        .preview-app-icon.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .preview-main {
+            flex: 1;
+            padding: 16px;
+            background: #f8f6ff;
+        }
+
+        .preview-stat-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .preview-stat {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .preview-stat-val {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .preview-stat-lbl {
+            font-size: 10px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .preview-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .preview-table-header {
+            background: #f0ecf5;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 8px;
+        }
+
+        .preview-table-row {
+            padding: 8px 12px;
+            font-size: 11px;
+            color: #555;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 8px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .preview-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .preview-badge.green { background: rgba(0,184,148,0.1); color: #00b894; }
+        .preview-badge.blue { background: rgba(0,160,157,0.1); color: #00A09D; }
+        .preview-badge.purple { background: rgba(113,75,103,0.1); color: #714B67; }
+
+        /* STATS BAND */
+        .stats-band {
+            background: var(--primary);
+            padding: 40px 5%;
+        }
+
+        .stats-band-inner {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .stat-item-val {
+            font-size: 40px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .stat-item-lbl {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* FEATURES */
+        .features {
+            padding: 80px 5%;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto 60px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            background: rgba(113,75,103,0.1);
+            color: var(--primary);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 40px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 17px;
+            color: var(--text-mid);
+            line-height: 1.7;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s;
+            border: 1px solid rgba(113,75,103,0.08);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(113,75,103,0.15);
+            background: white;
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .feature-desc {
+            font-size: 15px;
+            color: var(--text-mid);
+            line-height: 1.6;
+        }
+
+        /* APPS SECTION */
+        .apps-section {
+            padding: 80px 5%;
+            background: var(--bg-light);
+        }
+
+        .apps-showcase {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .app-showcase-card {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .app-showcase-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+        }
+
+        .app-showcase-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin: 0 auto 16px;
+        }
+
+        .app-showcase-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .app-showcase-desc {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* CTA */
+        .cta {
+            padding: 80px 5%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 44px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 40px;
+        }
+
+        .cta-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .btn-cta-white {
+            padding: 16px 40px;
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-cta-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-cta-outline {
+            padding: 16px 40px;
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.6);
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-cta-outline:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: white;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #1a1a2e;
+            padding: 40px 5%;
+            text-align: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .footer-logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .footer-tagline {
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .footer-copyright {
+            color: rgba(255,255,255,0.3);
+            font-size: 13px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 120px;
+            }
+            .hero-image { padding-left: 0; padding-top: 40px; }
+            .hero-actions { justify-content: center; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .apps-showcase { grid-template-columns: repeat(2, 1fr); }
+            .stats-band-inner { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero-title { font-size: 36px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .apps-showcase { grid-template-columns: repeat(2, 1fr); }
+            .stats-band-inner { grid-template-columns: repeat(2, 1fr); }
+            .cta-title { font-size: 32px; }
+            .cta-actions { flex-direction: column; align-items: center; }
+            .hero-dashboard-preview { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="landing.html" class="nav-logo">
+            <img src="assets/logo-navbar.png" alt="Azolve" style="height:40px;width:auto;">
+        </a>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#apps">Apps</a>
+            <a href="#pricing">Pricing</a>
+        </div>
+        <div class="nav-actions">
+            <a href="login.html" class="btn-login">Log In</a>
+            <a href="register.html" class="btn-signup">Get Started Free</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" style="display: flex;">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-bolt"></i>
+                All-in-One Business Platform
+            </div>
+            <h1 class="hero-title">Run Your Entire <span>Business</span> From One Platform</h1>
+            <p class="hero-description">
+                AZOLVE brings together CRM, HRM, Invoicing, Accounting, eCommerce and more — 
+                all in one powerful, modular platform built for modern businesses.
+            </p>
+            <div class="hero-actions">
+                <a href="register.html" class="btn-hero-primary">
+                    <i class="fas fa-rocket"></i>
+                    Start Free Trial
+                </a>
+                <a href="login.html" class="btn-hero-secondary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="hero-dashboard-preview">
+                <div class="preview-topbar">
+                    <div class="preview-dot red"></div>
+                    <div class="preview-dot yellow"></div>
+                    <div class="preview-dot green"></div>
+                    <span class="preview-title">AZOLVE Dashboard</span>
+                </div>
+                <div class="preview-body">
+                    <div class="preview-sidebar">
+                        <div class="preview-app-icon active"><i class="fas fa-th-large"></i></div>
+                        <div class="preview-app-icon"><i class="fas fa-users"></i></div>
+                        <div class="preview-app-icon"><i class="fas fa-id-card"></i></div>
+                        <div class="preview-app-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="preview-app-icon"><i class="fas fa-store"></i></div>
+                    </div>
+                    <div class="preview-main">
+                        <div class="preview-stat-row">
+                            <div class="preview-stat">
+                                <div class="preview-stat-val">142</div>
+                                <div class="preview-stat-lbl">Leads</div>
+                            </div>
+                            <div class="preview-stat">
+                                <div class="preview-stat-val">36</div>
+                                <div class="preview-stat-lbl">Employees</div>
+                            </div>
+                            <div class="preview-stat">
+                                <div class="preview-stat-val">$94k</div>
+                                <div class="preview-stat-lbl">Revenue</div>
+                            </div>
+                        </div>
+                        <div class="preview-table">
+                            <div class="preview-table-header">
+                                <span>Name</span>
+                                <span>Status</span>
+                                <span>Value</span>
+                            </div>
+                            <div class="preview-table-row">
+                                <span>Acme Corp</span>
+                                <span><span class="preview-badge green">Won</span></span>
+                                <span>$12,000</span>
+                            </div>
+                            <div class="preview-table-row">
+                                <span>TechStart Ltd</span>
+                                <span><span class="preview-badge blue">Proposal</span></span>
+                                <span>$8,500</span>
+                            </div>
+                            <div class="preview-table-row">
+                                <span>Global Inc</span>
+                                <span><span class="preview-badge purple">New</span></span>
+                                <span>$24,000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS BAND -->
+    <div class="stats-band">
+        <div class="stats-band-inner">
+            <div>
+                <div class="stat-item-val">10K+</div>
+                <div class="stat-item-lbl">Businesses Using AZOLVE</div>
+            </div>
+            <div>
+                <div class="stat-item-val">16+</div>
+                <div class="stat-item-lbl">Integrated Apps</div>
+            </div>
+            <div>
+                <div class="stat-item-val">99.9%</div>
+                <div class="stat-item-lbl">Uptime Guarantee</div>
+            </div>
+            <div>
+                <div class="stat-item-val">60+</div>
+                <div class="stat-item-lbl">Payment Gateways</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <div class="section-tag">Why AZOLVE?</div>
+            <h2 class="section-title">Everything You Need to Grow</h2>
+            <p class="section-subtitle">From managing leads to paying employees, AZOLVE has all the tools your business needs — in one place.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon" style="background: rgba(113,75,103,0.1); color: #714B67;">
+                    <i class="fas fa-cubes"></i>
+                </div>
+                <h3 class="feature-title">Modular Apps</h3>
+                <p class="feature-desc">Install only what you need. Our app store lets you build your perfect business suite with 16+ modules.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: rgba(0,160,157,0.1); color: #00A09D;">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3 class="feature-title">Real-Time Data</h3>
+                <p class="feature-desc">All your data synced in real-time via MongoDB Atlas cloud database with offline support built in.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: rgba(0,184,148,0.1); color: #00b894;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">Enterprise Security</h3>
+                <p class="feature-desc">JWT authentication, bcrypt password hashing, and HTTPS everywhere keeps your data safe.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: rgba(253,203,110,0.1); color: #f39c12;">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3 class="feature-title">Mobile Ready</h3>
+                <p class="feature-desc">Fully responsive design works perfectly on phones, tablets, and desktops.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: rgba(99,91,255,0.1); color: #635BFF;">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <h3 class="feature-title">60+ Payment Gateways</h3>
+                <p class="feature-desc">Accept payments from Stripe, PayPal, and 60+ other payment providers worldwide.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: rgba(214,48,49,0.1); color: #d63031;">
+                    <i class="fas fa-plug"></i>
+                </div>
+                <h3 class="feature-title">49+ Integrations</h3>
+                <p class="feature-desc">Connect with your favorite tools via our integration hub — Slack, Zapier, and more.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- APPS SECTION -->
+    <section class="apps-section" id="apps">
+        <div class="section-header">
+            <div class="section-tag">Our App Store</div>
+            <h2 class="section-title">Build Your Perfect Suite</h2>
+            <p class="section-subtitle">Install apps as you need them. Upgrade, downgrade, or swap apps anytime.</p>
+        </div>
+        <div class="apps-showcase">
+            <div class="app-showcase-card">
+                <div class="app-showcase-icon" style="background: #714B67;"><i class="fas fa-users"></i></div>
+                <div class="app-showcase-name">CRM</div>
+                <div class="app-showcase-desc">Customer Relationship Management</div>
+            </div>
+            <div class="app-showcase-card">
+                <div class="app-showcase-icon" style="background: #FF3D00;"><i class="fas fa-id-card"></i></div>
+                <div class="app-showcase-name">HRM</div>
+                <div class="app-showcase-desc">Human Resource Management</div>
+            </div>
+            <div class="app-showcase-card">
+                <div class="app-showcase-icon" style="background: #00A09D;"><i class="fas fa-rocket"></i></div>
+                <div class="app-showcase-name">Project</div>
+                <div class="app-showcase-desc">Project & Task Management</div>
+            </div>
+            <div class="app-showcase-card">
+                <div class="app-showcase-icon" style="background: #FFAB00;"><i class="fas fa-file-alt"></i></div>
+                <div class="app-showcase-name">CMS</div>
+                <div class="app-showcase-desc">Content Management System</div>
+            </div>
+            <div class="app-showcase-card">
+                <div class="app-showcase-icon" style="background: #635BFF;"><i class="fab fa-stripe-s"></i></div>
+                <div class="app-showcase-name">Stripe</div>
+                <div class="app-showcase-desc">Payment Processing</div>
+            </div>
+            <div class="app-showcase-card">
+                <div class="app-showcase-icon" style="background: #00457C;"><i class="fab fa-paypal"></i></div>
+                <div class="app-showcase-name">PayPal</div>
+                <div class="app-showcase-desc">PayPal Integration</div>
+            </div>
+            <div class="app-showcase-card">
+                <div class="app-showcase-icon" style="background: #714B67;"><i class="fas fa-chart-line"></i></div>
+                <div class="app-showcase-name">Sales</div>
+                <div class="app-showcase-desc">Advanced Sales Pipeline</div>
+            </div>
+            <div class="app-showcase-card">
+                <div class="app-showcase-icon" style="background: #FF3D00;"><i class="fas fa-shopping-cart"></i></div>
+                <div class="app-showcase-name">eCommerce</div>
+                <div class="app-showcase-desc">Online Store Builder</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <h2 class="cta-title">Ready to Transform Your Business?</h2>
+        <p class="cta-subtitle">Join thousands of businesses already using AZOLVE</p>
+        <div class="cta-actions">
+            <a href="register.html" class="btn-cta-white">
+                <i class="fas fa-rocket"></i> Start Free Trial
+            </a>
+            <a href="login.html" class="btn-cta-outline">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">
+            <img src="assets/logo-navbar.png" alt="Azolve" style="height:40px;width:auto;filter:brightness(2);">
+        </div>
+        <p class="footer-tagline">All-in-One Business Platform for Modern Companies</p>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a>
+        </div>
+        <p class="footer-copyright">© 2026 AZOLVE INFOTECH PVT LTD. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
